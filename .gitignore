@@ -29,5 +29,5 @@
 Thumbs.db
 Desktop.ini
 # Obsidian 개인 설정 및 휴지통
-/Docs/.obsidian/
-/Docs/.trash/
+.obsidian/
+.trash/
