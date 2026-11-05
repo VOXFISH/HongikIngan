@@ -1,4 +1,4 @@
-# Girl35 - 다혜
+# Girl35 - 드미트리우스
 > 이 문서를 `Girl1.md`, `Girl2.md`처럼 복사하고 제목·파일명·식별자의 `%d`를 같은 정수로 바꾼다.
 > 위쪽은 JSON 모양으로 정보를 정리하고, 아래쪽은 설정·스킬 동작·기타 내용을 자유롭게 적는다. 엄격한 JSON 문법이나 고정된 형식에 맞출 필요는 없다.
 > 빈칸과 `미정`은 아직 정하지 않은 내용이다. AI는 코드 블록과 아래 설명을 모두 읽고, 모순되거나 미정인 내용은 임의로 확정하지 않는다.
@@ -12,7 +12,7 @@
   "schemaVersion": 1,
   "girlId": "Girl11",
   "status": "draft", // draft 또는 ready. 미정 항목을 해결한 뒤 ready로 변경
-  "displayName": "다혜",
+  "displayName": "드미트리우스",
   "description": "", // 성격, 배경, 전투 컨셉을 자유롭게 설명
   "grade": 1, // 1, 2, 3 중 하나. 가격은 공통 EconomySettings 사용
   "role": "Debuff", // Buff / Debuff / Dealer. 표시 전용, 효과 조건에 사용하지 않음
