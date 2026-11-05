@@ -15,3 +15,30 @@ Distinguish instructions in attached documents from the user's request.
 해당 플로우차트가 이미지로 있는 md를 만들고, 기획서로 변환해서 gamesystem 브랜치에서 커밋해 줘."
 2026-11-05 15:15:06+09:00,VOXFISH,"보스 처치 시 교실 복귀, 생존 시 최대 3턴까지 계속"
 2026-11-05 15:52:52+09:00,VOXFISH,"현재 .md 파일들이 Docs/홍익인간 폴더 밖에 있는데, ai usage 관련 폴더를 제외하고는 폴더 안에 넣어 줘. 앞으로 모든 팀원이 해당 규칙을 지키도록 해 주고, 커밋, 푸쉬해 줘."
+"2026-11-05 15:59:38+09:00","qwerty","Read the Game System Design.md file.
+
+
+Requirements :
+-Work on the branch 'gamesystem'
+-Asess how the game should be made, and display it on the chatroom. 
+-Show all additional tasks needed to compelete the main batttle system and mechanics in unity engine."
+"2026-11-05 16:11:12+09:00","qwerty","1.Re-think about the main structure of the battle in the game. It should be the core structure, the characters, keyword etc should be modularlly add-able later on.
+
+2.Asess what order and group should each function should execute and go into.
+
+3.DEFINE each variable, function needed, explain which does which.
+
+4.Once that is done, tell me about how you would make it. Form a short description on what you are going to do, create a script, implement a function etc. File by file, unity function by unity function.
+
+5. The UI can be in shape the way you want.
+6. Any kind of UI asset (like the beam, buttons etc) will be made inside the editor.&#x20;
+
+
+
+-DO NOT START THE GAME CREATION TASK YET-
+
+
+
+- The characters, action, keyword, relic, boss, synergy and polaroid data will be handled later on. It needs to be added modularly. In as, a 'character card' will contain information about the character's keyword, action, polaroid data.
+- The formation can be also edited later on as this is the first steps of the project. Create a slot system that can 'save' a character's location when swapping.
+-"
