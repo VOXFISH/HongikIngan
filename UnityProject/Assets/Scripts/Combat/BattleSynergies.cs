@@ -41,17 +41,17 @@ namespace HongikIngan
                 int count = Count(run, "분위기메이커");
                 int amount = count >= 9 ? 1000 : count >= 5 ? 100 : count >= 3 ? 50 : 30;
                 run.Atmosphere += amount;
-                yield return Step(run.Battle, "synergy", "분위기 +" + amount + " · 누적 " + run.Atmosphere);
+                yield return Step(run.Battle, "synergy", "분위기 +" + amount + " - 누적 " + run.Atmosphere);
             }
             if (Count(run, "독설가") >= 3 && actor.Definition.Role == StudentRole.Debuff)
             {
                 run.Battle.Damage *= 1.2f; run.NotifyDamage();
-                yield return Step(run.Battle, "damage", "독설가 · 약화 역할군 액션 ×1.2");
+                yield return Step(run.Battle, "damage", "독설가 - 약화 역할군 액션 ×1.2");
             }
             if (run.Atmosphere >= 100 && MoodTarget(run, actor))
             {
                 AddDamage(run, run.Battle.Damage * .5f);
-                yield return Step(run.Battle, "damage", "분위기 · " + actor.Definition.Name + " 액션 시 현재 데미지 +50%p");
+                yield return Step(run.Battle, "damage", "분위기 - " + actor.Definition.Name + " 액션 시 현재 데미지 +50%p");
             }
         }
 
@@ -72,7 +72,7 @@ namespace HongikIngan
         {
             if (actor.Definition.Personality != "리더") yield break;
             AddDamage(run, run.Battle.Damage * .3f);
-            yield return Step(run.Battle, "damage", "리더의 버프 적용 · 현재 데미지 +30%");
+            yield return Step(run.Battle, "damage", "리더의 버프 적용 - 현재 데미지 +30%");
         }
 
         public static IEnumerable<BattleStep> FinalizeDamage(PrototypeRun run)
@@ -83,11 +83,11 @@ namespace HongikIngan
             if (flat > 0)
             {
                 AddDamage(run, flat);
-                yield return Step(run.Battle, "damage", "운동부 " + sports + " · 데미지 +" + flat);
+                yield return Step(run.Battle, "damage", "운동부 " + sports + " - 데미지 +" + flat);
                 if (factor > 1)
                 {
                     run.Battle.Damage *= factor; run.NotifyDamage();
-                    yield return Step(run.Battle, "damage", "운동부 · 데미지 ×" + factor);
+                    yield return Step(run.Battle, "damage", "운동부 - 데미지 ×" + factor);
                 }
             }
             int photography = Count(run, "사진부");
@@ -97,24 +97,24 @@ namespace HongikIngan
                 double perPhoto = photography >= 6 ? 1.2 : photography >= 4 ? 1.3 : 1.05;
                 if (run.Battle.Damage != 0) run.Battle.Damage = (float)(run.Battle.Damage * Math.Pow(perPhoto, run.PhotoCount));
                 run.NotifyDamage();
-                yield return Step(run.Battle, "damage", "사진부 · 폴라로이드 " + run.PhotoCount + "장 · 장마다 ×" + perPhoto);
+                yield return Step(run.Battle, "damage", "사진부 - 폴라로이드 " + run.PhotoCount + "장 - 장마다 ×" + perPhoto);
             }
             int rebels = Count(run, "반항아");
             if (rebels >= 2)
             {
                 float multiplier = rebels >= 5 ? .1f : .7f;
                 run.Battle.Damage *= multiplier; run.NotifyDamage();
-                yield return Step(run.Battle, "damage", "반항아 · 데미지 ×" + multiplier);
+                yield return Step(run.Battle, "damage", "반항아 - 데미지 ×" + multiplier);
             }
             if (run.Atmosphere > 0)
             {
                 AddDamage(run, run.Battle.Damage * run.Atmosphere / 100f);
-                yield return Step(run.Battle, "damage", "누적 분위기 · 데미지 +" + run.Atmosphere + "%p");
+                yield return Step(run.Battle, "damage", "누적 분위기 - 데미지 +" + run.Atmosphere + "%p");
             }
             if (run.Battle.LoverBonusPercent > 0)
             {
                 AddDamage(run, run.Battle.Damage * run.Battle.LoverBonusPercent / 100f);
-                yield return Step(run.Battle, "damage", "전투 시작의 인접 사랑꾼 · 데미지 +" + run.Battle.LoverBonusPercent + "%");
+                yield return Step(run.Battle, "damage", "전투 시작의 인접 사랑꾼 - 데미지 +" + run.Battle.LoverBonusPercent + "%");
             }
         }
 

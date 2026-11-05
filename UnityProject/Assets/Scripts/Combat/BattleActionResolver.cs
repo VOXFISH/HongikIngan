@@ -39,7 +39,7 @@ namespace HongikIngan
                         foreach (var step in ResolveCommand(run, command, queue)) yield return step;
                         continue;
                     }
-                    yield return Step(battle, "action", actor.Definition.Name + " · " + actor.Definition.SkillDescription, actor);
+                    yield return Step(battle, "action", actor.Definition.Name + " - " + actor.Definition.SkillDescription, actor);
                     float attackFactor = command.ForcedDamage.HasValue || IsAttack(actor.Definition.Action) ? TakeLove(run, actor) : 1;
 
                     foreach (var keyword in actor.Keywords.ToArray())
@@ -53,14 +53,14 @@ namespace HongikIngan
                     if (command.ForcedDamage.HasValue)
                     {
                         AddAttackDamage(run, command.ForcedDamage.Value, attackFactor);
-                        yield return Step(battle, "damage", actor.Definition.Name + " · 잔나비 추가 공격 +" + command.ForcedDamage.Value, actor);
+                        yield return Step(battle, "damage", actor.Definition.Name + " - 잔나비 추가 공격 +" + command.ForcedDamage.Value, actor);
                     }
                     else switch (actor.Definition.Action)
                     {
                         case ActionKind.FourthBatter:
                             float hit = actor.SkillValue * (run.Students.IndexOf(actor) == 3 ? 3 : 1);
                             AddAttackDamage(run, hit, attackFactor);
-                            yield return Step(battle, "damage", actor.Definition.Name + " · 4번 타자 +" + hit, actor);
+                            yield return Step(battle, "damage", actor.Definition.Name + " - 4번 타자 +" + hit, actor);
                             break;
                         case ActionKind.Advance:
                         case ActionKind.AdvanceToFront:
@@ -74,7 +74,7 @@ namespace HongikIngan
                             int kinds = battle.BossKeywords.Count(k => k.Stacks > 0);
                             int spiteStacks = kinds * (int)actor.SkillValue * BattleSynergies.DebuffApplications(run);
                             KeywordRules.Add(battle.BossKeywords, KeywordRules.Spite, 10, spiteStacks);
-                            yield return Step(battle, "keyword", "보스 키워드 " + kinds + "종류 · 표독 " + spiteStacks + "스택 부여", actor);
+                            yield return Step(battle, "keyword", "보스 키워드 " + kinds + "종류 - 표독 " + spiteStacks + "스택 부여", actor);
                             break;
                         case ActionKind.LuckyClover:
                             bool success = run.RollCombatChance(actor.SkillValue / 100f);
@@ -88,7 +88,7 @@ namespace HongikIngan
                         case ActionKind.RebelPercent:
                             int rebels = run.Students.Count(s => s.Definition.Personality == "반항아");
                             if (rebels > 0) AddAttackDamage(run, battle.Damage * actor.SkillValue * rebels / 100f, attackFactor);
-                            yield return Step(battle, "damage", "반항아 " + rebels + "명 · 현재 데미지 +" + actor.SkillValue * rebels + "%p", actor);
+                            yield return Step(battle, "damage", "반항아 " + rebels + "명 - 현재 데미지 +" + actor.SkillValue * rebels + "%p", actor);
                             if (rebels > 0) foreach (var step in BattleSynergies.LeaderBuff(run, actor)) yield return step;
                             break;
                         case ActionKind.AddDamage:
@@ -98,7 +98,7 @@ namespace HongikIngan
                         case ActionKind.TeamSizeDamage:
                             float teamDamage = run.Students.Count * actor.SkillValue;
                             AddAttackDamage(run, teamDamage, attackFactor);
-                            yield return Step(battle, "damage", "전대 " + run.Students.Count + "명 · 데미지 +" + PrototypeCatalog.FormatDamage(teamDamage), actor);
+                            yield return Step(battle, "damage", "전대 " + run.Students.Count + "명 - 데미지 +" + PrototypeCatalog.FormatDamage(teamDamage), actor);
                             break;
                         case ActionKind.AddThenPercentDamage:
                             if (actor.SkillValue != 0)
@@ -131,22 +131,22 @@ namespace HongikIngan
                             break;
                         case ActionKind.Paparazzi:
                             KeywordRules.Add(battle.BossKeywords, KeywordRules.Mine, actor.SkillValue);
-                            yield return Step(battle, "keyword", "보스에게 넌 내 꺼야 부여 · 전투 종료까지 유지", actor);
+                            yield return Step(battle, "keyword", "보스에게 넌 내 꺼야 부여 - 전투 종료까지 유지", actor);
                             break;
                         case ActionKind.Spotlight:
                             AddAttackDamage(run, battle.Damage * actor.SkillValue / 100f, attackFactor);
                             foreach (var neighbor in Neighbors(run, actor))
                                 KeywordRules.Add(neighbor.Keywords, KeywordRules.Lighting, 0);
-                            yield return Step(battle, "keyword", "현재 데미지 +" + actor.SkillValue + "% · 양옆 아군에게 조명", actor);
+                            yield return Step(battle, "keyword", "현재 데미지 +" + actor.SkillValue + "% - 양옆 아군에게 조명", actor);
                             break;
                         case ActionKind.LightingDamage:
                             int lights = run.Students.Count(s => HasLighting(s));
                             AddAttackDamage(run, 500, attackFactor);
-                            yield return Step(battle, "damage", "Lights, Camera, Action! · 데미지 +500", actor);
+                            yield return Step(battle, "damage", "Lights, Camera, Action! - 데미지 +500", actor);
                             for (int i = 0; i < lights; i++)
                             {
                                 AddAttackDamage(run, actor.SkillValue, attackFactor);
-                                yield return Step(battle, "damage", "조명 " + (i + 1) + "/" + lights + " · 데미지 +" + actor.SkillValue, actor);
+                                yield return Step(battle, "damage", "조명 " + (i + 1) + "/" + lights + " - 데미지 +" + actor.SkillValue, actor);
                             }
                             break;
                         case ActionKind.BestSubject:
@@ -155,12 +155,12 @@ namespace HongikIngan
                             int photographers = run.Students.Count(s => s.Definition.Club == "사진부");
                             int factor = actor.UpgradeCount > 0 ? cute * freshmen * photographers : cute + freshmen + photographers;
                             ReplaceAttackDamage(run, factor == 0 ? 0 : battle.Damage * factor, attackFactor);
-                            yield return Step(battle, "damage", "최고의 피사체 · 데미지 ×" + factor, actor);
+                            yield return Step(battle, "damage", "최고의 피사체 - 데미지 ×" + factor, actor);
                             break;
                         case ActionKind.GrantLove:
                             foreach (var ally in run.Students)
                                 KeywordRules.Add(ally.Keywords, KeywordRules.Love, 1.1f, (int)actor.SkillValue);
-                            yield return Step(battle, "keyword", "모든 아군에게 사랑 " + (int)actor.SkillValue + "스택 · 다음 공격 증가량에 스택당 ×1.1", actor);
+                            yield return Step(battle, "keyword", "모든 아군에게 사랑 " + (int)actor.SkillValue + "스택 - 다음 공격 증가량에 스택당 ×1.1", actor);
                             foreach (var step in BattleSynergies.LeaderBuff(run, actor)) yield return step;
                             break;
                         case ActionKind.CloneNext:
@@ -168,7 +168,7 @@ namespace HongikIngan
                             var clone = run.CloneNext(actor);
                             if (clone == null)
                             {
-                                yield return Step(battle, "action", "복제 불가 · 대상 없음, 9명 도달 또는 분신", actor);
+                                yield return Step(battle, "action", "복제 불가 - 대상 없음, 9명 도달 또는 분신", actor);
                                 break;
                             }
                             var pending = queue.First;
@@ -176,7 +176,7 @@ namespace HongikIngan
                             var copiedAction = new Command(clone, lightingRepeat: command.LightingRepeat, movementChain: command.MovementChain);
                             if (pending != null) queue.AddAfter(pending, copiedAction); else queue.AddFirst(copiedAction);
                             AddDamage(run, 3000f * actor.PrecisionCopies);
-                            yield return Step(battle, "clone", cloneTarget.Definition.Name + " 분신 생성 · 정밀화 +" + (3000f * actor.PrecisionCopies), actor);
+                            yield return Step(battle, "clone", cloneTarget.Definition.Name + " 분신 생성 - 정밀화 +" + (3000f * actor.PrecisionCopies), actor);
                             break;
                         case ActionKind.SwapNext:
                             var other = NextAlly.SelectTargets(actor, run.Students).FirstOrDefault();
@@ -206,7 +206,7 @@ namespace HongikIngan
                         var neighbors = Neighbors(run, actor).ToArray();
                         for (int i = neighbors.Length - 1; i >= 0; i--)
                             queue.AddFirst(new Command(neighbors[i], lightingRepeat: true, movementChain: command.MovementChain));
-                        yield return Step(battle, "keyword", actor.Definition.Name + " 조명 · 양옆 재행동", actor);
+                        yield return Step(battle, "keyword", actor.Definition.Name + " 조명 - 양옆 재행동", actor);
                     }
 
                     // Reaction actions emit the same event; there is deliberately no arbitrary combo cap.
@@ -244,13 +244,13 @@ namespace HongikIngan
                 if (actor.Definition.Action == ActionKind.Advance)
                 {
                     AddAttackDamage(run, 300, TakeLove(run, actor));
-                    yield return Step(battle, "damage", actor.Definition.Name + " 이동 · 데미지 +300", actor);
+                    yield return Step(battle, "damage", actor.Definition.Name + " 이동 - 데미지 +300", actor);
                     foreach (var step in AfterAttack(run, command, queue)) yield return step;
                 }
                 else if (actor.Definition.Action == ActionKind.AdvanceToFront)
                 {
                     AddAttackDamage(run, battle.Damage * actor.SkillValue / 100f, TakeLove(run, actor));
-                    yield return Step(battle, "damage", actor.Definition.Name + " 이동 · 현재 데미지 +" + actor.SkillValue + "%p", actor);
+                    yield return Step(battle, "damage", actor.Definition.Name + " 이동 - 현재 데미지 +" + actor.SkillValue + "%p", actor);
                     foreach (var step in BattleSynergies.LeaderBuff(run, actor)) yield return step;
                     foreach (var step in AfterAttack(run, command, queue)) yield return step;
                 }
@@ -258,7 +258,7 @@ namespace HongikIngan
                 {
                     for (int i = run.Students.Count - 1; i >= 0; i--)
                         queue.AddFirst(new Command(run.Students[i], forcedDamage: actor.SkillValue, lightingRepeat: command.LightingRepeat, movementChain: command.MovementChain));
-                    yield return Step(battle, "action", actor.Definition.Name + " 이동 · 자신을 포함한 모든 아군 추가 공격", actor);
+                    yield return Step(battle, "action", actor.Definition.Name + " 이동 - 자신을 포함한 모든 아군 추가 공격", actor);
                 }
             }
         }
@@ -280,7 +280,7 @@ namespace HongikIngan
             foreach (float value in love.Values) factor *= value;
             int stacks = love.Stacks;
             if (!BattleSynergies.KeepAllyConsumables(run)) actor.Keywords.Remove(love);
-            run.Battle.Log.Add(actor.Definition.Name + " 사랑 " + stacks + "스택 · 이번 공격 증가량 ×" + factor.ToString("0.###"));
+            run.Battle.Log.Add(actor.Definition.Name + " 사랑 " + stacks + "스택 - 이번 공격 증가량 ×" + factor.ToString("0.###"));
             return (float)factor;
         }
 
@@ -305,7 +305,7 @@ namespace HongikIngan
             AddDamage(run, 500);
             float percent = mark.Values[0];
             if (percent != 0) AddDamage(run, run.Battle.Damage * percent / 100f);
-            yield return Step(run.Battle, "damage", "넌 내 꺼야 · 추가 피해 500" + (percent > 0 ? " 후 현재 데미지 +" + percent + "%p" : ""));
+            yield return Step(run.Battle, "damage", "넌 내 꺼야 - 추가 피해 500" + (percent > 0 ? " 후 현재 데미지 +" + percent + "%p" : ""));
             if (!command.MovementChain)
                 queue.AddFirst(new Command(command.Actor, CommandKind.Move, 1, lightingRepeat: command.LightingRepeat));
         }

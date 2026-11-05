@@ -18,7 +18,7 @@ namespace HongikIngan
             Panel(new Rect(0,0,1440,900),new Color(.95f,.95f,.99f));
             Panel(new Rect(0,0,1440,100),new Color(.89f,.88f,.98f));
             Label(30,20,700,45,screenTitle,title);
-            Label(32,66,1000,28,$"마법소녀전대  ·  STAGE {Run.Stage}  ·  미라클 에너지 {Run.Money}  ·  폴라로이드 {PhotoCount()}",small);
+            Label(32,66,1000,28,$"마법소녀전대  -  STAGE {Run.Stage}  -  미라클 에너지 {Run.Money}  -  폴라로이드 {PhotoCount()}",small);
             if (Button(1260,25,150,46,"사운드 설정"))
             {
                 if (audioOpen) SoundManager.EnsureExists().SaveSettings();
@@ -63,15 +63,15 @@ namespace HongikIngan
             {
                 Face(r.x+12,r.y+12,35,d);
                 Label(r.x+55,r.y+16,r.width-60,30,d.Name,small);
-                Label(r.x+12,r.y+55,r.width-24,28,$"{d.Grade}학년 · {d.RoleLabel}",small);
-                Label(r.x+12,r.y+88,r.width-24,48,$"{d.Club} · {d.Personality}",small);
+                Label(r.x+12,r.y+55,r.width-24,28,$"{d.Grade}학년 - {d.RoleLabel}",small);
+                Label(r.x+12,r.y+88,r.width-24,48,$"{d.Club} - {d.Personality}",small);
                 Label(r.x+12,r.y+140,r.width-24,48,footer,small);
                 return;
             }
             Face(r.x+12,r.y+12,48,d);
             Label(r.x+70,r.y+8,r.width-75,30,d.Name,normal);
-            Label(r.x+70,r.y+40,r.width-75,28,$"{d.Grade}학년 · {d.RoleLabel}",small);
-            Label(r.x+12,r.y+76,r.width-24,48,$"{d.Club} · {d.Personality}",small);
+            Label(r.x+70,r.y+40,r.width-75,28,$"{d.Grade}학년 - {d.RoleLabel}",small);
+            Label(r.x+12,r.y+76,r.width-24,48,$"{d.Club} - {d.Personality}",small);
             Label(r.x+12,r.y+125,r.width-24,48,footer,small);
         }
         protected void AudioUI()

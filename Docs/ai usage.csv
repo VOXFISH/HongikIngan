@@ -275,3 +275,12 @@ Do quickly replace everything"
 "2026-11-06 04:14:03+09:00","qwerty","Remove objects that doesn't have any purpose or functions. In the scene ""School""
 
 Create a list of removed objects and the reason. (i.e. no component or child object attached)"
+"2026-11-06 04:28:15+09:00","qwerty","In the scene ""School"", replace all StudentDesk/DeskslotN with Deskslot0, but by using a prefab layout.
+
+I'll do the testing again."
+"2026-11-06 04:32:03+09:00","qwerty","UnassignedReferenceException: The variable dragLayer of SchoolScreen has not been assigned."
+"2026-11-06 04:35:58+09:00","qwerty","The character with Unicode Value \u00B7 was not found in the font asset.
+
+Requirements : 
+
+Replace every \u00B7 character with another character. DO NOT attempt to make it different everytime. Run a script, make sure the files doesn't get corrupt and good luck. This operation should be carried out on every single scene."
