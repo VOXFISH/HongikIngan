@@ -25,7 +25,7 @@ Rect Tool 또는 Inspector의 `RectTransform`에서 위치·크기·앵커를 �
 - `BattlePresentation`: 빔과 전투 사운드, 단계별 표시 시간.
 - `BattleAudioPanel`: 사운드 설정과 모달 입력 차단.
 - `BattleUiFont`: 기존 프로토타입의 OS 폰트 대체. Inspector의 Font를 지정하면 해당 폰트 사용.
-- `CombatEngine` / `PrototypeRun`: 기존 전투 계산·거래·승패 규칙. UI 분리로 변경하지 않는다.
+- `CombatEngine` / `PrototypeRun`: 기존 전투 계산·거래·승패 규칙. UI 분리로 변경하지 않는다. `BattleStep.Actor`·`Target`은 어느 슬롯을 강조할지 알려 주는 연출용 정보이며 규칙에 쓰지 않는다.
 
 기존 `BattleScreen` GUID와 `FormatDamage` 호출 호환성을 보존한다. 전투 진행 중 컨트롤러가 비활성화되면 중간 효과가 적용된 턴을 재실행하지 않고 재시작을 안내한다.
 

@@ -53,6 +53,19 @@ namespace HongikIngan
         private bool SchoolUnlocked => SchoolAvailable && !PendingPet;
         public bool Owns(string id) => Students.Any(s => s.Definition.Id == id);
 
+        /// <summary>Read-only pre-check for presentation (e.g. the sortie animation) before StartBattle(). Changes no state.</summary>
+        public bool CanStartBattle => StartBattleBlockReason == null;
+        /// <summary>Why StartBattle() would fail right now, or null when it can start.</summary>
+        public string StartBattleBlockReason =>
+            !SchoolUnlocked ? "펫 선택을 먼저 마쳐 주세요." :
+            Students.Count == 0 ? "마법소녀를 한 명 이상 영입해 주세요." : null;
+
+        // Victory reward for the current stage. ReturnToSchool() pays exactly VictoryReward, so result screens can preview it.
+        public int VictoryRewardBase => Settings.victoryReward;
+        public int VictoryRewardStageBonus => Settings.victoryRewardPerStage * (Stage - 1);
+        public int VictoryRewardRelicBonus => Relics.Where(r => r.Kind == RelicKind.VictoryMoney).Sum(r => (int)r.Value);
+        public int VictoryReward => Math.Max(0, VictoryRewardBase + VictoryRewardStageBonus + VictoryRewardRelicBonus);
+
         public bool BuyRecruit(int index)
         {
             if (!SchoolUnlocked) return Fail("먼저 진행 중인 선택을 마쳐 주세요.");
@@ -297,8 +310,8 @@ namespace HongikIngan
 
         public bool StartBattle()
         {
-            if (!SchoolUnlocked) return Fail("펫 선택을 먼저 마쳐 주세요.");
-            if (Students.Count == 0) return Fail("마법소녀를 한 명 이상 영입해 주세요.");
+            string blocked = StartBattleBlockReason;
+            if (blocked != null) return Fail(blocked);
             EnsureSchoolDesks();
             Students.Sort((first, second) => schoolDesks[first].CompareTo(schoolDesks[second]));
             RerollCost = Math.Max(0, Settings.rerollInitial);
@@ -325,8 +338,8 @@ namespace HongikIngan
         public bool ReturnToSchool()
         {
             if (!InBattle || Battle == null || !Battle.Won || Battle.IsResolving) return Fail("보스 처치 후 교실로 돌아갈 수 있습니다.");
-            int reward = Settings.victoryReward + Settings.victoryRewardPerStage * (Stage - 1) + Relics.Where(r => r.Kind == RelicKind.VictoryMoney).Sum(r => (int)r.Value);
-            Money += Math.Max(0, reward);
+            int reward = VictoryReward;
+            Money += reward;
             Stage++;
             InBattle = false;
             foreach (var student in Students) student.Keywords.Clear();
