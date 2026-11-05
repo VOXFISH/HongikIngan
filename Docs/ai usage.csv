@@ -284,3 +284,4 @@ I'll do the testing again."
 Requirements : 
 
 Replace every \u00B7 character with another character. DO NOT attempt to make it different everytime. Run a script, make sure the files doesn't get corrupt and good luck. This operation should be carried out on every single scene."
+"2026-11-06 04:39:42+09:00","qwerty","Check every script on every scene to check if that character exists. Do not create a seperate branch for this operation. If found, replace with -."
