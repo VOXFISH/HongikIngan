@@ -62,6 +62,11 @@ namespace HongikIngan.Editor
             BattleLayoutBuilder.ApplyRewardPopup();
             PrototypeChecks.Run();
         }
+        public static void BuildExpansion()
+        {
+            ValidateExpansion();
+            Build();
+        }
     }
 }
 #endif

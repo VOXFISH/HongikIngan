@@ -111,3 +111,5 @@ Unity 6000.3.7f1에서 규칙 검사 4,000개(기본 2,261, 기존 소녀 833, �
 기존 폰트에 없는 일부 장식 기호(별 아이콘 등)의 대체 표시 경고가 남아 있다. 보상 팝업은 지원되는 문자로 표시한다. 수동 마우스 인수 검사와 FMOD 실제 재생은 수행하지 않았다.
 
 실제 플레이어에서 UI 54개와 전체 소녀 전투·표시 258개 검사를 통과했다. 전투 카드 이름의 잘림 여부도 검사한다. 캡처는 Girl35MergedMockup, Girl35NameFitRoster에 있으며 이름 크기 수정 후 빌드는 Logs/Girl35NameFitBuild.log에 기록했다.
+
+추가로 main의 c5b250e 전투 카드·배경 건물 프리팹 변경을 사용자 승인에 따라 통합했다. 새 프리팹 구조에 보상 팝업과 이름 Auto Size를 적용한 최종 빌드에서도 같은 규칙 4,000개·시드 2,000개·플레이어 312개 검사가 통과했다. 최종 로그는 Logs/Girl35PrefabMergedBuild.log, Girl35PrefabMockupPlayer.log, Girl35PrefabRosterPlayer.log이며 캡처와 결과는 Builds/Girl35PrefabMockup 및 Girl35PrefabRoster에 있다.
