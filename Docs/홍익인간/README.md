@@ -6,6 +6,7 @@
 
 ## 문서 목록
 
+- [게임 전체 흐름과 덱 예시 — 작업자용 요약](Game%20Overview%20and%20Deck%20Examples.md): 교실·전투의 흐름, 4가지 덱 예시와 영입·강화·배치에서 생기는 선택.
 - [프로젝트 실행 안내](Project%20Setup.md): Unity 프로젝트 열기, 환경 확인 및 저장소 구조.
 - [게임 시스템 플로우차트](Game%20System%20Flowchart.md): 제공된 원본 이미지와 사용자가 확인한 결과 분기.
 - [게임 시스템 기획서](Game%20System%20Design.md): 턴 준비, 슬롯별 공격·트리거, 데미지·연출, 3턴 제한 및 미정 규칙.
@@ -16,6 +17,8 @@
 - [교실 기능별 결정 사항](Decisions/Classroom/README.md): 7개 기능의 결정·미정·검증 기준.
 
 - [프로토타입 실행 안내](Prototype%20Guide.md): 학교·전투 씬, 조작, 임시 콘텐츠, 검증 방법.
+- [전투 UI 편집](Battle%20UI%20Editing.md): 독립 UI 오브젝트 배치, 컴포넌트 책임과 검증.
+- [마법소녀 작성 서식](Girls/README.md): `Girl%d.jsonc` 복사·작성과 AI 일괄 구현 안내.
 - [FMOD 설정 안내](Audio%20Setup.md): 지속 SoundManager와 채널별 볼륨·음소거.
 
 ## 팀 공통 문서 관리 규칙
