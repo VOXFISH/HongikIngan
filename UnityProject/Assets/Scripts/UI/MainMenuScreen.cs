@@ -7,13 +7,10 @@ namespace HongikIngan
     public sealed class MainMenuScreen : MonoBehaviour
     {
         public Button startButton, exitButton;
-        Font menuFont;
         bool starting;
 
         void Start()
         {
-            menuFont = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 24);
-            foreach (var label in GetComponentsInChildren<Text>(true)) label.font = menuFont;
             startButton.onClick.AddListener(StartNewGame);
             exitButton.onClick.AddListener(ExitGame);
         }
@@ -39,7 +36,6 @@ namespace HongikIngan
         {
             if (startButton != null) startButton.onClick.RemoveListener(StartNewGame);
             if (exitButton != null) exitButton.onClick.RemoveListener(ExitGame);
-            if (menuFont != null) Destroy(menuFont);
         }
     }
 }

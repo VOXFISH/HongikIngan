@@ -24,7 +24,7 @@ Rect Tool 또는 Inspector의 `RectTransform`에서 위치·크기·앵커를 �
 - `BattleFormationView` / `BattleStudentSlot`: 학생 표시와 드래그·교환 요청.
 - `BattlePresentation`: 빔과 전투 사운드, 단계별 표시 시간.
 - `BattleAudioPanel`: 사운드 설정과 모달 입력 차단.
-- `BattleUiFont`: 기존 프로토타입의 OS 폰트 대체. Inspector의 Font를 지정하면 해당 폰트 사용.
+- `BattleUiFont`: TMP 폰트 선택. 기본적으로 각 텍스트에 저장된 폰트를 유지하고, Inspector의 Font에 TMP Font Asset을 지정하면 하위 텍스트에 적용한다.
 - `CombatEngine` / `PrototypeRun`: 기존 전투 계산·거래·승패 규칙. UI 분리로 변경하지 않는다. `BattleStep.Actor`·`Target`은 어느 슬롯을 강조할지 알려 주는 연출용 정보이며 규칙에 쓰지 않는다.
 
 기존 `BattleScreen` GUID와 `FormatDamage` 호출 호환성을 보존한다. 전투 진행 중 컨트롤러가 비활성화되면 중간 효과가 적용된 턴을 재실행하지 않고 재시작을 안내한다.
@@ -46,3 +46,10 @@ Rect Tool 또는 Inspector의 `RectTransform`에서 위치·크기·앵커를 �
 별도 루트 `SceneTransitionOverlay/Curtain/Band`는 출동·학교 복귀·새 게임 전환을 표시한다. 위치·크기는 RectTransform으로 조절하고, `SceneTransitionOverlay`의 `fadeDuration`, `holdDuration`으로 시간을 조절한다. 실행 중 하나만 유지하며 씬 로드 동안 화면을 덮는다. 기본 배치를 수정할 때는 School과 Battle에 저장된 전환 오브젝트를 함께 맞춘다.
 
 학교 팝업과 책상 위치도 씬에 저장되며 UI 갱신에서 강제 재배치하지 않는다. 이전 test 전용 디버그/중도 복귀 오브젝트는 공통 씬에 존재하지 않는다.
+## TextMeshPro 텍스트 (2026-11-06)
+
+프로젝트의 Main(6개), School(133개), Battle(90개) 텍스트를 모두 `TextMeshProUGUI`로 전환했다. SampleScene과 URP2DSceneTemplate에는 변환 대상이 없다. 문구·RectTransform·컴포넌트 fileID를 보존하고, UI 스크립트의 참조 타입은 `TMP_Text`로 변경했다. 기존 버튼, 학생 드래그, 상태 갱신 연결은 같은 객체를 참조한다.
+
+기본 폰트는 기존 `Assets/Resources/GmarketSansTTFMedium SDF.asset`이며 TMP Settings에도 지정했다. Main·School·씬 전환에서 실행 시 OS 폰트로 덮어쓰던 처리를 제거했으므로 Inspector에서 지정한 TMP 폰트가 유지된다. 레이아웃 생성 메뉴도 TMP 텍스트를 생성한다. `Tools/Bulk Replace TMP Fonts`는 열린 씬의 TMP Font Asset을 교체하며, 변경 후 씬을 저장해야 한다.
+
+파일 비교로 텍스트와 참조 식별자, 텍스트 이외 씬 블록의 보존을 확인했다. 사용자 요청에 따라 Unity 컴파일·플레이·시각 검사는 실행하지 않았다. 인수 확인 시 세 씬의 한글, 긴 문구 잘림, 버튼 라벨, 팝업, 턴·씬 전환 표시를 확인한다.

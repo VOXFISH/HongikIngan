@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace HongikIngan
     {
         public RectTransform studentVisual;
         public CanvasGroup visualGroup;
-        public Text nameLabel, roleLabel, synergyLabel, skillLabel, emptyLabel;
+        public TMP_Text nameLabel, roleLabel, synergyLabel, skillLabel, emptyLabel;
         public Image portrait;
         public BattleFormationView Owner { get; private set; }
         public int Index { get; private set; }

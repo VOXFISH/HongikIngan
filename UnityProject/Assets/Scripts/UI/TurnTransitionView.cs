@@ -1,3 +1,4 @@
+using TMPro;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ namespace HongikIngan
     public sealed class TurnTransitionView : MonoBehaviour
     {
         public CanvasGroup panel;
-        public Text title;
+        public TMP_Text title;
         [Min(0)] public float duration = .8f;
         public int LastShownTurn { get; private set; }
         public bool IsShowing { get; private set; }

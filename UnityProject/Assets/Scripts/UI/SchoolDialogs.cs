@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,8 +10,8 @@ namespace HongikIngan
         public GameObject offers, candidates, replacement, restart;
         public Button caller, closeOffers, skip, replace, closeReplacement, cancelRestart, acceptRestart, closeStudent;
         public Button[] candidateButtons, replacementButtons;
-        public Text[] candidateLabels, replacementLabels;
-        public Text candidateStatus;
+        public TMP_Text[] candidateLabels, replacementLabels;
+        public TMP_Text candidateStatus;
         public BattleAudioPanel audioPanel;
         SchoolScreen owner;
         public bool IsOpen => offers.activeSelf || candidates.activeSelf || restart.activeSelf || audioPanel.IsOpen;

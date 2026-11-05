@@ -1,3 +1,4 @@
+using TMPro;
 using System;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -13,7 +14,7 @@ namespace HongikIngan.Editor
     {
         static readonly Color Ink = new Color(.12f, .16f, .24f);
         static readonly Color Purple = new Color(.37f, .30f, .78f);
-        static Font font;
+        static TMP_FontAsset font;
 
         [MenuItem("HongikIngan/Apply editable Battle layout")]
         public static void Apply()
@@ -28,7 +29,7 @@ namespace HongikIngan.Editor
                 Debug.Log("BATTLE_LAYOUT_EXISTS: keeping authored layout.");
                 return;
             }
-            font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            font = BattleUiFont.DefaultFont;
             var root = new GameObject("BattleCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             root.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
             var scaler = root.GetComponent<CanvasScaler>();
@@ -47,8 +48,8 @@ namespace HongikIngan.Editor
             hud.turnLabel = Text(ui, "Turn", 35, 120, 950, 50, "TURN 0/3 · 조합을 바꿔 보스를 물리치세요", 24);
             hud.damageLabel = Text(ui, "Damage", 35, 180, 975, 75, "합동 데미지  0", 32);
             var boss = Image(ui, "BossPanel", 1040, 170, 350, 230, new Color(.27f, .24f, .42f)).transform;
-            Text(boss, "BossName", 20, 25, 310, 70, "괴수", 32, Color.white, TextAnchor.MiddleCenter);
-            hud.bossHpLabel = Text(boss, "HP", 20, 115, 310, 55, "HP 450 / 450", 19, Color.white, TextAnchor.MiddleCenter);
+            Text(boss, "BossName", 20, 25, 310, 70, "괴수", 32, Color.white, TextAlignmentOptions.Center);
+            hud.bossHpLabel = Text(boss, "HP", 20, 115, 310, 55, "HP 450 / 450", 19, Color.white, TextAlignmentOptions.Center);
             hud.bossHpBar = Slider(boss, "HealthBar", 25, 190, 300, false);
             var presentation = Rect(ui, "Presentation", 0, 0, 1440, 900).gameObject.AddComponent<BattlePresentation>();
             presentation.beam = Image(presentation.transform, "Beam", 100, 290, 950, 45, new Color(.95f, .65f, .85f)).gameObject;
@@ -62,11 +63,11 @@ namespace HongikIngan.Editor
                 var panel = Image(formation.transform, "Slot" + (i + 1).ToString("00"), i * 153, 0, 143, 195, new Color(.88f, .88f, .94f));
                 panel.raycastTarget = true;
                 var slot = panel.gameObject.AddComponent<BattleStudentSlot>();
-                slot.emptyLabel = Text(panel.transform, "Empty", 10, 60, 123, 65, "빈 슬롯", 18, Ink, TextAnchor.MiddleCenter);
+                slot.emptyLabel = Text(panel.transform, "Empty", 10, 60, 123, 65, "빈 슬롯", 18, Ink, TextAlignmentOptions.Center);
                 slot.studentVisual = Image(panel.transform, "Student", 0, 0, 143, 195, Color.white).rectTransform;
                 slot.visualGroup = slot.studentVisual.gameObject.AddComponent<CanvasGroup>();
                 slot.portrait = Image(slot.studentVisual, "Portrait", 12, 12, 35, 35, new Color(.9f, .8f, .95f));
-                Text(slot.portrait.transform, "Symbol", 0, 0, 35, 35, "✦", 20, Ink, TextAnchor.MiddleCenter);
+                Text(slot.portrait.transform, "Symbol", 0, 0, 35, 35, "✦", 20, Ink, TextAlignmentOptions.Center);
                 slot.nameLabel = Text(slot.studentVisual, "Name", 55, 12, 83, 35, "학생", 17);
                 slot.roleLabel = Text(slot.studentVisual, "GradeAndRole", 12, 55, 119, 36, "1학년 · Dealer", 15);
                 slot.synergyLabel = Text(slot.studentVisual, "Synergies", 12, 94, 119, 48, "부활동 · 성격", 15);
@@ -75,9 +76,9 @@ namespace HongikIngan.Editor
             }
             Text(ui, "FormationHint", 35, 380, 980, 32, "학생을 다른 학생 위로 드래그하여 공격 순서를 바꾸세요", 18);
             hud.statusLabel = Text(ui, "CurrentStep", 35, 645, 1360, 50, "준비가 되면 합동 공격을 시작하세요.", 24);
-            hud.logLabel = Text(ui, "BattleLog", 40, 706, 1340, 100, "전투 기록", 17, Ink, TextAnchor.UpperLeft);
+            hud.logLabel = Text(ui, "BattleLog", 40, 706, 1340, 100, "전투 기록", 17, Ink, TextAlignmentOptions.TopLeft);
             hud.actionButton = Button(ui, "ActionButton", 1100, 815, 290, 55, "합동 공격");
-            hud.actionLabel = hud.actionButton.GetComponentInChildren<Text>();
+            hud.actionLabel = hud.actionButton.GetComponentInChildren<TMP_Text>();
             formation.dragLayer = Rect(ui, "DragLayer", 0, 0, 1440, 900);
             screen.formation = formation;
             var audio = root.AddComponent<BattleAudioPanel>();
@@ -150,18 +151,19 @@ namespace HongikIngan.Editor
             image.color = color; image.raycastTarget = false;
             return image;
         }
-        static Text Text(Transform p, string name, float x, float y, float w, float h, string value, int size, Color? color = null, TextAnchor align = TextAnchor.MiddleLeft)
+        static TMP_Text Text(Transform p, string name, float x, float y, float w, float h, string value, int size, Color? color = null, TextAlignmentOptions align = TextAlignmentOptions.Left)
         {
-            var text = Rect(p, name, x, y, w, h).gameObject.AddComponent<Text>();
+            var text = Rect(p, name, x, y, w, h).gameObject.AddComponent<TextMeshProUGUI>();
             text.font = font; text.fontSize = size; text.text = value; text.color = color ?? Ink;
             text.alignment = align; text.raycastTarget = false;
+            text.textWrappingMode = TextWrappingModes.Normal; text.overflowMode = TextOverflowModes.Truncate; text.parseCtrlCharacters = false;
             return text;
         }
         static Button Button(Transform p, string name, float x, float y, float w, float h, string value)
         {
             var image = Image(p, name, x, y, w, h, Color.white); image.raycastTarget = true;
             var button = image.gameObject.AddComponent<Button>(); button.targetGraphic = image;
-            Text(image.transform, "Label", 5, 2, w - 10, h - 4, value, 20, Ink, TextAnchor.MiddleCenter);
+            Text(image.transform, "Label", 5, 2, w - 10, h - 4, value, 20, Ink, TextAlignmentOptions.Center);
             return button;
         }
         static Slider Slider(Transform p, string name, float x, float y, float w, bool interactive)

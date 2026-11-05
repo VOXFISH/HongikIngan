@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using TMPro;
 using System;
 using System.IO;
 using UnityEditor;
@@ -13,7 +14,7 @@ namespace HongikIngan.Editor
     public static class MainLayoutBuilder
     {
         const string Path = "Assets/Scenes/Main.unity";
-        static Font font;
+        static TMP_FontAsset font;
 
         [MenuItem("HongikIngan/Create Main menu")]
         public static void Apply()
@@ -37,7 +38,7 @@ namespace HongikIngan.Editor
             scaler.referenceResolution = new Vector2(1440, 900);
             scaler.matchWidthOrHeight = .5f;
             var screen = root.AddComponent<MainMenuScreen>();
-            font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            font = BattleUiFont.DefaultFont;
             var layout = Rect(root.transform, "Layout", 0, 0, 1440, 900);
             layout.anchorMin = layout.anchorMax = layout.pivot = new Vector2(.5f, .5f);
             Panel(layout, "Background", 0, 0, 1440, 900, new Color(.95f, .94f, .99f));
@@ -80,9 +81,10 @@ namespace HongikIngan.Editor
         }
         static void Label(Transform parent, string name, float x, float y, float width, float height, string value, int size, Color color)
         {
-            var label = Rect(parent, name, x, y, width, height).gameObject.AddComponent<Text>();
+            var label = Rect(parent, name, x, y, width, height).gameObject.AddComponent<TextMeshProUGUI>();
             label.font = font; label.text = value; label.fontSize = size; label.color = color;
-            label.alignment = TextAnchor.MiddleCenter; label.raycastTarget = false;
+            label.alignment = TextAlignmentOptions.Center; label.raycastTarget = false;
+            label.textWrappingMode = TextWrappingModes.Normal; label.overflowMode = TextOverflowModes.Truncate; label.parseCtrlCharacters = false;
         }
         static Button Button(Transform parent, string name, float x, float y, string value, Color background, Color foreground)
         {

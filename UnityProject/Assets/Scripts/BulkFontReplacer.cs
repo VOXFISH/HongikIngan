@@ -1,13 +1,14 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
-using UnityEngine.UI;
+using TMPro;
 using UnityEditor.SceneManagement;
 
 public class BulkFontReplacer : EditorWindow
 {
-    private Font targetFont;
+    private TMP_FontAsset targetFont;
 
-    [MenuItem("Tools/Bulk Replace Legacy Fonts")]
+    [MenuItem("Tools/Bulk Replace TMP Fonts")]
     public static void ShowWindow()
     {
         GetWindow<BulkFontReplacer>("Font Replacer");
@@ -15,9 +16,9 @@ public class BulkFontReplacer : EditorWindow
 
     private void OnGUI()
     {
-        GUILayout.Label("Replace All Legacy Fonts in Open Scenes & Prefabs", EditorStyles.boldLabel);
+        GUILayout.Label("Replace All TMP Fonts in Open Scenes", EditorStyles.boldLabel);
 
-        targetFont = (Font)EditorGUILayout.ObjectField("New Font", targetFont, typeof(Font), false);
+        targetFont = (TMP_FontAsset)EditorGUILayout.ObjectField("New Font", targetFont, typeof(TMP_FontAsset), false);
 
         if (GUILayout.Button("Replace Fonts") && targetFont != null)
         {
@@ -28,16 +29,16 @@ public class BulkFontReplacer : EditorWindow
     private void ReplaceAllFonts()
     {
         // 1. Process active scene objects
-        Text[] sceneTexts = Resources.FindObjectsOfTypeAll<Text>();
+        TMP_Text[] sceneTexts = Resources.FindObjectsOfTypeAll<TMP_Text>();
         int count = 0;
 
-        foreach (Text t in sceneTexts)
+        foreach (TMP_Text t in sceneTexts)
         {
             // Avoid modifying built-in Unity editor elements
-            if (t.hideFlags == HideFlags.NotEditable || t.hideFlags == HideFlags.HideAndDontSave)
+            if (EditorUtility.IsPersistent(t) || !t.gameObject.scene.IsValid() || !t.gameObject.scene.isLoaded || t.hideFlags == HideFlags.NotEditable || t.hideFlags == HideFlags.HideAndDontSave)
                 continue;
 
-            Undo.RecordObject(t, "Bulk Font Replace");
+            Undo.RecordObject(t, "Bulk TMP Font Replace");
             t.font = targetFont;
             count++;
 
@@ -49,6 +50,8 @@ public class BulkFontReplacer : EditorWindow
         }
 
         AssetDatabase.SaveAssets();
-        Debug.Log($"Successfully replaced font on {count} Legacy Text components!");
+        Debug.Log($"Successfully replaced font on {count} TMP Text components!");
     }
 }
+
+#endif

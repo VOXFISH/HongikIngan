@@ -1,3 +1,4 @@
+using TMPro;
 using System;
 using HongikIngan.Audio;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace HongikIngan
         public Button openButton, closeButton;
         public Slider bgmVolume, sfxVolume, voiceVolume;
         public Toggle bgmMute, sfxMute, voiceMute;
-        public Text statusLabel;
+        public TMP_Text statusLabel;
         public bool IsOpen => modal != null && modal.activeSelf;
         public event Action VisibilityChanged;
         void OnEnable()

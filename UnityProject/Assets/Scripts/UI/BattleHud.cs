@@ -1,3 +1,4 @@
+using TMPro;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ namespace HongikIngan
     /// <summary>Updates content only; authored RectTransforms are never repositioned.</summary>
     public sealed class BattleHud : MonoBehaviour
     {
-        public Text summaryLabel, turnLabel, damageLabel, bossHpLabel, statusLabel, logLabel, actionLabel;
+        public TMP_Text summaryLabel, turnLabel, damageLabel, bossHpLabel, statusLabel, logLabel, actionLabel;
         public Button actionButton;
         public Slider bossHpBar;
 

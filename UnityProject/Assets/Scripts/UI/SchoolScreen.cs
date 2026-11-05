@@ -1,3 +1,4 @@
+using TMPro;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,9 +11,9 @@ namespace HongikIngan
         public RectTransform dragLayer;
         public SchoolStudentSlot[] slots;
         public Button[] relicButtons, petButtons;
-        public Text[] relicLabels, petLabels;
-        public Text energyLabel, rosterLabel, stageLabel, photosLabel, synergyLabel, ownedRelicsLabel;
-        public Text detailTitle, detailBody, statusLabel;
+        public TMP_Text[] relicLabels, petLabels;
+        public TMP_Text energyLabel, rosterLabel, stageLabel, photosLabel, synergyLabel, ownedRelicsLabel;
+        public TMP_Text detailTitle, detailBody, statusLabel;
         public Button expandButton, rerollButton, battleButton, learnButton, sellButton;
         public Button restartButton, audioButton;
         public SchoolDialogs dialogs;
@@ -21,7 +22,6 @@ namespace HongikIngan
         int selected = -1;
         bool transitionWasBusy;
         PrototypeRun observedRun;
-        Font schoolFont;
         public bool CanInteract => observedRun != null && !observedRun.PendingPet && !dialogs.IsOpen && !(SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy);
 
         void Start()
@@ -33,9 +33,6 @@ namespace HongikIngan
                 enabled = false;
                 return;
             }
-            // OS font is used only for text; all portraits remain blank editor-authored Images.
-            schoolFont = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 20);
-            foreach (var text in schoolCanvas.GetComponentsInChildren<Text>(true)) text.font = schoolFont;
             observedRun.Changed += Refresh;
             for (int i = 0; i < relicButtons.Length; i++)
             {
@@ -61,7 +58,6 @@ namespace HongikIngan
         void OnDestroy()
         {
             if (observedRun != null) observedRun.Changed -= Refresh;
-            if (schoolFont != null) Destroy(schoolFont);
         }
         public void SelectStudent(int desk)
         {
@@ -152,7 +148,7 @@ namespace HongikIngan
                 detailBody.text = "학생을 눌러 자세히 살펴보세요.\n빈 책상에 놓으면 그 자리로 이동합니다.\n다른 학생 위에 놓으면 자리를 바꿉니다.";
             }
         }
-        static void SetButtonText(Button target, string value) => target.GetComponentInChildren<Text>().text = value;
+        static void SetButtonText(Button target, string value) => target.GetComponentInChildren<TMP_Text>().text = value;
         public void DeselectStudent() { selected = -1; Refresh(); }
         void Update()
         {

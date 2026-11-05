@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,10 +11,10 @@ namespace HongikIngan
     {
         public RectTransform studentVisual;
         public CanvasGroup visualGroup;
-        public Text nameLabel, roleLabel, emptyLabel;
+        public TMP_Text nameLabel, roleLabel, emptyLabel;
         public Image selectionFrame;
         public GameObject[] books;
-        public Text[] bookLabels;
+        public TMP_Text[] bookLabels;
         public int Index { get; private set; }
         public bool IsDragging { get; private set; }
         SchoolScreen owner;

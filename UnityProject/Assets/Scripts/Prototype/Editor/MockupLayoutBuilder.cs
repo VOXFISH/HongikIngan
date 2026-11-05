@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using TMPro;
 using System;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -11,7 +12,7 @@ namespace HongikIngan.Editor
     public static class MockupLayoutBuilder
     {
         static readonly Color Ink = Hex("2E2118"), Paper = Hex("FFF8EA"), Green = Hex("38965F"), Navy = Hex("2E2A3D"), Gold = Hex("FFD166");
-        static Font Font => Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        static TMP_FontAsset Font => BattleUiFont.DefaultFont;
         [MenuItem("HongikIngan/Apply HTML mockup layout once")]
         public static void Apply()
         {
@@ -32,7 +33,7 @@ namespace HongikIngan.Editor
             var battle=UnityEngine.Object.FindFirstObjectByType<BattleScreen>(); ui=battle.hud.transform.Find("Layout");
             if(ui.Find("ReadabilityV4_2")!=null) return;
             Rect(ui,"ReadabilityV4_2",0,0,0,0);
-            Put(ui.Find("Header/Title"),30,8,1000,34); ui.Find("Header/Title").GetComponent<Text>().fontSize=28;
+            Put(ui.Find("Header/Title"),30,8,1000,34); ui.Find("Header/Title").GetComponent<TMP_Text>().fontSize=28;
             Put(battle.hud.summaryLabel.transform,30,48,1150,24);
             for(int i=0;i<14;i++)
             {
@@ -99,10 +100,10 @@ namespace HongikIngan.Editor
                 Box(cell,"Handle",65,44,5,18,Paper);
             }
             Put(s.relicButtons[0].transform,8,8,258,78); s.relicButtons[0].GetComponent<Image>().color=Paper;
-            foreach(Transform child in s.relicButtons[0].transform) if(child.GetComponent<Text>()==null) child.gameObject.SetActive(false);
-            Put(s.relicLabels[0].transform,8,3,242,72); s.relicLabels[0].fontSize=16; s.relicLabels[0].alignment=TextAnchor.MiddleCenter;
+            foreach(Transform child in s.relicButtons[0].transform) if(child.GetComponent<TMP_Text>()==null) child.gameObject.SetActive(false);
+            Put(s.relicLabels[0].transform,8,3,242,72); s.relicLabels[0].fontSize=16; s.relicLabels[0].alignment=TextAlignmentOptions.Center;
             s.rerollButton.transform.SetParent(locker,false); Put(s.rerollButton.transform,272,8,82,78);
-            s.rerollButton.GetComponent<Image>().color=Gold; s.rerollButton.GetComponentInChildren<Text>().color=Ink;
+            s.rerollButton.GetComponent<Image>().color=Gold; s.rerollButton.GetComponentInChildren<TMP_Text>().color=Ink;
             FitLabel(s.rerollButton,15);
             s.ownedRelicsLabel.transform.SetParent(ui,false); Put(s.ownedRelicsLabel.transform,170,225,618,54); s.ownedRelicsLabel.fontSize=16;
             var synergies=s.synergyLabel.transform.parent.parent; Put(synergies,890,105,330,180);
@@ -158,20 +159,20 @@ namespace HongikIngan.Editor
             for(int i=0;i<3;i++)
             {
                 s.petButtons[i].transform.SetParent(d.offers.transform,false); Put(s.petButtons[i].transform,315+i*280,220,250,330);
-                foreach(Transform child in s.petButtons[i].transform) if(child.GetComponent<Text>()==null) child.gameObject.SetActive(false);
-                Put(s.petLabels[i].transform,15,20,220,280); s.petLabels[i].fontSize=26; s.petLabels[i].alignment=TextAnchor.MiddleCenter;
+                foreach(Transform child in s.petButtons[i].transform) if(child.GetComponent<TMP_Text>()==null) child.gameObject.SetActive(false);
+                Put(s.petLabels[i].transform,15,20,220,280); s.petLabels[i].fontSize=26; s.petLabels[i].alignment=TextAlignmentOptions.Center;
             }
             var oldPets=ui.Find("Pets"); if(oldPets!=null) oldPets.gameObject.SetActive(false);
             d.closeOffers=Button(d.offers.transform,"Close",610,650,220,52,"닫기",Paper);
             d.candidates=Modal(ui,"PetCandidatePopup","마법소녀 한 명을 선택하세요");
-            d.candidateButtons=new Button[5]; d.candidateLabels=new Text[5];
-            for(int i=0;i<5;i++) { d.candidateButtons[i]=Button(d.candidates.transform,"Candidate"+i,60+i*267,175,252,400,"",Paper); d.candidateLabels[i]=d.candidateButtons[i].GetComponentInChildren<Text>(); d.candidateLabels[i].fontSize=18; }
+            d.candidateButtons=new Button[5]; d.candidateLabels=new TMP_Text[5];
+            for(int i=0;i<5;i++) { d.candidateButtons[i]=Button(d.candidates.transform,"Candidate"+i,60+i*267,175,252,400,"",Paper); d.candidateLabels[i]=d.candidateButtons[i].GetComponentInChildren<TMP_Text>(); d.candidateLabels[i].fontSize=18; }
             d.candidateStatus=Label(d.candidates.transform,"Status",80,595,1280,45,"",18,Paper);
             d.replace=Button(d.candidates.transform,"Replace",100,665,330,54,"교체 · 기존 학생 판매",Gold);
             d.skip=Button(d.candidates.transform,"Skip",975,665,365,54,"영입하지 않음 (환불 없음)",Paper);
             d.replacement=Modal(d.candidates.transform,"ReplacementPanel","계약을 해제할 학생을 선택하세요");
-            d.replacementButtons=new Button[7]; d.replacementLabels=new Text[7];
-            for(int i=0;i<7;i++) { d.replacementButtons[i]=Button(d.replacement.transform,"Student"+i,65+i*188,300,175,165,"",Paper); d.replacementLabels[i]=d.replacementButtons[i].GetComponentInChildren<Text>(); }
+            d.replacementButtons=new Button[7]; d.replacementLabels=new TMP_Text[7];
+            for(int i=0;i<7;i++) { d.replacementButtons[i]=Button(d.replacement.transform,"Student"+i,65+i*188,300,175,165,"",Paper); d.replacementLabels[i]=d.replacementButtons[i].GetComponentInChildren<TMP_Text>(); }
             d.closeReplacement=Button(d.replacement.transform,"Close",600,620,240,52,"후보로 돌아가기",Paper);
             d.restart=Modal(ui,"RestartConfirmPopup","새 게임을 시작할까요?");
             Label(d.restart.transform,"Warning",300,270,840,100,"현재 학생·재화·유물·사진과 진행이 초기화됩니다.",25,Paper);
@@ -228,7 +229,7 @@ namespace HongikIngan.Editor
             Put(s.hud.turnLabel.transform,520,90,460,45); s.hud.turnLabel.fontSize=21;
             Put(s.hud.damageLabel.transform,30,100,480,45); s.hud.damageLabel.fontSize=23;
             var hp=s.hud.bossHpLabel.transform.parent; Put(hp,1010,90,340,115);
-            Put(hp.Find("BossName"),10,5,320,30); hp.Find("BossName").GetComponent<Text>().fontSize=23;
+            Put(hp.Find("BossName"),10,5,320,30); hp.Find("BossName").GetComponent<TMP_Text>().fontSize=23;
             Put(s.hud.bossHpLabel.transform,10,38,320,35); Put(s.hud.bossHpBar.transform,15,87,310,18);
             Put(s.formation.transform,0,0,1440,900);
             var points=new[]{new Vector2(60,180),new Vector2(230,150),new Vector2(30,400),new Vector2(150,590),new Vector2(330,565),new Vector2(430,180),new Vector2(535,550),new Vector2(620,180),new Vector2(755,545)};
@@ -281,9 +282,9 @@ namespace HongikIngan.Editor
         static RectTransform Rect(Transform p,string name,float x,float y,float w,float h) { var r=new GameObject(name,typeof(RectTransform)).GetComponent<RectTransform>(); r.SetParent(p,false); Put(r,x,y,w,h); return r; }
         static Image Box(Transform p,string name,float x,float y,float w,float h,Color color) { var i=Rect(p,name,x,y,w,h).gameObject.AddComponent<Image>(); i.color=color; i.raycastTarget=false; return i; }
         static RectTransform Frame(Transform p,string name,float x,float y,float w,float h,Color color) { var f=Box(p,name,x,y,w,h,Ink); Box(f.transform,"Fill",4,4,w-8,h-8,color); return f.rectTransform; }
-        static Text Label(Transform p,string name,float x,float y,float w,float h,string value,int size,Color? color=null) { var t=Rect(p,name,x,y,w,h).gameObject.AddComponent<Text>(); t.font=Font; t.text=value; t.fontSize=size; t.color=color??Ink; t.alignment=TextAnchor.MiddleCenter; t.raycastTarget=false; return t; }
+        static TMP_Text Label(Transform p,string name,float x,float y,float w,float h,string value,int size,Color? color=null) { var t=Rect(p,name,x,y,w,h).gameObject.AddComponent<TextMeshProUGUI>(); t.font=Font; t.text=value; t.fontSize=size; t.color=color??Ink; t.alignment=TextAlignmentOptions.Center; t.raycastTarget=false; t.textWrappingMode=TextWrappingModes.Normal; t.overflowMode=TextOverflowModes.Truncate; t.parseCtrlCharacters=false; return t; }
         static Button Button(Transform p,string name,float x,float y,float w,float h,string value,Color color) { var image=Box(p,name,x,y,w,h,color); image.raycastTarget=true; var b=image.gameObject.AddComponent<Button>(); b.targetGraphic=image; Label(b.transform,"Label",8,4,w-16,h-8,value,22); return b; }
-        static void FitLabel(Button b,int size) { var t=b.GetComponentInChildren<Text>(true); Put(t.transform,6,3,((RectTransform)b.transform).rect.width-12,((RectTransform)b.transform).rect.height-6); t.fontSize=size; }
+        static void FitLabel(Button b,int size) { var t=b.GetComponentInChildren<TMP_Text>(true); Put(t.transform,6,3,((RectTransform)b.transform).rect.width-12,((RectTransform)b.transform).rect.height-6); t.fontSize=size; }
         static void Stretch(RectTransform r) { r.anchorMin=Vector2.zero; r.anchorMax=Vector2.one; r.offsetMin=r.offsetMax=Vector2.zero; }
     }
 }

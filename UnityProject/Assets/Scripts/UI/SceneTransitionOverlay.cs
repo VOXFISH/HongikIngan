@@ -1,3 +1,4 @@
+using TMPro;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -10,11 +11,10 @@ namespace HongikIngan
     {
         public static SceneTransitionOverlay Current { get; private set; }
         public CanvasGroup curtain;
-        public Text title;
+        public TMP_Text title;
         [Min(0)] public float fadeDuration = .18f;
         [Min(0)] public float holdDuration = .2f;
         public bool IsBusy { get; private set; }
-        Font font;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatic() { Current = null; }
         void Awake()
@@ -22,8 +22,6 @@ namespace HongikIngan
             if (Current != null && Current != this) { Destroy(gameObject); return; }
             Current = this; DontDestroyOnLoad(gameObject);
             curtain.alpha = 0; curtain.blocksRaycasts = false;
-            font = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 40);
-            title.font = font;
         }
         public void Go(string message, Action changeScene)
         {
@@ -49,6 +47,6 @@ namespace HongikIngan
             { curtain.alpha = Mathf.Lerp(from, to, time / fadeDuration); yield return null; }
             curtain.alpha = to;
         }
-        void OnDestroy() { if (Current == this) Current = null; if (font != null) Destroy(font); }
+        void OnDestroy() { if (Current == this) Current = null; }
     }
 }

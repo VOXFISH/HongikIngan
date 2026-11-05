@@ -1,21 +1,25 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace HongikIngan
 {
-    /// <summary>Uses the prototype's OS font fallback; assign a font to keep a designer's choice.</summary>
+    /// <summary>Optional TMP font override; otherwise preserve each label's authored font.</summary>
     [ExecuteAlways]
     public sealed class BattleUiFont : MonoBehaviour
     {
-        public Font font;
-        static Font fallback;
+        public TMP_FontAsset font;
+        static TMP_FontAsset defaultFont;
+        public static TMP_FontAsset DefaultFont => defaultFont != null
+            ? defaultFont
+            : defaultFont = Resources.Load<TMP_FontAsset>("GmarketSansTTFMedium SDF");
+
         void OnEnable() => Apply();
         void OnValidate() => Apply();
         void Apply()
         {
-            if (font == null && fallback == null)
-                fallback = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 20);
-            foreach (var label in GetComponentsInChildren<Text>(true)) label.font = font != null ? font : fallback;
+            foreach (var label in GetComponentsInChildren<TMP_Text>(true))
+                if (font != null || label.font == null)
+                    label.font = font != null ? font : DefaultFont;
         }
     }
 }

@@ -1,3 +1,4 @@
+using TMPro;
 using HongikIngan.Audio;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ namespace HongikIngan
     public sealed class BattlePresentation : MonoBehaviour
     {
         public GameObject beam;
-        public Text orbDamage, damagePop, chant, actorLabel;
+        public TMP_Text orbDamage, damagePop, chant, actorLabel;
         [Min(.01f)] public float stepDuration = .35f;
         public void BeginBattle()
         {

@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using TMPro;
 using System;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -14,7 +15,7 @@ namespace HongikIngan.Editor
     {
         static readonly Color Ink = Hex("30344F"), Pink = Hex("D9629F"), Navy = Hex("243D59");
         static readonly Color Cream = Hex("FFF6E4"), Gold = Hex("CFA76C"), Paper = Hex("FFFDF7");
-        static Font font;
+        static TMP_FontAsset font;
 
         [MenuItem("HongikIngan/Apply School reference layout")]
         public static void Apply()
@@ -45,7 +46,7 @@ namespace HongikIngan.Editor
                 Debug.Log("School layout already exists; edit its Canvas in the scene.");
                 return;
             }
-            font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            font = BattleUiFont.DefaultFont;
             var root = new GameObject("SchoolCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster), typeof(CanvasGroup));
             var canvas = root.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             var scaler = root.GetComponent<CanvasScaler>();
@@ -61,39 +62,39 @@ namespace HongikIngan.Editor
             for (int i = 0; i < 12; i++) Image(ui, "WallPanel" + i, i * 130, 90, 3, 185, Hex("E5BCCF"));
 
             var energy = Frame(ui, "Energy", 24, 18, 228, 64, Pink, Cream, 3);
-            screen.energyLabel = Text(energy, "Value", 12, 4, 204, 56, "미라클 에너지\n160", 19, Ink, TextAnchor.MiddleCenter);
+            screen.energyLabel = Text(energy, "Value", 12, 4, 204, 56, "미라클 에너지\n160", 19, Ink, TextAlignmentOptions.Center);
             var roster = Frame(ui, "Roster", 264, 18, 160, 64, Navy, Hex("EDF4FA"), 3);
-            screen.rosterLabel = Text(roster, "Value", 8, 4, 144, 56, "전대 인원\n1 / 3", 18, Navy, TextAnchor.MiddleCenter);
+            screen.rosterLabel = Text(roster, "Value", 8, 4, 144, 56, "전대 인원\n1 / 3", 18, Navy, TextAlignmentOptions.Center);
             var photos = Frame(ui, "Photos", 436, 18, 194, 64, Pink, Cream, 3);
-            screen.photosLabel = Text(photos, "Value", 8, 4, 178, 56, "폴라로이드 0", 18, Ink, TextAnchor.MiddleCenter);
-            screen.stageLabel = Text(ui, "Stage", 648, 25, 300, 45, "STAGE 01 · 방과 전", 24, Ink, TextAnchor.MiddleLeft);
+            screen.photosLabel = Text(photos, "Value", 8, 4, 178, 56, "폴라로이드 0", 18, Ink, TextAlignmentOptions.Center);
+            screen.stageLabel = Text(ui, "Stage", 648, 25, 300, 45, "STAGE 01 · 방과 전", 24, Ink, TextAlignmentOptions.Left);
             screen.restartButton = Button(ui, "NewGame", 1128, 24, 126, 40, "새 게임", Hex("FFF6ED"), Ink);
             screen.audioButton = Button(ui, "Sound", 1266, 24, 146, 40, "사운드 설정", Hex("FFF6ED"), Ink);
 
             var board = Frame(ui, "Chalkboard", 240, 100, 700, 194, Gold, Hex("335653"), 9);
-            Text(board, "Caption", 20, 7, 660, 29, "우리들의 보물 칠판", 20, Cream, TextAnchor.MiddleCenter);
-            screen.relicButtons = new Button[1]; screen.relicLabels = new Text[1];
+            Text(board, "Caption", 20, 7, 660, 29, "우리들의 보물 칠판", 20, Cream, TextAlignmentOptions.Center);
+            screen.relicButtons = new Button[1]; screen.relicLabels = new TMP_Text[1];
             for (int i = 0; i < 1; i++)
             {
                 var b = Button(board, "RelicOffer" + i, 28, 43, 644, 98, "", Hex("F6EEE2"), Ink);
                 Blank(b.transform, "RelicPlaceholder", 10, 10, 54);
                 screen.relicButtons[i] = b;
-                screen.relicLabels[i] = Text(b.transform, "Offer", 73, 10, 555, 78, "유물\n30 에너지", 17, Ink, TextAnchor.MiddleCenter);
+                screen.relicLabels[i] = Text(b.transform, "Offer", 73, 10, 555, 78, "유물\n30 에너지", 17, Ink, TextAlignmentOptions.Center);
             }
-            screen.ownedRelicsLabel = Text(board, "OwnedRelics", 25, 149, 650, 31, "아직 획득한 유물이 없어요", 15, Cream, TextAnchor.MiddleCenter);
+            screen.ownedRelicsLabel = Text(board, "OwnedRelics", 25, 149, 650, 31, "아직 획득한 유물이 없어요", 15, Cream, TextAlignmentOptions.Center);
 
             var pets = Frame(ui, "Pets", 958, 100, 454, 194, Pink, Hex("FFF5F8"), 3);
-            Text(pets, "Caption", 8, 5, 438, 28, "새로운 인연 · 펫 부르기", 20, Pink, TextAnchor.MiddleCenter);
-            screen.petButtons = new Button[3]; screen.petLabels = new Text[3];
+            Text(pets, "Caption", 8, 5, 438, 28, "새로운 인연 · 펫 부르기", 20, Pink, TextAlignmentOptions.Center);
+            screen.petButtons = new Button[3]; screen.petLabels = new TMP_Text[3];
             for (int i = 0; i < 3; i++)
             {
                 var b = Button(pets, "Pet" + i, 12 + i * 147, 38, 137, 143, "", Hex("F5E5F0"), Ink);
                 Blank(b.transform, "PetPlaceholder", 40, 8, 57);
                 screen.petButtons[i] = b;
-                screen.petLabels[i] = Text(b.transform, "Offer", 6, 73, 125, 61, "펫 부르기", 15, Ink, TextAnchor.MiddleCenter);
+                screen.petLabels[i] = Text(b.transform, "Offer", 6, 73, 125, 61, "펫 부르기", 15, Ink, TextAlignmentOptions.Center);
             }
 
-            Text(ui, "FormationCaption", 30, 301, 760, 29, "우리 전대  /  학생을 끌어 자리를 바꿔 보세요", 18, Ink, TextAnchor.MiddleLeft);
+            Text(ui, "FormationCaption", 30, 301, 760, 29, "우리 전대  /  학생을 끌어 자리를 바꿔 보세요", 18, Ink, TextAlignmentOptions.Left);
             var row = Rect(ui, "StudentDesks", 24, 340, 1080, 280);
             screen.slots = new SchoolStudentSlot[9];
             for (int i = 0; i < screen.slots.Length; i++)
@@ -105,33 +106,33 @@ namespace HongikIngan.Editor
                 Image(desk.transform, "DeskLegLeft", 23, 246, 11, 34, Hex("9D8079"));
                 Image(desk.transform, "DeskLegRight", 166, 246, 11, 34, Hex("9D8079"));
                 Frame(desk.transform, "Desktop", 0, 235, 200, 16, Hex("AC805F"), Hex("E8BA82"), 3);
-                slot.emptyLabel = Text(desk.transform, "EmptyLabel", 10, 92, 180, 60, i < 3 ? "빈 책상" : "확장 가능한 책상", 18, Hex("9E8295"), TextAnchor.MiddleCenter);
+                slot.emptyLabel = Text(desk.transform, "EmptyLabel", 10, 92, 180, 60, i < 3 ? "빈 책상" : "확장 가능한 책상", 18, Hex("9E8295"), TextAlignmentOptions.Center);
                 slot.studentVisual = Rect(desk.transform, "StudentVisual", 0, 0, 200, 208);
                 slot.visualGroup = slot.studentVisual.gameObject.AddComponent<CanvasGroup>();
                 slot.selectionFrame = Image(slot.studentVisual, "Selected", 12, 31, 176, 176, Pink);
-                slot.nameLabel = Text(slot.studentVisual, "Name", 5, 0, 190, 29, "학생 이름", 20, Ink, TextAnchor.MiddleCenter);
+                slot.nameLabel = Text(slot.studentVisual, "Name", 5, 0, 190, 29, "학생 이름", 20, Ink, TextAlignmentOptions.Center);
                 Blank(slot.studentVisual, "StudentPlaceholder", 16, 35, 168);
-                slot.roleLabel = Text(slot.studentVisual, "Role", 16, 171, 168, 30, "1학년 · Dealer", 16, Ink, TextAnchor.MiddleCenter);
-                slot.books = new GameObject[3]; slot.bookLabels = new Text[3];
+                slot.roleLabel = Text(slot.studentVisual, "Role", 16, 171, 168, 30, "1학년 · Dealer", 16, Ink, TextAlignmentOptions.Center);
+                slot.books = new GameObject[3]; slot.bookLabels = new TMP_Text[3];
                 for (int b = 0; b < 3; b++)
                 {
                     var book = Book(desk.transform, "SynergyBook" + b, 29 + b * 5, 219 - b * 20, 142, 19, b == 1 ? Hex("D787A7") : Navy);
                     slot.books[b] = book.gameObject;
-                    slot.bookLabels[b] = Text(book, "Synergy", 16, 0, 118, 14, "시너지", 11, Cream, TextAnchor.MiddleCenter);
+                    slot.bookLabels[b] = Text(book, "Synergy", 16, 0, 118, 14, "시너지", 11, Cream, TextAlignmentOptions.Center);
                 }
                 screen.slots[i] = slot;
                 if (i > 4) desk.gameObject.SetActive(false);
             }
             var synergies = Frame(ui, "SynergyPanel", 1122, 318, 290, 229, Gold, Navy, 3);
-            Text(synergies, "Title", 12, 8, 266, 32, "전대 시너지", 22, Cream, TextAnchor.MiddleCenter);
+            Text(synergies, "Title", 12, 8, 266, 32, "전대 시너지", 22, Cream, TextAlignmentOptions.Center);
             var viewport = Image(synergies, "Viewport", 16, 48, 258, 166, new Color(0, 0, 0, 0));
             viewport.gameObject.AddComponent<RectMask2D>(); viewport.raycastTarget = true;
-            screen.synergyLabel = Text(viewport.transform, "Counts", 0, 0, 258, 166, "보유 시너지", 18, Cream, TextAnchor.UpperLeft);
+            screen.synergyLabel = Text(viewport.transform, "Counts", 0, 0, 258, 166, "보유 시너지", 18, Cream, TextAlignmentOptions.TopLeft);
             var fit = screen.synergyLabel.gameObject.AddComponent<ContentSizeFitter>(); fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             var scroll = viewport.gameObject.AddComponent<ScrollRect>(); scroll.viewport = (RectTransform)viewport.transform;
             scroll.content = screen.synergyLabel.rectTransform; scroll.horizontal = false; scroll.movementType = ScrollRect.MovementType.Clamped;
             screen.expandButton = Button(ui, "ExpandDesks", 1122, 560, 290, 42, "책상 확장", Hex("FBF0DF"), Ink);
-            screen.statusLabel = Text(ui, "Status", 32, 607, 1370, 26, "교실에 오신 것을 환영합니다.", 16, Ink, TextAnchor.MiddleLeft);
+            screen.statusLabel = Text(ui, "Status", 32, 607, 1370, 26, "교실에 오신 것을 환영합니다.", 16, Ink, TextAlignmentOptions.Left);
 
             screen.rerollButton = Button(ui, "Reroll", 24, 661, 194, 120, "유물 리롤\n20 에너지", Pink, Color.white);
             var detail = Frame(ui, "StudentDetailBook", 238, 649, 864, 138, Gold, Cream, 4);
@@ -139,8 +140,8 @@ namespace HongikIngan.Editor
             Image(detail, "RightPage", 172, 8, 682, 122, Paper);
             Image(detail, "Binding", 165, 5, 5, 128, Hex("D8C5AE"));
             Blank(detail, "PortraitPlaceholder", 36, 20, 104);
-            screen.detailTitle = Text(detail, "Name", 189, 9, 470, 30, "우리들의 교실", 22, Ink, TextAnchor.MiddleLeft);
-            screen.detailBody = Text(detail, "Description", 189, 45, 470, 84, "학생을 선택하세요", 17, Ink, TextAnchor.UpperLeft);
+            screen.detailTitle = Text(detail, "Name", 189, 9, 470, 30, "우리들의 교실", 22, Ink, TextAlignmentOptions.Left);
+            screen.detailBody = Text(detail, "Description", 189, 45, 470, 84, "학생을 선택하세요", 17, Ink, TextAlignmentOptions.TopLeft);
             screen.learnButton = Button(detail, "Upgrade", 678, 12, 166, 49, "보충 학습", Navy, Color.white);
             screen.sellButton = Button(detail, "Release", 678, 75, 166, 49, "계약 해제", Pink, Color.white);
             screen.battleButton = Button(ui, "EnterBattle", 1122, 661, 290, 120, "방과 후!\n전투 시작", Pink, Color.white);
@@ -179,7 +180,7 @@ namespace HongikIngan.Editor
                 var rect = (RectTransform)screen.relicButtons[0].transform;
                 rect.sizeDelta = new Vector2(644, rect.sizeDelta.y);
                 screen.relicLabels[0].rectTransform.sizeDelta = new Vector2(555, 78);
-                screen.rerollButton.GetComponentInChildren<Text>().text = "유물 리롤\n20 에너지";
+                screen.rerollButton.GetComponentInChildren<TMP_Text>().text = "유물 리롤\n20 에너지";
                 changed = true;
             }
             return changed;
@@ -275,11 +276,11 @@ namespace HongikIngan.Editor
             Image(book, "Gilding", 11, 1, w - 15, 1, Gold);
             return book;
         }
-        static Text Text(Transform p, string name, float x, float y, float w, float h, string value, int size, Color color, TextAnchor align)
+        static TMP_Text Text(Transform p, string name, float x, float y, float w, float h, string value, int size, Color color, TextAlignmentOptions align)
         {
-            var text = Rect(p, name, x, y, w, h).gameObject.AddComponent<Text>();
+            var text = Rect(p, name, x, y, w, h).gameObject.AddComponent<TextMeshProUGUI>();
             text.font = font; text.text = value; text.fontSize = size; text.color = color; text.alignment = align;
-            text.raycastTarget = false; text.horizontalOverflow = HorizontalWrapMode.Wrap; text.verticalOverflow = VerticalWrapMode.Truncate;
+            text.raycastTarget = false; text.textWrappingMode = TextWrappingModes.Normal; text.overflowMode = TextOverflowModes.Truncate; text.parseCtrlCharacters = false;
             return text;
         }
         static Button Button(Transform p, string name, float x, float y, float w, float h, string value, Color fill, Color foreground)
@@ -288,8 +289,8 @@ namespace HongikIngan.Editor
             var button = image.gameObject.AddComponent<Button>(); button.targetGraphic = image;
             var colors = button.colors; colors.highlightedColor = new Color(.95f, .88f, .96f); colors.pressedColor = new Color(.85f, .76f, .87f);
             button.colors = colors;
-            var label = Text(button.transform, "Label", 8, 3, w - 16, h - 6, value, 20, foreground, TextAnchor.MiddleCenter);
-            label.fontStyle = FontStyle.Bold;
+            var label = Text(button.transform, "Label", 8, 3, w - 16, h - 6, value, 20, foreground, TextAlignmentOptions.Center);
+            label.fontStyle = FontStyles.Bold;
             return button;
         }
     }
