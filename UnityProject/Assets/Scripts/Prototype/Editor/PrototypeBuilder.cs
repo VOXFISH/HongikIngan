@@ -17,11 +17,12 @@ namespace HongikIngan.Editor
             AssetDatabase.Refresh();
             var economy=AssetDatabase.LoadAssetAtPath<EconomySettings>("Assets/Resources/PrototypeEconomy.asset");
             if(economy==null) AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<EconomySettings>(),"Assets/Resources/PrototypeEconomy.asset");
+            MainLayoutBuilder.Apply();
             CreateScene<SchoolScreen>("School");
             SchoolLayoutBuilder.Apply();
             CreateScene<BattleScreen>("Battle");
             BattleLayoutBuilder.Apply();
-            var paths=new[]{"Assets/Scenes/School.unity","Assets/Scenes/Battle.unity"};
+            var paths=new[]{"Assets/Scenes/Main.unity","Assets/Scenes/School.unity","Assets/Scenes/Battle.unity"};
             EditorBuildSettings.scenes=paths.Select(p=>new EditorBuildSettingsScene(p,true))
                 .Concat(EditorBuildSettings.scenes.Where(s=>!paths.Contains(s.path))).ToArray();
             AssetDatabase.SaveAssets();
@@ -47,7 +48,7 @@ namespace HongikIngan.Editor
             Create();
             Directory.CreateDirectory("Builds/Prototype");
             var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions {
-                scenes=new[]{"Assets/Scenes/School.unity","Assets/Scenes/Battle.unity"},
+                scenes=new[]{"Assets/Scenes/Main.unity","Assets/Scenes/School.unity","Assets/Scenes/Battle.unity"},
                 locationPathName="Builds/Prototype/HongikIngan.exe", target=BuildTarget.StandaloneWindows64,
                 options=BuildOptions.None
             });

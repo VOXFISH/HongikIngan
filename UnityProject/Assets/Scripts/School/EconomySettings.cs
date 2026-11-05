@@ -6,7 +6,7 @@ namespace HongikIngan
     public sealed class EconomySettings : ScriptableObject
     {
         [Header("Prototype balance - edit this asset")]
-        public int startingMoney = 160;
+        public int startingMoney = 100;
         public int[] recruitPrices = { 30, 60, 90 };
         public int[] upgradePrices = { 20, 40, 60 };
         public int[] salePrices = { 15, 30, 45 };

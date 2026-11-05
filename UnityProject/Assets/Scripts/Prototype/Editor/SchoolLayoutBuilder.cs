@@ -26,7 +26,15 @@ namespace HongikIngan.Editor
             // Never overwrite subsequent hand edits to a scene already using this layout.
             if (screen.schoolCanvas != null)
             {
-                if (MigratePetOnlyLayout(screen))
+                bool changed = MigratePetOnlyLayout(screen);
+                var existingScaler = screen.schoolCanvas.GetComponent<CanvasScaler>();
+                if (existingScaler != null && existingScaler.screenMatchMode != CanvasScaler.ScreenMatchMode.Expand)
+                {
+                    existingScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+                    EditorUtility.SetDirty(existingScaler);
+                    changed = true;
+                }
+                if (changed)
                 {
                     EditorUtility.SetDirty(screen);
                     EditorSceneManager.MarkSceneDirty(scene);
@@ -43,6 +51,7 @@ namespace HongikIngan.Editor
             var scaler = root.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1440, 810); scaler.matchWidthOrHeight = .5f;
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             screen.schoolCanvas = root.GetComponent<CanvasGroup>();
             Transform ui = root.transform;
             Image(ui, "ClassroomBackdrop", 0, 0, 1440, 810, Hex("F2DDE6"));

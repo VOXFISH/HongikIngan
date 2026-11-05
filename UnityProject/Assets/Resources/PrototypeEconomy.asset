@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa0ca905937262f4688ca46ab9b25495, type: 3}
   m_Name: PrototypeEconomy
   m_EditorClassIdentifier: Assembly-CSharp::HongikIngan.EconomySettings
-  startingMoney: 160
+  startingMoney: 100
   recruitPrices: 1e0000003c0000005a000000
   upgradePrices: 14000000280000003c000000
   salePrices: 0f0000001e0000002d000000

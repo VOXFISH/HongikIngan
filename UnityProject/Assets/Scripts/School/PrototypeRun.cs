@@ -22,7 +22,7 @@ namespace HongikIngan
         public int Money { get; private set; }
         public int Stage { get; private set; } = 1;
         public int BaseCapacity { get; private set; } = 3;
-        public int Capacity => Math.Min(9, BaseCapacity + Relics.Where(r => r.Kind == RelicKind.ExtraSlots).Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r)));
+        public int Capacity => Math.Min(7, BaseCapacity + Relics.Where(r => r.Kind == RelicKind.ExtraSlots).Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r)));
         public float Atmosphere { get; internal set; }
         public int RerollCost { get; private set; }
         public bool PendingPet { get; private set; }
@@ -42,7 +42,9 @@ namespace HongikIngan
             random = new Random(seed);
             Money = Math.Max(0, settings.startingMoney);
             RerollCost = Math.Max(0, settings.rerollInitial);
-            Students.Add(new StudentState(PrototypeCatalog.Students[0]));
+            // Reuse pet grade weighting (4:2) while excluding third-years and duplicates.
+            var starters = DrawStudents(PrototypeCatalog.Students.Where(s => s.Grade == 1 || s.Grade == 2).ToList(), 3);
+            Students.AddRange(starters.Select(s => new StudentState(s)));
             RefreshOffers();
         }
 
@@ -50,6 +52,14 @@ namespace HongikIngan
         private bool Done(string message) { LastMessage = message; Changed?.Invoke(); return true; }
         private bool SchoolAvailable => !InBattle && !GameOver;
         private bool SchoolUnlocked => SchoolAvailable && !PendingPet;
+        public bool CanStartBattle => StartBattleBlockReason == null;
+        public string StartBattleBlockReason => !SchoolUnlocked ? "펫 선택을 먼저 마쳐 주세요." :
+            Students.Count == 0 ? "마법소녀를 한 명 이상 영입해 주세요." : null;
+        public int VictoryRewardBase => Settings.victoryReward;
+        public int VictoryRewardStageBonus => Settings.victoryRewardPerStage * (Stage - 1);
+        public int VictoryRewardRelicBonus => Relics.Where(r => r.Kind == RelicKind.VictoryMoney)
+            .Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r));
+        public int VictoryReward => BattleSynergies.Income(this, VictoryRewardBase + VictoryRewardStageBonus + VictoryRewardRelicBonus);
         public bool Owns(string id) => Students.Any(s => s.Definition.Id == id);
 
         public bool BuyRelic(int index)
@@ -196,7 +206,7 @@ namespace HongikIngan
         public bool ExpandSlots()
         {
             if (!SchoolUnlocked) return Fail("먼저 진행 중인 선택을 마쳐 주세요.");
-            if (BaseCapacity >= 7) return Fail("기본 슬롯 확장은 최대 7칸입니다.");
+            if (Capacity >= 7) return Fail("일반 전대는 최대 7명입니다. 추가 두 칸은 복제 분신 전용입니다.");
             int price = Math.Max(0, Settings.slotExpansionPrice);
             if (Money < price) return Fail("미라클 에너지가 부족합니다.");
             Money -= price; BaseCapacity++;
@@ -301,8 +311,7 @@ namespace HongikIngan
 
         public bool StartBattle()
         {
-            if (!SchoolUnlocked) return Fail("펫 선택을 먼저 마쳐 주세요.");
-            if (Students.Count == 0) return Fail("마법소녀를 한 명 이상 영입해 주세요.");
+            if (!CanStartBattle) return Fail(StartBattleBlockReason);
             EnsureSchoolDesks();
             Students.Sort((first, second) => schoolDesks[first].CompareTo(schoolDesks[second]));
             RerollCost = Math.Max(0, Settings.rerollInitial);
@@ -311,6 +320,33 @@ namespace HongikIngan
             Battle = new BattleState(hp);
             InBattle = true;
             return Done("방과 후! 최대 3턴 안에 보스를 처치하세요.");
+        }
+
+        internal StudentState CloneNext(StudentState source)
+        {
+            int index = Students.IndexOf(source);
+            if (source.IsClone || index < 0 || index + 1 >= Students.Count || Students.Count >= 9) return null;
+            var target = Students[index + 1];
+            var clone = new StudentState(target.Definition)
+            {
+                UpgradeCount = target.UpgradeCount, SkillValue = target.SkillValue,
+                IsClone = true, CloneLastsBattle = source.UpgradeCount > 0
+            };
+            foreach (var keyword in target.Keywords)
+            {
+                if (keyword.Values.Count == 0) continue;
+                var copy = new KeywordState(keyword.Definition, keyword.Values[0]);
+                copy.Values.Clear(); copy.Values.AddRange(keyword.Values);
+                clone.Keywords.Add(copy);
+            }
+            Students.Insert(index + 2, clone);
+            source.PrecisionCopies++;
+            return clone;
+        }
+
+        internal void RemoveExpiredClones(bool battleEnded)
+        {
+            Students.RemoveAll(s => s.IsClone && (battleEnded || !s.CloneLastsBattle));
         }
 
         public IEnumerable<BattleStep> ResolveTurn()
@@ -329,12 +365,13 @@ namespace HongikIngan
         public bool ReturnToSchool()
         {
             if (!InBattle || Battle == null || !Battle.Won || Battle.IsResolving) return Fail("보스 처치 후 교실로 돌아갈 수 있습니다.");
-            int reward = Settings.victoryReward + Settings.victoryRewardPerStage * (Stage - 1) + Relics.Where(r => r.Kind == RelicKind.VictoryMoney).Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r));
+            int reward = VictoryRewardBase + VictoryRewardStageBonus + VictoryRewardRelicBonus;
             int earned = BattleSynergies.Income(this, reward);
             AddMoney(reward);
             BattleSynergies.FinishBattle(this);
             Stage++;
             InBattle = false;
+            RemoveExpiredClones(true);
             foreach (var student in Students) student.Keywords.Clear();
             Battle = null;
             RelicPurchasedThisBattle = false;

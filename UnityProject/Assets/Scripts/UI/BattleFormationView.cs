@@ -18,7 +18,7 @@ namespace HongikIngan
         {
             for (int i = 0; i < slots.Length; i++)
             {
-                slots[i].gameObject.SetActive(i < run.Capacity);
+                slots[i].gameObject.SetActive(i < Mathf.Max(run.Capacity, run.Students.Count));
                 slots[i].Render(i < run.Students.Count ? run.Students[i] : null);
             }
         }

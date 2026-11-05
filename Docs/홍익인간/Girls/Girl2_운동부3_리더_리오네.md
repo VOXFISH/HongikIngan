@@ -8,92 +8,20 @@
 
 ```json
 {
-  "schemaVersion": 1,
-  "girlId": "Girl1",
-  "status": "draft", // draft 또는 ready. 미정 항목을 해결한 뒤 ready로 변경
-  "displayName": "",
-  "description": "", // 성격, 배경, 전투 컨셉을 자유롭게 설명
-  "grade": null, // 1, 2, 3 중 하나. 가격은 공통 EconomySettings 사용
-  "role": "", // Buff / Debuff / Dealer. 표시 전용, 효과 조건에 사용하지 않음
-  "synergies": {
-    "club": "", // [[Girl 0]]부활동
-    "personality": "", // 성격
-    "special": [], // 특수 시너지 ID/이름. 없으면 []
-    "notes": "" // 시너지의 고유 효과나 기존 정의와 차이가 있으면 설명
-  },
-  "skill": {
-    "skillId": "Girl%d_Skill",
-    "displayName": "",
-    "descriptionTemplate": "", // 현재 변수는 {value}처럼 표기
-    "intent": "", // 어떤 조합과 배치에서 어떤 플레이를 유도하는지
-    "variables": [
-      { "id": "value", "initialValue": null, "unit": "", "description": "" }
-    ],
-    "upgrade": {
-      "mode": "", // Once 또는 Unlimited
-      "targetVariableId": "value", // 스킬당 하나만 강화. variables 안에 존재해야 함
-      "replacementRule": "", // n=강화 후 횟수, old=현재 값. 산출값으로 대체(누적 가산 아님)
-      "examples": [
-        { "upgradeCount": 0, "expectedValue": null },
-        { "upgradeCount": 1, "expectedValue": null },
-        { "upgradeCount": 2, "expectedValue": null }
-      ] // Once이면 2회 항목 삭제. Unlimited이면 모든 n의 규칙 설명
-    },
-    "rules": [
-      {
-        "ruleId": "Girl%d_Rule1",
-        "trigger": "", // 예: 배치 시 / 자기 슬롯 액션 / 다른 아군 액션 / 이동 시
-        "condition": "", // 무조건이면 '없음'. 키워드/이동 등 조건의 판정 시점도 명시
-        "effectsInOrder": [
-          {
-            "description": "", // 효과 순서가 중요. 필요하면 효과 항목을 복사
-            "operation": "", // 예: 합동 데미지 더하기 / %p / 곱하기 / 키워드 부여 / 위치 교환 / 재화 획득
-            "valueExpression": "value", // 현재 스킬 변수로 계산. 상수/수식이면 의미도 설명
-            "target": {
-              "strategy": "", // 예: 자신 / 다음 아군 / 다른 아군 전체 / 보스 / 합동 데미지
-              "selectionTiming": "", // 액션 실행 직전 등
-              "tieBreaker": "", // 여러 후보 중 선택 순서. 무관하면 '해당 없음'
-              "ifEmpty": "" // 대상이 없을 때. 임의 규칙을 만들지 않도록 명시
-            },
-            "keywordId": null, // 키워드 부여일 때만 입력
-            "keywordStacks": null // 키워드 부여일 때만 입력
-          }
-        ],
-        "reactionNotes": "" // 자기 반응 제외, 반응 연쇄/교환 재행동과의 관계, 무한 콤보 가능성
-      }
-    ]
-  },
-  "keywordDefinitions": [
-    // 새 키워드가 없으면 이 항목을 삭제하고 []로 둔다. 기존 키워드 참조는 ID만 사용.
-    {
-      "keywordId": "",
-      "displayName": "",
-      "description": "",
-      "consumable": null,
-      "stackable": null,
-      "isVolatile": null,
-      "applicationTiming": "",
-      "effect": ""
-    }
+  "식별자": "Girl2",
+  "이름": "리오네",
+  "학년": 3,
+  "역할군": "공격",
+  "시너지": [
+    "운동부",
+    "리더"
   ],
-  "visuals": {
-    "portraitAsset": null, // 기존 에셋 경로 또는 제작 예정. 없으면 null
-    "battleAsset": null,
-    "themeColor": null, // 예: #FFD76AFF
-    "presentationNotes": "" // 게임 효과와 순수 연출을 구별
+  "스킬": {
+    "이름": "G.O.A.T",
+    "기본 효과": "자기 차례에 1번 자리까지 한 칸씩 이동한다. 이동마다 현재 합동 데미지 +20%p. 이동에 따른 모든 반응을 마친 뒤 다음 한 칸으로 이동한다.",
+    "강화 효과": "이동마다 현재 합동 데미지 +40%p."
   },
-  "acceptanceExamples": [
-    {
-      "name": "기본 액션",
-      "given": "", // 배치, 강화 횟수, 현재 데미지, 키워드 등
-      "when": "",
-      "then": "" // 기대 수치·대상·키워드·슬롯 변화
-    },
-    { "name": "강화 후 액션", "given": "", "when": "", "then": "" },
-    { "name": "대상 없음 또는 조건 불충족", "given": "", "when": "", "then": "" }
-  ],
-  "openQuestions": [], // 미정 사항을 구체적으로 작성. 있으면 ready로 바꾸지 않음
-  "implementationNotes": "" // 기존 프로토타입의 제약을 포함한 구현자 전달 사항
+  "작성 기준": "자연어와 사용자 확인 답변. 이 코드 블록은 요약이며 게임에서 직접 읽지 않는다."
 }
 ```
 
@@ -123,3 +51,12 @@
 ## 기타 메모와 미정 사항
 
 <!-- 잡다한 아이디어, 참고 자료, 추후 결정할 내용. 필요한 제목과 항목을 자유롭게 추가한다. -->
+
+## 확정된 구현 규칙
+
+2026-11-06 사용자 확인 답변을 반영한다. 상단 코드 블록은 아래 자연어 규칙에 맞춘 요약이다.
+
+- 3학년 · 운동부 · 리더 · 공격
+- 스킬: G.O.A.T
+- 기본: 자기 차례에 1번 자리까지 한 칸씩 이동한다. 이동마다 현재 합동 데미지 +20%p. 이동에 따른 모든 반응을 마친 뒤 다음 한 칸으로 이동한다.
+- 1회 강화: 이동마다 현재 합동 데미지 +40%p.

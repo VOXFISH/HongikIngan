@@ -57,10 +57,12 @@ namespace HongikIngan
             var sound = SoundManager.EnsureExists();
             originalVolume = sound.GetVolume(AudioCategory.BGM); originalMute = sound.GetMuted(AudioCategory.Voice); capturedSettings = true;
             var session = PrototypeSession.Ensure();
+            session.Run.Students.Clear();
+            session.Run.Students.Add(new StudentState(PrototypeCatalog.Students[0]));
             session.Run.Students.Add(new StudentState(PrototypeCatalog.Students[1]));
             session.Run.Settings.bossBaseHp = 1;
             session.EnterBattle();
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             var screen = FindFirstObjectByType<BattleScreen>();
             Check(screen != null && screen.CanReorder, "battle scene initialized");
             var slots = screen.formation.slots;
@@ -95,17 +97,18 @@ namespace HongikIngan
             // Render representative UI with all nine slots, then restore the actual run.
             var previewSettings = ScriptableObject.CreateInstance<EconomySettings>();
             var preview = new PrototypeRun(previewSettings);
+            preview.Students.Clear();
             preview.Relics.Add(new RelicDefinition { Id = "preview_slots", Kind = RelicKind.ExtraSlots, Value = 6 });
-            for (int i = 1; i < 9; i++) preview.Students.Add(new StudentState(PrototypeCatalog.Students[i]));
+            for (int i = 0; i < 9; i++) preview.Students.Add(new StudentState(PrototypeCatalog.Students[i]) { IsClone = i >= 7 });
             screen.formation.Render(preview);
             Screen.SetResolution(1440, 900, false);
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "battle-nine-slots.png"));
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             Screen.SetResolution(1280, 720, false);
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "battle-1280x720.png"));
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             Destroy(previewSettings);
             screen.formation.Render(session.Run);
             screen.presentation.stepDuration = .01f;
@@ -118,12 +121,12 @@ namespace HongikIngan
             while (screen.IsRunning && Time.realtimeSinceStartup < deadline) yield return null;
             Check(!screen.IsRunning && session.Run.Battle.Won, "actual controller reaches victory");
             screen.hud.actionButton.onClick.Invoke();
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(1.5f);
             Check(SceneManager.GetActiveScene().name == "School" && session.Run.Stage == 2, "victory returns to school");
             Check(SoundManager.Instance == sound && Math.Abs(sound.GetVolume(AudioCategory.BGM) - .23f) < .001f &&
                 sound.GetMuted(AudioCategory.Voice) == !originalMute, "audio survives transition");
             session.ResetRun(); session.Run.Settings.bossBaseHp = 1e30f;
-            session.EnterBattle(); yield return new WaitForSeconds(.2f);
+            session.EnterBattle(); yield return new WaitForSeconds(1.5f);
             screen = FindFirstObjectByType<BattleScreen>(); screen.presentation.stepDuration = .01f;
             for (int i = 1; i <= 3; i++)
             {
@@ -131,16 +134,17 @@ namespace HongikIngan
                 while (screen.IsRunning && Time.realtimeSinceStartup < deadline) yield return null;
                 Check(!screen.IsRunning && session.Run.Battle.Turn == i, "turn completion " + i);
                 Check(session.Run.Battle.Lost == (i == 3), "three-turn defeat boundary " + i);
+                if (i < 3) yield return new WaitForSeconds(1f);
             }
-            screen.hud.actionButton.onClick.Invoke(); yield return new WaitForSeconds(.2f);
+            screen.hud.actionButton.onClick.Invoke(); yield return new WaitForSeconds(1.5f);
             Check(SceneManager.GetActiveScene().name == "School" && session.Run.Stage == 1, "defeat restarts");
-            session.EnterBattle(); yield return new WaitForSeconds(.2f);
+            session.EnterBattle(); yield return new WaitForSeconds(1.5f);
             screen = FindFirstObjectByType<BattleScreen>(); screen.PerformAction();
             screen.enabled = false;
             Check(!session.Run.Battle.IsResolving && !screen.IsRunning, "interruption disposes iterator");
             screen.enabled = true;
             Check(screen.hud.actionLabel.text.Contains("중단") && !screen.CanReorder, "interruption requires restart");
-            screen.PerformAction(); yield return new WaitForSeconds(.2f);
+            screen.PerformAction(); yield return new WaitForSeconds(1.5f);
             Check(SceneManager.GetActiveScene().name == "School", "interruption recovery");
         }
         void Check(bool condition, string message)

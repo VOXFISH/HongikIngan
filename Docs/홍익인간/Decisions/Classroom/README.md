@@ -5,7 +5,7 @@
 - [CL01 — 학생 관리·배치·보충 학습](CL01-Student-Management.md)
 - [CL02 — 유물 리롤](CL02-Reroll.md)
 - [CL03 — 일반 모집 제거·펫 전용 영입](CL03-Recruitment.md)
-- [CL04 — 유물 제안·획득·칠판](CL04-Relics.md)
+- [CL04 — 유물 한 칸·획득·사물함](CL04-Relics.md)
 - [CL05 — 펫 영입·시너지 추첨·폴라로이드](CL05-Pets-and-Polaroids.md)
 - [CL06 — 경제 설정·결제](CL06-Economy.md)
 - [CL07 — 전투 진입·교실 복귀](CL07-Battle-Transition.md)
