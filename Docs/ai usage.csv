@@ -48,3 +48,17 @@ Requirements :
 - The characters, action, keyword, relic, boss, synergy and polaroid data will be handled later on. It needs to be added modularly. In as, a 'character card' will contain information about the character's keyword, action, polaroid data.
 - The formation can be also edited later on as this is the first steps of the project. Create a slot system that can 'save' a character's location when swapping.
 -"
+2026-11-05 16:46:27+09:00,VOXFISH,"커밋을 확인하고, 최근 결정 사항들을 요약해 줘. 특히 내가 결정해야 할 사항들에 대해서 정리해서 채팅으로 답변해 줘. 문서는 생성하지 마."
+2026-11-05 17:17:38+09:00,VOXFISH,"1. 합동 데미지 -> 매턴 0부터 시작해. 키워드는 다음의 속성을 지녀.
+
+- 소모성 : 사용 시 소모되는지
+- stackable : 쌓이는지
+- 휘발성 : 턴이 지나면 소모되는지
+
+2. 이동 후 행동 순서 : 두 소녀가 위치를 바꾸면, 바뀐 기준에서 번호가 작은 소녀가 행동한 후 번호가 큰 소녀가 다시 행동한다.
+3. 반응 액션의 연쇄 : 반응으로 발생한 액션도 다른 아군의 반응을 발생시켜. 무한 콤보가 발생 시 사후 조치할 예정이야.
+4. 데미지 계산식 : 발생 순서대로 적용해서, 변경이 있을 때마다 합동 공격 데미지 표시란에 업데이트해.
+5. 키워드 수명/중첩 : 키워드의 중첩 상한은 없어. 중첩 불가 키워드는 다시 받으면 무시해. 소모성 키워드는 적용 시, 휘발성 키워드는 턴 종료 시 사라져 (stackable 키워드는 소모성일 시 1스택 소모, 휘발성이면 소멸).
+6. 슬롯과 대상 선택 : 기본 슬롯 수는 3, 최대 슬롯 수는 7. 만약 유물 중에서 슬롯 증가가 있다면 9까지 증가. (유물로 증가한 슬롯과 기존 슬롯은 연출을 위해서만 구분)
+7. 강화값 산출 : 강화 대상 변수는 스킬당 하나로만 제한, 강화값을 지정하는 로직은 마법소녀마다 다름
+8. 경제와 재영입 : 밸런싱을 위해 경제 관련 값들은 모아서 하나의 ScriptableObject로 관리. 일단은 임시값을 적용. 계약 해제한 소녀는 다시 영입 가능, 강화 상태는 유지되지 않음."
