@@ -25,6 +25,8 @@
 - [FMOD 설정 안내](Audio%20Setup.md): 지속 SoundManager와 채널별 볼륨·음소거.
 - [UI 목업 구현·Inspector 편집 v4](UI%20Mockup/UI%20Mockup%20Implementation%20v4.md): 교실·전투 인터랙티브 목업을 프로젝트 규칙·씬 구조에 맞춰 옮기는 배치·연출 기획과 버전 이력.
 
+- [School 씬 삭제 오브젝트 목록](School%20Scene%20Cleanup.md): 이미지와 현재 UI로 대체된 185개 오브젝트의 개별 삭제 이유 및 유지 항목.
+
 ## 팀 공통 문서 관리 규칙
 
 - 루트의 `AGENTS.md`와 이를 참조하는 `CLAUDE.md`는 도구가 공통 규칙을 찾기 위한 진입 파일이므로 루트에 유지합니다.

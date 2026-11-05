@@ -268,3 +268,10 @@ battlesystem은 gamesystem을 뜻함"
 
 
 Find the problem and fix it. Do not evaulate if you fixed it, I will do."
+"2026-11-06 04:06:59+09:00","qwerty","In the scene ""School"" replace assets using the images in Assets/sprite/background
+
+Do not use image generating features
+Do quickly replace everything"
+"2026-11-06 04:14:03+09:00","qwerty","Remove objects that doesn't have any purpose or functions. In the scene ""School""
+
+Create a list of removed objects and the reason. (i.e. no component or child object attached)"
