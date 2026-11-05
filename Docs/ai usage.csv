@@ -48,3 +48,9 @@ Requirements :
 - The characters, action, keyword, relic, boss, synergy and polaroid data will be handled later on. It needs to be added modularly. In as, a 'character card' will contain information about the character's keyword, action, polaroid data.
 - The formation can be also edited later on as this is the first steps of the project. Create a slot system that can 'save' a character's location when swapping.
 -"
+"2026-11-05 16:32:56+09:00","qwerty","There are new and updates .md files. Read them and assess them even more, I'll leave it up to you. Good job, this is to cheer you up. Don't make mistakes."
+"2026-11-05 16:44:18+09:00","qwerty","Do the following:
+-Create /홍익인간/Decisions
+-Create an .md file with a title that contains the topic of the decision requirements & current time.
+-Dissect the current conversation by comment & create individual files.
+-Create a log based on recommendations."
