@@ -120,7 +120,7 @@ namespace HongikIngan
             float deadline = Time.realtimeSinceStartup + 10;
             while (screen.IsRunning && Time.realtimeSinceStartup < deadline) yield return null;
             Check(!screen.IsRunning && session.Run.Battle.Won, "actual controller reaches victory");
-            screen.hud.actionButton.onClick.Invoke();
+            screen.rewardPopup.claimButton.onClick.Invoke();
             yield return new WaitForSeconds(1.5f);
             Check(SceneManager.GetActiveScene().name == "School" && session.Run.Stage == 2, "victory returns to school");
             Check(SoundManager.Instance == sound && Math.Abs(sound.GetVolume(AudioCategory.BGM) - .23f) < .001f &&

@@ -16,6 +16,41 @@ namespace HongikIngan.Editor
         static readonly Color Purple = new Color(.37f, .30f, .78f);
         static TMP_FontAsset font;
 
+        [MenuItem("HongikIngan/Add battle reward popup")]
+        public static void ApplyRewardPopup()
+        {
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            var scene = EditorSceneManager.OpenScene("Assets/Scenes/Battle.unity");
+            var screen = UnityEngine.Object.FindFirstObjectByType<BattleScreen>();
+            if (screen == null || screen.hud == null) throw new InvalidOperationException("Battle layout missing.");
+            if (screen.rewardPopup == null)
+            {
+                font = BattleUiFont.DefaultFont;
+                var layout = screen.hud.transform.Find("Layout");
+                if (layout == null) throw new InvalidOperationException("Battle Layout missing.");
+                var popup = screen.hud.gameObject.AddComponent<BattleRewardPopup>();
+                var modal = Image(layout, "RewardPopup", 0, 0, 1440, 900, new Color(0, 0, 0, .65f));
+                modal.raycastTarget = true;
+                var dialog = Image(modal.transform, "Dialog", 370, 170, 700, 560, new Color(.96f, .95f, 1f));
+                dialog.raycastTarget = true;
+                Text(dialog.transform, "Title", 35, 25, 630, 60, "전투 보상", 34, Ink, TextAlignmentOptions.Center);
+                popup.detailsLabel = Text(dialog.transform, "RewardDetails", 40, 100, 620, 340,
+                    "전투 종료! 보상을 수령하세요.", 23, Ink, TextAlignmentOptions.TopLeft);
+                popup.claimButton = Button(dialog.transform, "ClaimButton", 195, 465, 310, 65, "보상 수령");
+                popup.modal = modal.gameObject;
+                popup.modal.SetActive(false);
+                screen.rewardPopup = popup;
+                EditorUtility.SetDirty(screen);
+                EditorSceneManager.MarkSceneDirty(scene);
+                EditorSceneManager.SaveScene(scene);
+                AssetDatabase.SaveAssets();
+            }
+            Validate(screen);
+            ValidateReferences(screen.rewardPopup);
+            SettlementChecks.Run();
+            Debug.Log("BATTLE_REWARD_POPUP_SAVED");
+        }
+
         [MenuItem("HongikIngan/Apply editable Battle layout")]
         public static void Apply()
         {

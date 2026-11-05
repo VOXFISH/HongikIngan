@@ -56,6 +56,12 @@ namespace HongikIngan.Editor
                 throw new Exception("Prototype build failed: "+report.summary.result);
             Debug.Log("PROTOTYPE_BUILD_PASSED");
         }
+        public static void ValidateExpansion()
+        {
+            SchoolLayoutBuilder.ApplyOverflowRecruitment();
+            BattleLayoutBuilder.ApplyRewardPopup();
+            PrototypeChecks.Run();
+        }
     }
 }
 #endif

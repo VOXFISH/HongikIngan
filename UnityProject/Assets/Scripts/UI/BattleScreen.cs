@@ -12,13 +12,14 @@ namespace HongikIngan
         public BattlePresentation presentation;
         public BattleAudioPanel audioPanel;
         public TurnTransitionView turnTransition;
+        public BattleRewardPopup rewardPopup;
         PrototypeRun run;
         IEnumerator<BattleStep> resolution;
         bool running, interrupted, initialized, preparing;
         string current = "준비가 되면 합동 공격을 시작하세요.";
 
         public bool CanReorder => isActiveAndEnabled && initialized && !running && !preparing && !interrupted &&
-            !audioPanel.IsOpen && run.Battle != null && !run.Battle.IsResolving && !run.Battle.Won && !run.Battle.Lost;
+            !audioPanel.IsOpen && run.Battle != null && !run.Battle.IsResolving && !run.Battle.Ended;
         public bool IsRunning => running;
 
         void Start()
@@ -43,6 +44,7 @@ namespace HongikIngan
         {
             run.Changed += Refresh;
             hud.actionButton.onClick.AddListener(PerformAction);
+            if (rewardPopup != null) rewardPopup.claimButton.onClick.AddListener(ClaimReward);
             audioPanel.VisibilityChanged += ModalChanged;
         }
         void OnDisable()
@@ -50,6 +52,7 @@ namespace HongikIngan
             if (!initialized) return;
             run.Changed -= Refresh;
             hud.actionButton.onClick.RemoveListener(PerformAction);
+            if (rewardPopup != null) rewardPopup.claimButton.onClick.RemoveListener(ClaimReward);
             audioPanel.VisibilityChanged -= ModalChanged;
             formation.CancelDrag();
             preparing = false;
@@ -78,8 +81,16 @@ namespace HongikIngan
                 (SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy)) return;
             if (interrupted || run.Battle == null || run.Battle.Lost)
                 ChangeScene("새로운 시작", () => PrototypeSession.Instance.Restart());
-            else if (run.Battle.Won) ChangeScene("학교로!", () => PrototypeSession.Instance.BackToSchool());
+            else if (run.Battle.CanReturnToSchool) Refresh();
             else if (!run.Battle.IsResolving) StartCoroutine(Attack());
+        }
+        public void ClaimReward()
+        {
+            if (!initialized || running || preparing || run.Battle == null || !run.Battle.CanReturnToSchool ||
+                run.Battle.IsResolving || run.Battle.Reward == null || run.Battle.Reward.Claimed ||
+                (SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy)) return;
+            if (rewardPopup != null) rewardPopup.claimButton.interactable = false;
+            ChangeScene("보상 수령 - 학교로!", () => PrototypeSession.Instance.BackToSchool());
         }
         static void ChangeScene(string message, System.Action action)
         {
@@ -88,7 +99,7 @@ namespace HongikIngan
         }
         IEnumerator PrepareTurn()
         {
-            if (run.Battle == null || run.Battle.Won || run.Battle.Lost) yield break;
+            if (run.Battle == null || run.Battle.Ended) yield break;
             preparing = true; formation.CancelDrag(); Refresh();
             while (SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy) yield return null;
             if (turnTransition != null) yield return turnTransition.Show(run.Battle.Turn + 1);
@@ -120,12 +131,13 @@ namespace HongikIngan
                 presentation.Clear();
                 Refresh();
             }
-            if (!run.Battle.Won && !run.Battle.Lost) yield return PrepareTurn();
+            if (!run.Battle.Ended) yield return PrepareTurn();
         }
         void Refresh()
         {
             if (!initialized) return;
-            hud.Render(run, current, running || preparing, audioPanel.IsOpen, interrupted);
+            if (rewardPopup != null) rewardPopup.Render(run, !running && !preparing && !interrupted);
+            hud.Render(run, current, running || preparing, audioPanel.IsOpen || rewardPopup != null && rewardPopup.IsOpen, interrupted);
             formation.Render(run);
         }
         // Kept for existing callers and formatting checks.

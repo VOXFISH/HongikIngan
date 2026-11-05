@@ -18,10 +18,10 @@
 
 - [프로토타입 실행 안내](Prototype%20Guide.md): 메인·학교·전투 씬, 초기 지급, 조작과 검증 방법.
 - [전투 UI 편집](Battle%20UI%20Editing.md): 독립 UI 오브젝트 배치, 컴포넌트 책임과 검증.
-- [Girl0–Girl17 전투 구현](Girl%20Battle%20Implementation.md): 자연어 우선 해석, 18명 스킬·강화와 공통 시너지, 검증 결과.
-- [전체 시너지 효과 목록](Girls/synergy.md): 구현된 부활동·성격 9종 및 정밀화와 미구현 부활동 3종의 기획.
+- [Girl0–Girl35 전투 구현](Girl%20Battle%20Implementation.md): 자연어 우선 해석, 36명 스킬·강화와 공통 시너지, 검증 결과.
+- [전체 시너지 효과 목록](Girls/synergy.md): 전체 6개 부활동·6개 성격 및 정밀화의 공통 효과.
 - [키워드 효과 목록](Girls/keywords.md): 표독·검은 클로버·넌 내 꺼야·조명·사랑의 수치·소모·중첩·유지 규칙과 이전 호환 항목.
-- [마법소녀 작성 서식과 원본 기획](Girls/README.md): `Girl%d.md` 서식, Girl0–Girl17 문서, 자연어 우선 해석과 현재 구현 범위.
+- [마법소녀 작성 서식과 원본 기획](Girls/README.md): `Girl%d.md` 서식, Girl0–Girl35 문서, 자연어 우선 해석과 현재 구현 범위.
 - [FMOD 설정 안내](Audio%20Setup.md): 지속 SoundManager와 채널별 볼륨·음소거.
 - [UI 목업 구현·Inspector 편집 v4](UI%20Mockup/UI%20Mockup%20Implementation%20v4.md): 교실·전투 인터랙티브 목업을 프로젝트 규칙·씬 구조에 맞춰 옮기는 배치·연출 기획과 버전 이력.
 

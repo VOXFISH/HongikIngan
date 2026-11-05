@@ -45,8 +45,9 @@ namespace HongikIngan
             var run = new PrototypeRun(e, 912);
             for (int i = 0; i < 4; i++) run.ExpandSlots();
             run.Relics.Add(PrototypeCatalog.Relics.First(r => r.Kind == RelicKind.ExtraSlots));
-            run.Students.Clear(); run.Students.AddRange(actors);
+            run.Students.Clear(); run.Students.AddRange(actors.Take(7));
             Check(run.StartBattle(), "test battle starts");
+            run.Students.Clear(); run.Students.AddRange(actors); // Includes injected clone slots for synergy fixtures.
             return run;
         }
         static void Resolve(PrototypeRun run)
