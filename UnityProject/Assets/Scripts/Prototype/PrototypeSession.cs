@@ -28,6 +28,7 @@ namespace HongikIngan
             var economy = Resources.Load<EconomySettings>("PrototypeEconomy");
             if (economy == null) economy = ScriptableObject.CreateInstance<EconomySettings>();
             Run = new PrototypeRun(economy, System.Environment.TickCount);
+            Run.PracticeBattles = true;
         }
         public void EnterBattle()
         {
@@ -36,6 +37,10 @@ namespace HongikIngan
         public void BackToSchool()
         {
             if (Run.ReturnToSchool()) SceneManager.LoadScene("School");
+        }
+        public void BackFromPractice()
+        {
+            if (Run.ReturnFromPracticeBattle()) SceneManager.LoadScene("School");
         }
         public void Restart() { ResetRun(); SceneManager.LoadScene("School"); }
         void OnDestroy() { if (Instance == this) Instance = null; }

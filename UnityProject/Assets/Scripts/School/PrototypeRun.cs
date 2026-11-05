@@ -27,6 +27,9 @@ namespace HongikIngan
         public int RerollCost { get; private set; }
         public bool PendingPet { get; private set; }
         public bool InBattle { get; private set; }
+        // Enabled by the session only on the test branch; standalone rule tests keep normal defaults.
+        public bool PracticeBattles { get; set; }
+        public bool CanReturnFromPractice => InBattle && Battle != null && Battle.IsPracticeBattle && Battle.Turn >= 3;
         public bool GameOver => Battle != null && Battle.Lost;
         public string LastMessage { get; private set; } = "교실에 오신 것을 환영합니다.";
         public BattleState Battle { get; private set; }
@@ -301,9 +304,9 @@ namespace HongikIngan
             RerollCost = Math.Max(0, Settings.rerollInitial);
             float hp = Settings.bossBaseHp * (float)Math.Pow(Settings.bossGrowth, Stage - 1);
             if (float.IsInfinity(hp) || hp <= 0) hp = float.MaxValue;
-            Battle = new BattleState(hp);
+            Battle = new BattleState(hp, PracticeBattles);
             InBattle = true;
-            return Done("방과 후! 최대 3턴 안에 보스를 처치하세요.");
+            return Done(PracticeBattles ? "테스트 전투 · 보스 HP 무한, 3턴부터 교실 복귀 가능" : "방과 후! 최대 3턴 안에 보스를 처치하세요.");
         }
 
         public IEnumerable<BattleStep> ResolveTurn()
@@ -330,6 +333,16 @@ namespace HongikIngan
             Battle = null;
             RefreshOffers();
             return Done("보스 처치 보상 +" + reward + ". 다음 스테이지를 준비하세요!");
+        }
+
+        public bool ReturnFromPracticeBattle()
+        {
+            if (!CanReturnFromPractice || Battle.IsResolving) return Fail("테스트 전투 3턴부터 진행을 멈춘 뒤 복귀할 수 있습니다.");
+            InBattle = false;
+            foreach (var student in Students) student.Keywords.Clear();
+            Battle = null;
+            RefreshOffers();
+            return Done("테스트 전투에서 복귀했습니다. 스테이지와 승리 보상은 변경하지 않습니다.");
         }
 
         internal void AddMoney(int amount) { Money = checked(Money + Math.Max(0, amount)); }

@@ -24,6 +24,11 @@ namespace HongikIngan.Editor
             if (screen == null) throw new InvalidOperationException("BattleScreen is missing.");
             if (screen.hud != null)
             {
+                if (AddPracticeReturn(screen))
+                {
+                    EditorSceneManager.MarkSceneDirty(scene);
+                    EditorSceneManager.SaveScene(scene);
+                }
                 Validate(screen);
                 Debug.Log("BATTLE_LAYOUT_EXISTS: keeping authored layout.");
                 return;
@@ -102,6 +107,7 @@ namespace HongikIngan.Editor
             audio.closeButton = Button(dialog, "Close", 340, 412, 160, 40, "닫기");
             modal.gameObject.SetActive(false);
             screen.audioPanel = audio;
+            AddPracticeReturn(screen);
             root.AddComponent<BattleUiFont>();
             if (UnityEngine.Object.FindFirstObjectByType<EventSystem>() == null)
             {
@@ -127,6 +133,16 @@ namespace HongikIngan.Editor
                     if (GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(transform.gameObject) > 0)
                         throw new InvalidOperationException("Missing script: " + transform.name);
             Debug.Log("BATTLE_LAYOUT_BINDINGS_PASS");
+        }
+        static bool AddPracticeReturn(BattleScreen screen)
+        {
+            if (screen.hud.practiceReturnButton != null) return false;
+            font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            screen.hud.practiceReturnButton = Button(screen.hud.actionButton.transform.parent, "PracticeReturnButton",
+                760, 815, 310, 55, "3턴부터 교실로 복귀");
+            screen.hud.practiceReturnButton.transform.SetSiblingIndex(screen.hud.actionButton.transform.GetSiblingIndex() + 1);
+            EditorUtility.SetDirty(screen.hud);
+            return true;
         }
         static void ValidateReferences(MonoBehaviour component)
         {

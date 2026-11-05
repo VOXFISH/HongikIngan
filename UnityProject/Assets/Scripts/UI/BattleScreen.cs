@@ -41,6 +41,7 @@ namespace HongikIngan
         {
             run.Changed += Refresh;
             hud.actionButton.onClick.AddListener(PerformAction);
+            hud.practiceReturnButton.onClick.AddListener(ReturnFromPractice);
             audioPanel.VisibilityChanged += ModalChanged;
         }
         void OnDisable()
@@ -48,6 +49,7 @@ namespace HongikIngan
             if (!initialized) return;
             run.Changed -= Refresh;
             hud.actionButton.onClick.RemoveListener(PerformAction);
+            hud.practiceReturnButton.onClick.RemoveListener(ReturnFromPractice);
             audioPanel.VisibilityChanged -= ModalChanged;
             formation.CancelDrag();
             // Partial effects cannot safely be replayed after interruption.
@@ -72,7 +74,19 @@ namespace HongikIngan
             if (!initialized || !isActiveAndEnabled || running || audioPanel.IsOpen) return;
             if (interrupted || run.Battle == null || run.Battle.Lost) PrototypeSession.Instance.Restart();
             else if (run.Battle.Won) PrototypeSession.Instance.BackToSchool();
-            else if (!run.Battle.IsResolving) StartCoroutine(Attack());
+            else if (!run.Battle.IsResolving && (!run.Battle.IsPracticeBattle || run.Battle.Turn < 3)) StartCoroutine(Attack());
+        }
+        public void ReturnFromPractice()
+        {
+            if (!initialized || !isActiveAndEnabled || audioPanel.IsOpen || !run.CanReturnFromPractice) return;
+            // Return is available even while the third turn's presentation is playing.
+            StopAllCoroutines();
+            resolution?.Dispose();
+            resolution = null;
+            running = false;
+            presentation.Clear();
+            formation.CancelDrag();
+            PrototypeSession.Instance.BackFromPractice();
         }
         IEnumerator Attack()
         {

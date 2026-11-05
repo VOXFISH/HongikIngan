@@ -92,13 +92,18 @@ namespace HongikIngan
         public int Turn { get; internal set; }
         public float BossHp { get; internal set; }
         public float MaxBossHp { get; }
+        public bool IsPracticeBattle { get; }
         public float Damage { get; internal set; }
         public bool IsResolving { get; internal set; }
         public bool Won { get; internal set; }
         public bool Lost { get; internal set; }
         public readonly List<string> Log = new List<string>();
         public readonly List<KeywordState> BossKeywords = new List<KeywordState>();
-        public BattleState(float hp) { BossHp = hp; MaxBossHp = hp; }
+        public BattleState(float hp, bool isPracticeBattle = false)
+        {
+            IsPracticeBattle = isPracticeBattle;
+            BossHp = MaxBossHp = isPracticeBattle ? float.PositiveInfinity : hp;
+        }
     }
 
     public static class CombatEngine
@@ -110,6 +115,7 @@ namespace HongikIngan
         {
             var battle = run.Battle;
             if (battle == null || battle.IsResolving || battle.Won || battle.Lost) yield break;
+            if (battle.IsPracticeBattle && battle.Turn >= 3) yield break;
             battle.IsResolving = true;
             try
             {
@@ -212,12 +218,14 @@ namespace HongikIngan
 
                 yield return Step(battle, "chant", BuildChant(run.Students));
                 yield return Step(battle, "beam", "합동 필살기! " + PrototypeCatalog.FormatDamage(battle.Damage));
-                battle.BossHp = Math.Max(0f, battle.BossHp - battle.Damage);
-                battle.Won = battle.BossHp <= 0f;
-                battle.Lost = !battle.Won && battle.Turn >= 3;
+                // Do not subtract from infinity: infinite test damage would produce NaN.
+                if (!battle.IsPracticeBattle) battle.BossHp = Math.Max(0f, battle.BossHp - battle.Damage);
+                battle.Won = !battle.IsPracticeBattle && battle.BossHp <= 0f;
+                battle.Lost = !battle.IsPracticeBattle && !battle.Won && battle.Turn >= 3;
                 foreach (var student in run.Students) KeywordRules.EndTurn(student.Keywords);
                 KeywordRules.EndTurn(battle.BossKeywords);
-                yield return Step(battle, "result", battle.Won ? "보스 처치! 교실로 돌아가세요." : battle.Lost ? "3턴 종료 · 게임 오버" : "보스 생존 · 배치를 바꾸고 다음 턴에 도전하세요.");
+                yield return Step(battle, "result", battle.IsPracticeBattle && battle.Turn >= 3 ? "테스트 3턴 종료 · 교실로 돌아갈 수 있습니다." :
+                    battle.Won ? "보스 처치! 교실로 돌아가세요." : battle.Lost ? "3턴 종료 · 게임 오버" : "보스 생존 · 배치를 바꾸고 다음 턴에 도전하세요.");
             }
             finally { battle.IsResolving = false; }
         }

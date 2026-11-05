@@ -57,6 +57,7 @@ namespace HongikIngan
             var sound = SoundManager.EnsureExists();
             originalVolume = sound.GetVolume(AudioCategory.BGM); originalMute = sound.GetMuted(AudioCategory.Voice); capturedSettings = true;
             var session = PrototypeSession.Ensure();
+            session.Run.PracticeBattles = false;
             session.Run.Students.Add(new StudentState(PrototypeCatalog.Students[1]));
             session.Run.Settings.bossBaseHp = 1;
             session.EnterBattle();
@@ -123,6 +124,7 @@ namespace HongikIngan
             Check(SoundManager.Instance == sound && Math.Abs(sound.GetVolume(AudioCategory.BGM) - .23f) < .001f &&
                 sound.GetMuted(AudioCategory.Voice) == !originalMute, "audio survives transition");
             session.ResetRun(); session.Run.Settings.bossBaseHp = 1e30f;
+            session.Run.PracticeBattles = false;
             session.EnterBattle(); yield return new WaitForSeconds(.2f);
             screen = FindFirstObjectByType<BattleScreen>(); screen.presentation.stepDuration = .01f;
             for (int i = 1; i <= 3; i++)
@@ -134,6 +136,7 @@ namespace HongikIngan
             }
             screen.hud.actionButton.onClick.Invoke(); yield return new WaitForSeconds(.2f);
             Check(SceneManager.GetActiveScene().name == "School" && session.Run.Stage == 1, "defeat restarts");
+            session.Run.PracticeBattles = false;
             session.EnterBattle(); yield return new WaitForSeconds(.2f);
             screen = FindFirstObjectByType<BattleScreen>(); screen.PerformAction();
             screen.enabled = false;

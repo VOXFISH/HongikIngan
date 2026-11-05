@@ -29,6 +29,7 @@ namespace HongikIngan
             float original=sound.GetVolume(AudioCategory.BGM); bool originalMute=sound.GetMuted(AudioCategory.Voice);
             sound.SetVolume(AudioCategory.BGM,.23f); sound.SetMuted(AudioCategory.Voice,true);
             var session=PrototypeSession.Ensure(); session.Run.Settings.bossBaseHp=1;
+            session.Run.PracticeBattles=false;
             session.EnterBattle();
             yield return new WaitForSeconds(.7f);
             if(SceneManager.GetActiveScene().name!="Battle"||SoundManager.Instance!=sound||Math.Abs(sound.GetVolume(AudioCategory.BGM)-.23f)>.001f||!sound.GetMuted(AudioCategory.Voice))
