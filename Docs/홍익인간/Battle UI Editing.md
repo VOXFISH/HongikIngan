@@ -69,3 +69,11 @@ School 씬의 교실 배경, 책상, 의자, 문, 사물함과 별 장식은 `As
 School의 `DragLayer`는 책상 프리팹 밖의 `SchoolCanvas/Layout` 아래에 유지해야 한다. `SchoolScreen.Awake`는 참조가 비어 있으면 기존 레이어를 연결하고, 레이어도 없으면 전체 Layout 크기의 RectTransform을 생성한다. 편집 상태에서 복구·저장하려면 `HongikIngan > Restore School drag layer` 메뉴를 사용한다. 이번 수정에서 씬의 누락된 레이어와 참조를 저장했으며 플레이 테스트는 수행하지 않았다.
 
 텍스트 구분자: 폰트에 없는 U+00B7 대신 모든 씬, 공통 책상 프리팹, 런타임/Editor 문구 생성 코드에서 ASCII 하이픈(-)을 사용한다. 2026-11-06에 로컬 스크립트 UnityProject/Logs/ReplaceMiddleDot.ps1로 124곳을 치환했으며 원본은 UnityProject/Logs/MiddleDotBackup-20261106-043514-997/에 보관했다. Logs의 스크립트와 백업은 버전 관리 대상이 아니다. 씬 5개 중 SampleScene과 URP2DSceneTemplate에는 해당 문자가 없어 변경하지 않았다.
+
+책상 프리팹의 표시용 AttackOrder 라벨은 사용자 요청으로 제거했다. 슬롯별 텍스트 오버라이드와 생성 코드도 제거했으며, 실제 학생 배치 및 공격 순서 처리에는 변경이 없다.
+
+후속 요청으로 AttackOrder 라벨을 복구했다. 현재 표시는 설명 문구 없이 슬롯별 숫자 1~9만 사용하며, 생성 코드도 같은 형식을 적용한다.
+
+## 시너지 책 프리팹
+
+Assets/UI/Prefabs/SchoolSynergyBook.prefab이 책 한 권의 공통 배치다. SchoolDeskSlot 안의 SynergyBook0~2는 이 프리팹의 중첩 인스턴스이며, 모든 학교 책상에 적용된다. 책의 공통 구조는 책 프리팹에서 편집하고, 쌓인 위치와 가운데 책의 색상은 책상 프리팹의 인스턴스 설정으로 유지한다. SchoolStudentSlot.books와 bookLabels는 각 책 및 시너지 텍스트를 참조하며 실제 문구와 표시 여부는 기존 Bind가 담당한다. 최초 변환 메뉴는 HongikIngan > Use synergy book prefab in School desks이며 이미 연결된 경우 재생성하지 않는다.

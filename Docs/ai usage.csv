@@ -285,3 +285,8 @@ Requirements :
 
 Replace every \u00B7 character with another character. DO NOT attempt to make it different everytime. Run a script, make sure the files doesn't get corrupt and good luck. This operation should be carried out on every single scene."
 "2026-11-06 04:39:42+09:00","qwerty","Check every script on every scene to check if that character exists. Do not create a seperate branch for this operation. If found, replace with -."
+"2026-11-06 04:52:19+09:00","qwerty","Tell me where '공격순서1' is connected to which script, inside scene ""school"", prefab deskslot"
+"2026-11-06 04:55:29+09:00","qwerty","Get rid of it please."
+"2026-11-06 05:03:09+09:00","qwerty","Revert, reinclude, only the number"
+"2026-11-06 05:06:02+09:00","qwerty","It didn't come back. Think"
+"2026-11-06 05:09:28+09:00","qwerty","Make the syngergie books (syngergies) also a prefab too."
