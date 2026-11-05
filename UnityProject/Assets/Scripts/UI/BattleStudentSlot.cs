@@ -17,7 +17,7 @@ namespace HongikIngan
         public bool HasStudent { get; private set; }
         public bool IsDragging { get; private set; }
         Transform originalParent;
-        Vector3 originalPosition;
+        Vector3 originalPosition, originalScale;
         int sibling;
         Vector2 pointerOffset;
         public void Bind(BattleFormationView owner, int index) { Owner = owner; Index = index; }
@@ -41,6 +41,7 @@ namespace HongikIngan
             if (e.button != PointerEventData.InputButton.Left || Owner == null || !Owner.CanReorder || !HasStudent) return;
             originalParent = studentVisual.parent;
             originalPosition = studentVisual.localPosition;
+            originalScale = studentVisual.localScale;
             sibling = studentVisual.GetSiblingIndex();
             studentVisual.SetParent(Owner.dragLayer, true);
             RectTransformUtility.ScreenPointToLocalPointInRectangle(Owner.dragLayer, e.position, e.pressEventCamera, out var pointer);
@@ -71,6 +72,8 @@ namespace HongikIngan
             studentVisual.SetParent(originalParent, false);
             studentVisual.SetSiblingIndex(sibling);
             studentVisual.localPosition = originalPosition;
+            // Reparenting to the drag layer adjusts local scale to preserve world size.
+            studentVisual.localScale = originalScale;
             visualGroup.blocksRaycasts = true;
         }
     }
