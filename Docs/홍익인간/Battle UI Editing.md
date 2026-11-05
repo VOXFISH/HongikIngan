@@ -131,3 +131,7 @@ BattlePresentation의 **Animate Students**는 전체 토글이다. 각 BattleStu
 열려 있던 에디터 작업을 보호하기 위해 별도 프로젝트 복사본에서 Unity 6000.3.7f1 Windows 빌드·씬/프리팹 참조·규칙 4,010개·초기 지급 2,000시드를 검사했다. 실제 1080p 플레이어 검사 222개는 배경 가장자리, 3·4·5·7·9명 배치, 페이드 시작/읽기/종료, 송신/수신/전대 버프 대상의 홉, 전체/개별 토글, 중단 후 위치 복구를 포함한다. 복구 오차 허용은 0.01 UI 단위 미만이다.
 
 검증한 Battle 씬·학생 프리팹과 동일한 소스를 원본에 반영했고 기존 GUID를 유지했다. 캡처와 결과는 UnityProject/Builds/BattlePolishComplete/, 로그는 UnityProject/Logs/BattlePolishIsolatedBuild.log에 있다. 수동 마우스 인수 검사와 FMOD 청취는 미실시다. 이전 Battle을 열어 둔 에디터는 디스크의 씬을 다시 불러온다.
+
+### Battle 뒷모습 이미지 (2026-11-06)
+
+BattleFormationView.Artwork의 Girl0·Girl1·Girl2를 Assets/magical_char_back의 같은 ID 이미지로 연결했다. 기존 여러 Sprite 분할 중 캐릭터 본체를 참조하며 원본 PNG·GUID·가져오기 설정은 유지한다. 현재 해당 폴더에는 3개만 있으므로 나머지 Girl은 기존 이미지를 유지한다. 추가 이미지는 같은 Artwork 목록에서 Girl ID에 맞게 연결한다. 기존 홉·페이드·드래그와 비율 유지 설정도 그대로 사용한다.

@@ -7479,11 +7479,11 @@ MonoBehaviour:
   tooltip: {fileID: 1008072169}
   artwork:
   - girlId: Girl0
-    sprite: {fileID: 21300000, guid: a4807bb330460c04cb89c4938cb03773, type: 3}
+    sprite: {fileID: 5509046545686954142, guid: 5c7c69fa63e4f8e4d961c6700cd877ce, type: 3}
   - girlId: Girl1
-    sprite: {fileID: 21300000, guid: 1bd43890a60b45b4aafe792201acd2d5, type: 3}
+    sprite: {fileID: -4913148767084458671, guid: 9229ee5a5cdbb5e4197167156c5b56da, type: 3}
   - girlId: Girl2
-    sprite: {fileID: 21300000, guid: 4bf1ddd49de97874b8f58d51589787ba, type: 3}
+    sprite: {fileID: -1831542387125468934, guid: c52a95f8146afd94bbc9f1f40af01d48, type: 3}
   - girlId: Girl3
     sprite: {fileID: 21300000, guid: 10fe74c9f8a75d644b09d32de8aaf631, type: 3}
   - girlId: Girl4
