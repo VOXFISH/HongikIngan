@@ -121,3 +121,10 @@ Unity 6000.3.7f1의 컴파일·씬 참조·Windows 빌드와 기존 규칙 4,000
 검증 명령은 플레이어의 `--battle-arc-smoke`, `--girl-battle-smoke`, `--battle-ui-smoke`와 `--smoke-output <폴더>`다. 최신 빌드는 `HongikIngan.Editor.BattleArcLayoutBuilder.Build`로 만든다. 로컬 로그는 `Logs/BattleArcPolishedBuild.log`, `BattleArcVerifiedPlayer.log`, `BattleArcAllGirls.log`, `BattleArcUiRegression.log`이며 결과는 `Builds/BattleArcVerified`, `BattleArcAllGirls`, `BattleArcUiRegression`에 있다. 빌드·로그는 커밋하지 않는다.
 
 숨김 Windows 창의 화면 버퍼가 검게 캡처될 수 있어, 새 호 배치 검사는 실제 Canvas를 임시 렌더 텍스처로 렌더링한 뒤 카메라·Canvas 설정을 모두 복원한다. 검증에만 사용하는 경로이며 일반 게임에서는 실행하지 않는다. 3·4·5·7·9명 구도, 호버 박스, 계산식, 빔 이미지를 확인했다. 수동 마우스 인수 검사와 FMOD 실제 재생은 이번에 수행하지 않았다. 스프라이트 미지정 항목은 임시 도형을 사용한다.
+
+
+### 기본 이미지 연결
+
+원격 test의 기본 이미지 커밋도 병합해 보존했다. Assets/sprite/characters/Girl00.png부터 Girl35까지 존재하는 34개 이미지를 Girl 식별자로 연결했다. Girl05와 Girl11 파일은 아직 없어 임시 도형으로 표시한다. HongikIngan/Bind available Girl artwork 메뉴는 비어 있는 Artwork 항목만 채우며 수동 지정은 보존한다. 여러 Sprite로 분할된 원본은 면적이 가장 큰 본체를 선택하고, 기존 분할 설정과 GUID를 유지한다. 가키(Girl04)도 작은 장식 조각 대신 본체 Sprite를 연결했다.
+
+이미지 통합 후 빌드 로그는 Logs/BattleArcFinalBuild.log, 호 배치 검증 결과와 화면 캡처는 Builds/BattleArcFinal/에서 확인한다.

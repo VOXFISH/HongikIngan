@@ -65,6 +65,7 @@ namespace HongikIngan
             run.Students.Clear();run.Students.AddRange(actual);formation.Render(run);
             Check(formation.artwork.Length==36,"Inspector artwork entry for every Girl");
             var artwork=formation.artwork.Single(a=>a.girlId==actual[0].Definition.Id);
+            var originalArtwork=artwork.sprite;
             var testSprite=Sprite.Create(Texture2D.whiteTexture,new Rect(0,0,1,1),new Vector2(.5f,.5f));
             artwork.sprite=testSprite;formation.Render(run);
             var first=formation.StudentSlot(0); var second=formation.StudentSlot(1);
@@ -88,7 +89,7 @@ namespace HongikIngan
             var original=run.Students[0];first.OnBeginDrag(e);second.OnDrop(e);first.OnEndDrag(e);
             Check(run.Students[1]==original,"centered drag uses logical index");
             Check(formation.StudentSlot(1).portrait.sprite==testSprite,"Girl sprite follows reordered student");
-            artwork.sprite=null;formation.Render(run);Destroy(testSprite);
+            artwork.sprite=originalArtwork;formation.Render(run);Destroy(testSprite);
             first=formation.StudentSlot(0);first.OnPointerEnter(e);screen.PerformAction();first.OnPointerEnter(e);
             Check(screen.IsRunning && !formation.tooltip.IsOpen,"attack hides and rejects hover");
             float deadline=Time.realtimeSinceStartup+120;

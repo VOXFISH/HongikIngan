@@ -16,7 +16,37 @@ namespace HongikIngan.Editor
         const string SlotPath = "Assets/UI/Prefabs/BattleStudentSlot.prefab";
         static readonly Color Ink = new Color(.14f,.12f,.23f);
         static readonly Color Paper = new Color(.97f,.96f,1);
-        public static void Build() { Apply(); RefineReadability(); RefineTextBounds(); PrototypeBuilder.BuildExpansion(); }
+        public static void Build() { Apply(); RefineReadability(); RefineTextBounds(); BindAvailableArtwork(); PrototypeBuilder.BuildExpansion(); }
+        [MenuItem("HongikIngan/Bind available Girl artwork")]
+        public static void BindAvailableArtwork()
+        {
+            var scene=EditorSceneManager.OpenScene("Assets/Scenes/Battle.unity");
+            var formation=Object.FindFirstObjectByType<BattleFormationView>(); int bound=0;
+            foreach(var entry in formation.artwork)
+            {
+                if(entry.sprite!=null) continue;
+                if(!int.TryParse(entry.girlId.Replace("Girl",""),out int id)) continue;
+                string path="Assets/sprite/characters/Girl"+id.ToString("00")+".png";
+                var importer=AssetImporter.GetAtPath(path) as TextureImporter;
+                if(importer==null)continue;
+                // Imported art may have separate accent slices; use the character body.
+                var sprite=AssetDatabase.LoadAllAssetsAtPath(path).OfType<Sprite>()
+                    .OrderByDescending(s=>s.rect.width*s.rect.height).FirstOrDefault();
+                if(sprite==null)
+                {
+                    importer.textureType=TextureImporterType.Sprite; importer.spriteImportMode=SpriteImportMode.Single;
+                    importer.alphaIsTransparency=true; importer.SaveAndReimport();
+                    sprite=AssetDatabase.LoadAssetAtPath<Sprite>(path);
+                }
+                if(sprite!=null) { entry.sprite=sprite; bound++; }
+            }
+            if(bound>0)
+            {
+                EditorUtility.SetDirty(formation); EditorSceneManager.MarkSceneDirty(scene);
+                EditorSceneManager.SaveScene(scene); AssetDatabase.SaveAssets();
+            }
+            Debug.Log("BATTLE_ARTWORK_BOUND count="+formation.artwork.Count(a=>a.sprite!=null));
+        }
         static void RefineTextBounds()
         {
             var scene=EditorSceneManager.OpenScene("Assets/Scenes/Battle.unity");
