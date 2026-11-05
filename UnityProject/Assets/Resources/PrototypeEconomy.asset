@@ -23,6 +23,6 @@ MonoBehaviour:
   slotExpansionPrice: 40
   victoryReward: 70
   victoryRewardPerStage: 15
-  bossBaseHp: 450
-  bossGrowth: 1.65
+  bossBaseHp: 2000
+  bossGrowth: 2
   polaroidDamage: 10

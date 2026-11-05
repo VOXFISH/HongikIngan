@@ -1,5 +1,7 @@
 # 교실·전투 UI 목업 → Unity 구현 v4
 
+> 2026-11-06 후속 변경: 전투 구도는 사용자의 새 스케치에 맞춘 가운데 호 배치로 교체했다. 슬롯 채우기·호버·원기옥과 빔·1초 계산 표시는 [최신 전투 UI 편집](../Battle%20UI%20Editing.md)의 마지막 절을 우선한다. 아래 v4 좌표는 이전 구현 이력이다.
+
 - 날짜: 2026-11-06
 - 기준: enkephalin-needed의 [v3 기획서](UI%20Mockup%20Implementation%20v3.md), 사용자가 지정한 로컬 [HTML 원본](Reference/classroom-lobby.html), gamesystem `83200b3`의 Girl0–Girl17·경제·전투 규칙.
 - HTML 원본 이름: `교실 로비 — 인터랙티브 목업 (학생증 추가).html`. 카카오톡 받은 파일 폴더에서 찾았으며 수정 없이 참고 폴더에 보존했다. HTML의 게임 로직은 Unity 구현에 사용하지 않는다.

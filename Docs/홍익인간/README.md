@@ -17,7 +17,7 @@
 - [교실 기능별 결정 사항](Decisions/Classroom/README.md): 7개 기능의 결정·미정·검증 기준.
 
 - [프로토타입 실행 안내](Prototype%20Guide.md): 메인·학교·전투 씬, 초기 지급, 조작과 검증 방법.
-- [전투 UI 편집](Battle%20UI%20Editing.md): 독립 UI 오브젝트 배치, 컴포넌트 책임과 검증.
+- [전투 UI 편집](Battle%20UI%20Editing.md): 가운데 호 배치, 슬롯별 호버·버프·계산식, 원기옥·HP 연출과 Inspector 편집.
 - [Girl0–Girl35 전투 구현](Girl%20Battle%20Implementation.md): 자연어 우선 해석, 36명 스킬·강화와 공통 시너지, 검증 결과.
 - [전체 시너지 효과 목록](Girls/synergy.md): 전체 6개 부활동·6개 성격 및 정밀화의 공통 효과.
 - [키워드 효과 목록](Girls/keywords.md): 표독·검은 클로버·넌 내 꺼야·조명·사랑의 수치·소모·중첩·유지 규칙과 이전 호환 항목.
