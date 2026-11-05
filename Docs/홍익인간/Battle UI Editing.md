@@ -95,3 +95,9 @@ Assets/UI/Prefabs/SchoolSynergyBook.prefab이 책 한 권의 공통 배치다. S
 Assets/UI/Prefabs/BattleStudentSlot.prefab은 Slot01 기반의 학생 슬롯이다. Formation/Slot01~09가 이를 사용하며 BattleFormationView.slots 배열과 드래그 연결을 유지한다. Assets/UI/Prefabs/BattleBuilding.prefab은 Building0 기반 배경 건물이며 CityBack/Building0~13에 적용된다. 기존 개별 위치·크기·색상과 텍스트 차이는 인스턴스 오버라이드로 보존했다. 공통 변경이 특정 인스턴스의 오버라이드와 겹치면 해당 인스턴스 설정이 우선한다. 생성 메뉴는 HongikIngan > Use Battle slot and building prefabs이다. 이미 연결된 프리팹은 재생성하지 않는다. 건물은 사용자 추가 승인 후 변환했으며 SoundModal과 SceneTransitionOverlay는 이번 프리팹화 범위에 포함하지 않았다.
 
 Girl35 확장 통합에서는 main의 이 프리팹 구조를 보존했다. 학생 이름의 Auto Size 설정은 공통 BattleStudentSlot 프리팹에 두며, 보상 팝업은 Battle 씬의 독립 오브젝트다. HongikIngan.Editor.PrototypeBuilder.BuildExpansion은 필요한 팝업·모집 UI 연결과 규칙 검사를 마친 뒤 Windows 빌드를 생성한다.
+
+## School 학생 초상화
+
+SchoolStudentSlot.Bind가 현재 학생의 Id로 Assets/UI/StudentPortraitCatalog.asset을 조회하고 StudentPlaceholder의 Image.sprite를 갱신한다. 사진이 있을 때는 Fill을 숨기고 흰색 tint와 Preserve Aspect를 적용하며, 빈 슬롯이나 이미지 누락 시 기존 초상화를 지우고 자리표시자로 되돌린다. 학생 이동·교환·영입은 기존 Refresh/Bind 흐름을 사용한다.
+
+Assets/sprite/characters/Girl00.png는 Girl0, Girl01.png는 Girl1로 연결한다. 현재 34장이고 Girl05.png와 Girl11.png는 없다. 이미지를 추가한 뒤 HongikIngan > Connect School student portraits를 실행하면 카탈로그와 공통 책상 프리팹 연결을 갱신한다. 각 PNG는 전체 그림 한 장이므로 Sprite Mode Single로 가져오며 원본 PNG는 수정하지 않는다. 카탈로그를 프리팹이 직접 참조하므로 플레이어 빌드에도 포함된다. 학생 이미지 적용은 실행 중이며 편집 상태에는 특정 학생을 고정하지 않는다.
