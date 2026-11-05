@@ -95,3 +95,47 @@ Assets/UI/Prefabs/SchoolSynergyBook.prefab이 책 한 권의 공통 배치다. S
 Assets/UI/Prefabs/BattleStudentSlot.prefab은 Slot01 기반의 학생 슬롯이다. Formation/Slot01~09가 이를 사용하며 BattleFormationView.slots 배열과 드래그 연결을 유지한다. Assets/UI/Prefabs/BattleBuilding.prefab은 Building0 기반 배경 건물이며 CityBack/Building0~13에 적용된다. 기존 개별 위치·크기·색상과 텍스트 차이는 인스턴스 오버라이드로 보존했다. 공통 변경이 특정 인스턴스의 오버라이드와 겹치면 해당 인스턴스 설정이 우선한다. 생성 메뉴는 HongikIngan > Use Battle slot and building prefabs이다. 이미 연결된 프리팹은 재생성하지 않는다. 건물은 사용자 추가 승인 후 변환했으며 SoundModal과 SceneTransitionOverlay는 이번 프리팹화 범위에 포함하지 않았다.
 
 Girl35 확장 통합에서는 main의 이 프리팹 구조를 보존했다. 학생 이름의 Auto Size 설정은 공통 BattleStudentSlot 프리팹에 두며, 보상 팝업은 Battle 씬의 독립 오브젝트다. HongikIngan.Editor.PrototypeBuilder.BuildExpansion은 필요한 팝업·모집 UI 연결과 규칙 검사를 마친 뒤 Windows 빌드를 생성한다.
+
+## 가운데 호 배치와 숫자 연출 (2026-11-06 최신)
+
+이 절은 앞의 왼쪽 부유 슬롯 배치보다 우선한다. [사용자 스케치](Images/Battle%20Arc%20Sketch.png)를 기준으로 괴수를 위쪽 중앙, 원기옥을 가운데, 학생을 아래쪽 호에 배치했다. TURN과 현재 시너지는 왼쪽 위, 공격 버튼은 오른쪽 아래다. 보스 디버프는 HP 오른쪽, 아군 버프는 각 이름 위에서 스택과 함께 표시한다.
+
+9개의 물리적인 자리와 논리적인 행동 순서를 구별한다. 3명은 물리 자리 4–6, 4명은 3–6, 5명은 3–7, 7명은 2–8, 분신 포함 9명은 1–9에 선다. 표시 번호와 스킬의 자리 조건은 보이는 학생의 왼쪽부터 1로 시작한다. 짝수 인원은 중앙 왼쪽에 한 명 더 선다. 드래그와 재행동도 논리 순서를 사용하며, 인원이 바뀌어도 런타임에서 슬롯 RectTransform을 재계산하지 않는다.
+
+- BattleCanvas/Layout/Formation/Slot01–09: 호의 실제 좌표. 배열은 물리적인 왼쪽부터 순서다.
+- Assets/UI/Prefabs/BattleStudentSlot.prefab의 Student/Portrait: 스프라이트 자리. Name, Buffs, Calculation, AttackOrder는 각각 이름, 버프, 계산식, 행동 순서다. 기존 학년·역할·시너지·스킬 텍스트는 데이터 참조를 유지하되 화면에서는 숨긴다.
+- BattleCanvas/Layout/StudentTooltip: 준비 중 포인터를 올렸을 때 이름·스킬명·스킬 설명·강화 수치가 나오는 박스. 박스 크기와 텍스트는 Inspector에서, 학생과의 간격은 offset으로 편집한다. 화면 밖으로 나가지 않도록 위치만 따라간다. 공격·모달·턴 전환·결과에는 숨긴다.
+- BossPanel: 이마 위 HP 숫자와 바. BossDebuffs는 오른쪽 효과 목록이다.
+- Presentation/Orb: 숫자와 최근 두 항목의 데미지 로그. 기존 별도 BonusPanel은 숨긴다.
+- BattlePresentation의 stepDuration은 기본 1초, beamDuration도 기본 1초다. 각 항목의 계산식을 해당 학생 머리 위에 표시하면서 합동 데미지를 보간한다. 전역 효과는 원기옥 로그에 표시한다.
+- 빔은 원기옥 숫자 RectTransform 중심에서 HP 숫자 중심까지 향한다. 두 숫자를 옮기면 빔도 따라간다. 빔 두께는 RectTransform 높이로 편집한다. 원기옥은 0까지 소진되고 HP는 같은 시간 동안 감소한다. 전투 규칙·보상 계산은 기존 모델을 사용하며, 남은 피해가 있더라도 화면 HP는 0 아래로 내려가지 않는다.
+
+명시적 마이그레이션 메뉴는 HongikIngan/Apply centered arc Battle layout이다. 이미 적용된 씬의 배치는 다시 덮어쓰지 않는다. 준비 중 상세 정보는 BattleStudentTooltip, 표시 순서 매핑은 BattleFormationView, 숫자·빔 연출은 BattlePresentation이 담당한다.
+
+스프라이트를 추가할 때는 Formation의 BattleFormationView > Artwork에서 Girl0–Girl35 식별자에 Sprite를 연결한다. 복제·이동·재배치 후에도 같은 소녀의 이미지가 따라간다. 빈 항목은 임시 색상 도형을 사용한다. Portrait 오브젝트는 그림의 위치와 크기를 편집하는 자리이며, 개별 그림 연결은 Artwork 목록을 사용한다. 원기옥의 BattleOrbGraphic은 해상도와 무관하게 타원을 그리며 크기·색상·테두리는 Inspector에서 편집한다.
+
+### 호 배치 검증
+
+Unity 6000.3.7f1의 컴파일·씬 참조·Windows 빌드와 기존 규칙 4,000개, 초기 지급 2,000개 시드를 통과했다. 실제 플레이어에서 호 배치·스프라이트·호버·1초 계산·빔과 숫자 동기화 114개, 전체 소녀·분신·강화·복귀 258개, 기존 전투 입력·모달·승패·중단 복구 26개를 확인했다.
+
+검증 명령은 플레이어의 `--battle-arc-smoke`, `--girl-battle-smoke`, `--battle-ui-smoke`와 `--smoke-output <폴더>`다. 최신 빌드는 `HongikIngan.Editor.BattleArcLayoutBuilder.Build`로 만든다. 로컬 로그는 `Logs/BattleArcPolishedBuild.log`, `BattleArcVerifiedPlayer.log`, `BattleArcAllGirls.log`, `BattleArcUiRegression.log`이며 결과는 `Builds/BattleArcVerified`, `BattleArcAllGirls`, `BattleArcUiRegression`에 있다. 빌드·로그는 커밋하지 않는다.
+
+숨김 Windows 창의 화면 버퍼가 검게 캡처될 수 있어, 새 호 배치 검사는 실제 Canvas를 임시 렌더 텍스처로 렌더링한 뒤 카메라·Canvas 설정을 모두 복원한다. 검증에만 사용하는 경로이며 일반 게임에서는 실행하지 않는다. 3·4·5·7·9명 구도, 호버 박스, 계산식, 빔 이미지를 확인했다. 수동 마우스 인수 검사와 FMOD 실제 재생은 이번에 수행하지 않았다. 스프라이트 미지정 항목은 임시 도형을 사용한다.
+
+
+### 기본 이미지 연결
+
+원격 test의 기본 이미지와 학교 초상화 커밋을 병합해 보존했다. Assets/sprite/characters/Girl00.png부터 Girl35까지 36개 이미지를 Girl 식별자로 연결했다. 원격에 확정된 이미지 GUID와 가져오기 설정을 사용한다. HongikIngan/Bind available Girl artwork 메뉴는 비어 있는 Artwork 항목만 채우며 수동 지정은 보존한다. 여러 Sprite로 분할된 원본은 면적이 가장 큰 본체를 선택하고, 기존 분할 설정과 GUID를 유지한다. 가키(Girl04)도 원격의 단일 스프라이트를 사용해 본체와 장식을 함께 표시한다.
+
+이미지 통합 후 빌드 로그는 저장소 루트의 Logs/BattleArcFinalBuild.log, 호 배치 검증 결과와 화면 캡처는 UnityProject/Builds/BattleArcFinal/에서 확인한다. 최종 병합 후 Windows 빌드와 호 배치 플레이어 검사 114개도 통과했다.
+## School 학생 초상화
+
+SchoolStudentSlot.Bind가 현재 학생의 Id로 Assets/UI/StudentPortraitCatalog.asset을 조회하고 StudentPlaceholder의 Image.sprite를 갱신한다. 사진이 있을 때는 Fill을 숨기고 흰색 tint와 Preserve Aspect를 적용하며, 빈 슬롯이나 이미지 누락 시 기존 초상화를 지우고 자리표시자로 되돌린다. 학생 이동·교환·영입은 기존 Refresh/Bind 흐름을 사용한다.
+
+Assets/sprite/characters/Girl00.png는 Girl0, Girl01.png는 Girl1로 연결한다. 현재 34장이고 Girl05.png와 Girl11.png는 없다. 이미지를 추가한 뒤 HongikIngan > Connect School student portraits를 실행하면 카탈로그와 공통 책상 프리팹 연결을 갱신한다. 각 PNG는 전체 그림 한 장이므로 Sprite Mode Single로 가져오며 원본 PNG는 수정하지 않는다. 카탈로그를 프리팹이 직접 참조하므로 플레이어 빌드에도 포함된다. 학생 이미지 적용은 실행 중이며 편집 상태에는 특정 학생을 고정하지 않는다.
+
+## 1920×1080 확인 (2026-11-06)
+
+Battle Canvas는 1440×900 편집 좌표와 CanvasScaler의 Expand를 유지한다. 1920×1080에서는 1.2배로 표시되어 주요 배치 영역은 1728×1080이고 좌우 여백은 각각 96px이다. 스프라이트 비율을 유지하며, Inspector에서 작성한 호 좌표를 런타임에 덮어쓰지 않는다. 화면 해상도가 1920×1080이라고 편집 좌표도 같은 수치로 변경할 필요는 없다.
+
+실제 Windows 플레이어에서 `--battle-arc-smoke --full-hd --smoke-output <폴더>`로 렌더 해상도를 확인한다. 3·4·5·7·9명 초상화·이름·번호, 턴·시너지·보스 HP·디버프·원기옥 로그·공격 버튼과 호버 텍스트의 화면 경계를 검사하고 계산·빔을 캡처했다. 기본 보스 체력 2,000으로 UI 검사 209개와 규칙 검사 4,010개, 초기 지급 2,000시드를 통과했다. 결과는 `UnityProject/Builds/Battle1080Final/`, 로그는 `UnityProject/Logs/Battle1080Build.log`와 `Battle1080FinalPlayer.log`에 있다. 일반 실행의 창 크기는 이 검증 옵션이 변경하지 않는다.

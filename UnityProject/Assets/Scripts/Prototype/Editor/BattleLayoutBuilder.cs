@@ -84,7 +84,7 @@ namespace HongikIngan.Editor
             hud.damageLabel = Text(ui, "Damage", 35, 180, 975, 75, "합동 데미지  0", 32);
             var boss = Image(ui, "BossPanel", 1040, 170, 350, 230, new Color(.27f, .24f, .42f)).transform;
             Text(boss, "BossName", 20, 25, 310, 70, "괴수", 32, Color.white, TextAlignmentOptions.Center);
-            hud.bossHpLabel = Text(boss, "HP", 20, 115, 310, 55, "HP 450 / 450", 19, Color.white, TextAlignmentOptions.Center);
+            hud.bossHpLabel = Text(boss, "HP", 20, 115, 310, 55, "HP 2 000 / 2 000", 19, Color.white, TextAlignmentOptions.Center);
             hud.bossHpBar = Slider(boss, "HealthBar", 25, 190, 300, false);
             var presentation = Rect(ui, "Presentation", 0, 0, 1440, 900).gameObject.AddComponent<BattlePresentation>();
             presentation.beam = Image(presentation.transform, "Beam", 100, 290, 950, 45, new Color(.95f, .65f, .85f)).gameObject;
@@ -173,7 +173,10 @@ namespace HongikIngan.Editor
             var property = new SerializedObject(component).GetIterator();
             while (property.NextVisible(true))
                 if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue == null)
+                {
+                    if (component is BattleFormationView && property.propertyPath.StartsWith("artwork.Array.data[") && property.propertyPath.EndsWith(".sprite")) continue;
                     throw new InvalidOperationException(component.name + ": missing " + property.propertyPath);
+                }
         }
         static RectTransform Rect(Transform parent, string name, float x, float y, float w, float h)
         {

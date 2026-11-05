@@ -13,6 +13,9 @@ namespace HongikIngan
         public CanvasGroup visualGroup;
         public TMP_Text nameLabel, roleLabel, emptyLabel;
         public Image selectionFrame;
+        public Image studentPortrait;
+        public GameObject portraitPlaceholderFill;
+        public StudentPortraitCatalog portraitCatalog;
         public GameObject[] books;
         public TMP_Text[] bookLabels;
         public int Index { get; private set; }
@@ -30,6 +33,14 @@ namespace HongikIngan
             emptyLabel.gameObject.SetActive(!occupied);
             emptyLabel.text = available ? "빈 책상" : "확장 가능한 책상";
             selectionFrame.enabled = selected && occupied;
+            if (studentPortrait != null)
+            {
+                var sprite = student == null || portraitCatalog == null ? null : portraitCatalog.Find(student.Id);
+                studentPortrait.sprite = sprite;
+                studentPortrait.color = sprite != null ? Color.white : new Color(.85f, .77f, .82f, 1);
+                studentPortrait.preserveAspect = true;
+                if (portraitPlaceholderFill != null) portraitPlaceholderFill.SetActive(sprite == null);
+            }
             if (occupied)
             {
                 nameLabel.text = student.Name;

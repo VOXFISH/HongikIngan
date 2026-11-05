@@ -68,7 +68,7 @@ namespace HongikIngan
                 Check(screen != null && screen.CanReorder && SceneManager.GetActiveScene().name == "Battle", "battle scene ready " + group);
                 for (int i = 0; i < run.Students.Count; i++)
                 {
-                    var d = run.Students[i].Definition; var slot = screen.formation.slots[i];
+                    var d = run.Students[i].Definition; var slot = screen.formation.StudentSlot(i);
                     Check(slot.HasStudent && slot.nameLabel.text == d.Name, "girl name rendered " + d.Id);
                     slot.nameLabel.ForceMeshUpdate();
                     Check(!slot.nameLabel.isTextTruncated, "full girl name fits authored card " + d.Id);
