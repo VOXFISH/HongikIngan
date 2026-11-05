@@ -1,0 +1,611 @@
+fileFormatVersion: 2
+guid: c1e7efd6cbf2ab04b84663cdcbf5761d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5911909334797213980
+    second: Girl27_Magical_0
+  - first:
+      213: -1752851358884877173
+    second: Girl27_Magical_1
+  - first:
+      213: -8902207604855992355
+    second: Girl27_Magical_2
+  - first:
+      213: 822485433827815986
+    second: Girl27_Magical_3
+  - first:
+      213: -369511972027976055
+    second: Girl27_Magical_4
+  - first:
+      213: -2724378658829164067
+    second: Girl27_Magical_5
+  - first:
+      213: -5496946097467346972
+    second: Girl27_Magical_6
+  - first:
+      213: -5783260876924011671
+    second: Girl27_Magical_7
+  - first:
+      213: 2371968067574410812
+    second: Girl27_Magical_8
+  - first:
+      213: -2412137267584738809
+    second: Girl27_Magical_9
+  - first:
+      213: -344292804018936451
+    second: Girl27_Magical_10
+  - first:
+      213: 2961111902533251623
+    second: Girl27_Magical_11
+  - first:
+      213: 5218881419326414299
+    second: Girl27_Magical_12
+  - first:
+      213: 5899225471966810547
+    second: Girl27_Magical_13
+  - first:
+      213: 285046323341662398
+    second: Girl27_Magical_14
+  - first:
+      213: -2274823875974634729
+    second: Girl27_Magical_15
+  - first:
+      213: 5184983747748504262
+    second: Girl27_Magical_16
+  - first:
+      213: -3879729228729847803
+    second: Girl27_Magical_17
+  - first:
+      213: 558927219796648263
+    second: Girl27_Magical_18
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Girl27_Magical_0
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 0
+        width: 975
+        height: 1515
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ee981b58cda4fda0800000000000000
+      internalID: -5911909334797213980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_1
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 1367
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8c2b91e9fe9ca7e0800000000000000
+      internalID: -1752851358884877173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1175
+        width: 7
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddf07cb6951057480800000000000000
+      internalID: -8902207604855992355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_3
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 1255
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2327d34f42e0a6b00800000000000000
+      internalID: 822485433827815986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_4
+      rect:
+        serializedVersion: 2
+        x: 912
+        y: 1217
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 986b407b1da3fdaf0800000000000000
+      internalID: -369511972027976055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_5
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 1118
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd125de4b00113ad0800000000000000
+      internalID: -2724378658829164067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_6
+      rect:
+        serializedVersion: 2
+        x: 934
+        y: 1093
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ef2dfef5ace6b3b0800000000000000
+      internalID: -5496946097467346972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_7
+      rect:
+        serializedVersion: 2
+        x: 944
+        y: 1097
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96bb78b9fdabdbfa0800000000000000
+      internalID: -5783260876924011671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_8
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 441
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3ea756e36ceae020800000000000000
+      internalID: 2371968067574410812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_9
+      rect:
+        serializedVersion: 2
+        x: 914
+        y: 291
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70a51286fed568ed0800000000000000
+      internalID: -2412137267584738809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_10
+      rect:
+        serializedVersion: 2
+        x: 926
+        y: 294
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d756ab5d483d83bf0800000000000000
+      internalID: -344292804018936451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_11
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 83
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 722fca2369bf71920800000000000000
+      internalID: 2961111902533251623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_12
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 79
+        width: 7
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdd56d300013d6840800000000000000
+      internalID: 5218881419326414299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_13
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 63
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b19482bf424ed150800000000000000
+      internalID: 5899225471966810547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_14
+      rect:
+        serializedVersion: 2
+        x: 910
+        y: 71
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb89f4fee10b4f300800000000000000
+      internalID: 285046323341662398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_15
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 33
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71364f1ccb33e60e0800000000000000
+      internalID: -2274823875974634729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_16
+      rect:
+        serializedVersion: 2
+        x: 898
+        y: 49
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c229b25f33c4f740800000000000000
+      internalID: 5184983747748504262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_17
+      rect:
+        serializedVersion: 2
+        x: 902
+        y: 41
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5007bd872de682ac0800000000000000
+      internalID: -3879729228729847803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl27_Magical_18
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 33
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 741a6475855b1c700800000000000000
+      internalID: 558927219796648263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Girl27_Magical_0: -5911909334797213980
+      Girl27_Magical_1: -1752851358884877173
+      Girl27_Magical_10: -344292804018936451
+      Girl27_Magical_11: 2961111902533251623
+      Girl27_Magical_12: 5218881419326414299
+      Girl27_Magical_13: 5899225471966810547
+      Girl27_Magical_14: 285046323341662398
+      Girl27_Magical_15: -2274823875974634729
+      Girl27_Magical_16: 5184983747748504262
+      Girl27_Magical_17: -3879729228729847803
+      Girl27_Magical_18: 558927219796648263
+      Girl27_Magical_2: -8902207604855992355
+      Girl27_Magical_3: 822485433827815986
+      Girl27_Magical_4: -369511972027976055
+      Girl27_Magical_5: -2724378658829164067
+      Girl27_Magical_6: -5496946097467346972
+      Girl27_Magical_7: -5783260876924011671
+      Girl27_Magical_8: 2371968067574410812
+      Girl27_Magical_9: -2412137267584738809
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
