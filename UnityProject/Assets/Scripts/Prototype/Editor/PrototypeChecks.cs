@@ -22,9 +22,12 @@ namespace HongikIngan
                 ReplacementAndUpgrades();
                 CapacityAndRelics();
                 RerollAndBattle();
+                PetRefillAndRelicLimit();
                 Keywords();
                 CombatOrderingAndChains();
+                DocumentedDamageActions();
                 DamageFormatting();
+                GirlContentChecks.Run();
                 Debug.Log("PROTOTYPE_CHECKS_PASS assertions=" + assertions);
             }
             finally
@@ -81,7 +84,7 @@ namespace HongikIngan
                 Check(!run.PendingPet && !run.ChoosePet(0), "All pet tiers finish after one choice, including premium");
                 Check(run.Money == paid, "No grade price charged after pet payment");
                 Check(run.PhotoCount == candidateCount - 1 && !run.Photos.ContainsKey(chosen), "Only unchosen candidates become photos");
-                Check(run.PetOffers[0] == null, "Purchased offer remains empty");
+                Check(run.PetOffers[0].HasValue, "Consumed pet is immediately replaced");
 
                 var skip = new PrototypeRun(economy, 200 + (int)kind);
                 PetOffer(skip, kind);
@@ -111,13 +114,14 @@ namespace HongikIngan
         private static void FailedTransactions()
         {
             var run = new PrototypeRun(Economy(0), 5);
-            var recruits = run.RecruitOffers.Select(s => s.Id).ToArray();
+            var relics = run.RelicOffers.Select(r => r.Id).ToArray();
+            var pets = run.PetOffers.ToArray();
             int cost = run.RerollCost;
-            Check(!run.BuyRecruit(0) && !run.BuyRelic(0) && !run.OpenPet(0), "Insufficient funds prevent purchases");
+            Check(!run.BuyRelic(0) && !run.OpenPet(0), "Insufficient funds prevent purchases");
             Check(!run.Upgrade(0) && !run.Reroll() && !run.ExpandSlots(), "Insufficient funds prevent paid operations");
             Check(run.Money == 0 && run.Students.Count == 1 && run.Relics.Count == 0 && !run.PendingPet, "Failed operations are atomic");
-            Check(run.RerollCost == cost && recruits.SequenceEqual(run.RecruitOffers.Select(s => s.Id)), "Failed reroll preserves offers and next cost");
-            Check(!run.BuyRecruit(-1) && !run.OpenPet(999) && !run.Sell(999), "Invalid indices rejected");
+            Check(run.RerollCost == cost && relics.SequenceEqual(run.RelicOffers.Select(r => r.Id)) && pets.SequenceEqual(run.PetOffers), "Failed reroll preserves offers and next cost");
+            Check(!run.BuyRelic(-1) && !run.OpenPet(999) && !run.Sell(999), "Invalid indices rejected");
         }
 
         private static void SamplingAndOffers()
@@ -128,13 +132,14 @@ namespace HongikIngan
             for (int seed = 0; seed < 400; seed++)
             {
                 var run = new PrototypeRun(economy, seed);
-                Check(run.RecruitOffers.Count == 3, "Recruit offer has three candidates");
-                Check(run.RecruitOffers.All(s => !run.Owns(s.Id)), "Recruit candidates exclude owned students");
-                Check(run.RecruitOffers.Select(s => s.Id).Distinct().Count() == 3, "Recruit candidate uniqueness");
-                foreach (var student in run.RecruitOffers) grades[student.Grade - 1]++;
                 Check(run.PetOffers.Count == 3 && !run.PetOffers.All(p => p == PetKind.Normal), "Triple normal pet offers are rejected");
                 repeatedNonNormalPet |= run.PetOffers.GroupBy(p => p).Any(g => g.Count() > 1 && g.Key != PetKind.Normal);
-                Check(run.RelicOffers.Count == 3 && run.RelicOffers.Select(r => r.Id).Distinct().Count() == 3, "Unique relic offers");
+                Check(run.RelicOffers.Count == 1, "Exactly one relic offer");
+                PetOffer(run, PetKind.Normal);
+                Check(run.OpenPet(0), "Open weighted pet candidates");
+                Check(run.PendingCandidates.Count == 3 && run.PendingCandidates.All(s => !run.Owns(s.Id)), "Pet candidates exclude owned students");
+                Check(run.PendingCandidates.Select(s => s.Id).Distinct().Count() == 3, "Pet candidate uniqueness");
+                foreach (var student in run.PendingCandidates) grades[student.Grade - 1]++;
             }
             Check(repeatedNonNormalPet, "Other repeated pet kinds remain possible");
             float total = grades.Sum();
@@ -156,12 +161,14 @@ namespace HongikIngan
             Check(!run.Upgrade(0) && run.Money == money && run.Students[0].UpgradeCount == 1, "Once upgrade cap prevents repeat payment");
             Check(run.Sell(0), "Sell upgraded student");
             Check(run.Money == money + run.Settings.SalePrice(once.Grade), "Sale pays grade price");
-            run.RecruitOffers.Clear(); run.RecruitOffers.Add(once);
-            Check(run.BuyRecruit(0), "Released student can be recruited again");
+            PetOffer(run, PetKind.Normal);
+            Check(run.OpenPet(0), "Pay pet to recruit released student");
+            run.PendingCandidates.Clear(); run.PendingCandidates.Add(once);
+            Check(run.ChoosePet(0), "Released student can be recruited again through pet");
             Check(run.Students[0].UpgradeCount == 0 && run.Students[0].SkillValue == once.InitialValue, "Recruiting again resets upgrades");
-            Check(run.RecruitOffers[0] == null, "Recruit purchase leaves offer empty");
 
-            var unlimited = PrototypeCatalog.Students.First(s => s.UnlimitedUpgrade);
+            var unlimited = new StudentDefinition { Id = "unlimited_fixture", Name = "강화 검사", Grade = 1,
+                InitialValue = 100, UpgradeStep = 25, Action = ActionKind.AddDamage, UnlimitedUpgrade = true };
             run.Students.Clear(); run.Students.Add(new StudentState(unlimited));
             for (int i = 1; i <= 4; i++)
                 Check(run.Upgrade(0) && run.Students[0].UpgradeCount == i && run.Students[0].SkillValue == unlimited.ValueAtUpgrade(i), "Unlimited replacement rule at level " + i);
@@ -193,7 +200,7 @@ namespace HongikIngan
             run.RelicOffers[0] = desk;
             money = run.Money;
             Check(!run.BuyRelic(0) && run.Money == money, "Owned relic cannot be bought again");
-            Check(run.Reroll() && run.RelicOffers.All(r => r.Id != desk.Id), "Relic redraw excludes owned relics");
+            Check(!run.Reroll() && run.Money == money, "Relic purchase locks paid rerolls");
         }
 
         private static void RerollAndBattle()
@@ -205,14 +212,14 @@ namespace HongikIngan
             Check(run.Money == money - 20 && run.RerollCost == 40 && run.Reroll(), "Second reroll costs forty");
             Check(run.Money == money - 60 && run.RerollCost == 60, "Next reroll costs sixty");
             Check(run.StartBattle() && run.RerollCost == 20, "Battle entry resets reroll cost");
-            Check(!run.BuyRecruit(0) && !run.Sell(0) && !run.Reroll(), "Battle locks school transactions");
+            Check(!run.OpenPet(0) && !run.BuyRelic(0) && !run.Sell(0) && !run.Reroll(), "Battle locks school transactions");
             var student = run.Students[0];
             run.ResolveNextTurn();
             Check(run.Battle.Won && !run.Battle.Lost, "Boss death wins before turn limit");
             money = run.Money;
             Check(run.ReturnToSchool() && !run.InBattle && run.Stage == 2, "Win returns to next stage school");
             Check(ReferenceEquals(student, run.Students[0]) && run.Money >= money, "School return preserves students and rewards");
-            Check(run.RecruitOffers.Count == 3 && run.RelicOffers.Count == 3 && run.PetOffers.Count == 3, "Victory refreshes all offers");
+            Check(run.RelicOffers.Count == 1 && run.PetOffers.Count == 3, "Victory provides one relic and keeps three pets");
 
             var losingEconomy = Economy(); losingEconomy.bossBaseHp = 1000000f;
             var losing = new PrototypeRun(losingEconomy, 56);
@@ -230,6 +237,60 @@ namespace HongikIngan
             Check(losing.ResolveNextTurn().Count == 0 && losing.Battle.Log.Count == logCount, "Ended battle cannot resolve another turn");
             var empty = new PrototypeRun(Economy(), 57); empty.Students.Clear();
             Check(!empty.StartBattle(), "Empty team cannot enter battle");
+        }
+
+        private static void PetRefillAndRelicLimit()
+        {
+            var economy = Economy(); economy.bossBaseHp = 1;
+            var run = new PrototypeRun(economy, 502);
+            var pets = run.PetOffers.ToArray();
+            string firstRelic = run.RelicOffers[0].Id;
+            Check(run.Reroll() && pets.SequenceEqual(run.PetOffers), "Relic reroll leaves all pets unchanged");
+            Check(run.RelicOffers.Count == 1 && run.RelicOffers[0].Id != firstRelic, "Reroll changes the single offer when alternatives exist");
+            Check(run.BuyRelic(0), "One relic can be purchased before battle");
+            int paid = run.Money, cost = run.RerollCost;
+            Check(!run.Reroll() && !run.BuyRelic(0) && run.Money == paid && run.RerollCost == cost, "No repeat purchase or reroll charge after purchase");
+            // Even a caller supplying another offer cannot bypass the purchase allowance.
+            run.RelicOffers[0] = PrototypeCatalog.Relics.First(r => r.Id != run.Relics[0].Id);
+            Check(!run.BuyRelic(0) && run.Relics.Count == 1 && run.Money == paid, "Different relic cannot bypass per-battle limit");
+            for (int i = 0; i < 3; i++)
+            {
+                pets = run.PetOffers.ToArray();
+                Check(run.OpenPet(i), "Pets remain usable after relic purchase");
+                Check(run.PetOffers[i].HasValue, "Used pet slot refills before choice completes");
+                Check(Enumerable.Range(0, 3).Where(n => n != i).All(n => run.PetOffers[n] == pets[n]), "Refill preserves other pet slots");
+                Check(!run.PetOffers.All(p => p == PetKind.Normal), "Refill never leaves three normal pets");
+                paid = run.Money;
+                var candidates = run.PendingCandidates.ToArray();
+                pets = run.PetOffers.ToArray();
+                Check(!run.OpenPet(i) && !run.OpenPet((i + 1) % 3) && run.Money == paid &&
+                    candidates.SequenceEqual(run.PendingCandidates) && pets.SequenceEqual(run.PetOffers), "Pending selection prevents double charge and extra refill");
+                Check(run.SkipPet(), "Finish paid choice without refund");
+            }
+            pets = run.PetOffers.ToArray();
+            Check(!run.ReturnToSchool() && run.RelicPurchasedThisBattle, "Invalid return cannot reset purchase allowance");
+            Check(run.StartBattle() && run.RelicPurchasedThisBattle, "Entering battle does not reopen school purchases");
+            run.ResolveNextTurn();
+            Check(run.ReturnToSchool() && !run.RelicPurchasedThisBattle, "Victory return resets relic allowance");
+            Check(pets.SequenceEqual(run.PetOffers), "Returning from battle preserves unconsumed pets");
+            Check(run.RelicOffers.Count == 1 && run.RelicOffers.All(r => run.Relics.All(owned => owned.Id != r.Id)), "Next battle excludes already owned relics");
+            Check(run.BuyRelic(0) && run.Relics.Count == 2, "Next battle allows one further relic");
+
+            var empty = new PrototypeRun(Economy(0));
+            pets = empty.PetOffers.ToArray();
+            Check(!empty.OpenPet(0) && pets.SequenceEqual(empty.PetOffers), "Unaffordable pet does not refill");
+            Check(!empty.BuyRelic(0) && !empty.RelicPurchasedThisBattle, "Failed purchase does not consume relic allowance");
+            var exhausted = new PrototypeRun(Economy());
+            exhausted.Students.Clear();
+            exhausted.Students.AddRange(PrototypeCatalog.Students.Select(s => new StudentState(s)));
+            pets = exhausted.PetOffers.ToArray(); paid = exhausted.Money;
+            Check(!exhausted.OpenPet(0) && exhausted.Money == paid && pets.SequenceEqual(exhausted.PetOffers), "No eligible students means no payment or pet refill");
+            var noRelics = new PrototypeRun(economy);
+            noRelics.Relics.AddRange(PrototypeCatalog.Relics);
+            noRelics.StartBattle(); noRelics.ResolveNextTurn();
+            Check(noRelics.ReturnToSchool() && noRelics.RelicOffers.Count == 0, "Exhausted relic pool yields no offer");
+            paid = noRelics.Money;
+            Check(!noRelics.Reroll() && noRelics.Money == paid, "No paid reroll for exhausted relic pool");
         }
 
         private static void Keywords()
@@ -315,6 +376,34 @@ namespace HongikIngan
             Check(actionNames.Count == 12 && actionNames[0] == "initial", "Reaction actions emit further reactions without an arbitrary combo cap");
             Check(actionNames.Skip(1).All(n => n == "react1" || n == "react2"), "Only other reacting allies continue the reaction chain");
             for (int i = 2; i < actionNames.Count; i++) Check(actionNames[i] != actionNames[i - 1], "Reaction does not trigger itself");
+        }
+
+        private static void DocumentedDamageActions()
+        {
+            var minji = Actor("Girl6", ActionKind.TeamSizeDamage, 100);
+            var hanbyeol = Actor("Girl9", ActionKind.TeamSizeDamage, 100);
+            var team = ControlledBattle(100000, minji, hanbyeol, Actor("helper", ActionKind.AddDamage, 0));
+            team.ResolveNextTurn();
+            Check(team.Battle.Damage == 600, "Each team-size skill adds 100 per current team member, including self");
+
+            var nayeon = Actor("Girl10", ActionKind.AddThenPercentDamage, 0);
+            nayeon.Definition.InitialPercent = 10;
+            var percent = ControlledBattle(100000, Actor("seed", ActionKind.AddDamage, 250), nayeon);
+            percent.ResolveNextTurn();
+            Check(percent.Battle.Damage == 275, "Good Cop adds ten percent of accumulated damage");
+
+            var dahye = Actor("Girl11", ActionKind.AddThenPercentDamage, 50);
+            dahye.Definition.InitialPercent = 10;
+            dahye.Definition.UpgradeStep = 50;
+            dahye.Definition.PercentUpgradeStep = 5;
+            var venom = ControlledBattle(100000, Actor("seed", ActionKind.AddDamage, 150), dahye);
+            var values = new List<float>(); venom.DamageChanged += values.Add;
+            venom.ResolveNextTurn();
+            Check(values.SequenceEqual(new[] { 0f, 150f, 200f, 220f }), "Venom adds flat damage before current-damage percentage and reports both changes");
+            dahye.UpgradeCount = 1;
+            dahye.SkillValue = dahye.Definition.ValueAtUpgrade(1);
+            venom.ResolveNextTurn();
+            Check(venom.Battle.Damage == 287.5f, "Upgraded Venom applies 100 then fifteen percent");
         }
 
         private static void DamageFormatting()

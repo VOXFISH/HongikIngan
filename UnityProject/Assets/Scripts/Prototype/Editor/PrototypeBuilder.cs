@@ -18,6 +18,7 @@ namespace HongikIngan.Editor
             var economy=AssetDatabase.LoadAssetAtPath<EconomySettings>("Assets/Resources/PrototypeEconomy.asset");
             if(economy==null) AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<EconomySettings>(),"Assets/Resources/PrototypeEconomy.asset");
             CreateScene<SchoolScreen>("School");
+            SchoolLayoutBuilder.Apply();
             CreateScene<BattleScreen>("Battle");
             BattleLayoutBuilder.Apply();
             var paths=new[]{"Assets/Scenes/School.unity","Assets/Scenes/Battle.unity"};
