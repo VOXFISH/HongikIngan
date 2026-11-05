@@ -114,7 +114,7 @@ namespace HongikIngan.Editor
             for(int i=0;i<s.slots.Length;i++)
             {
                 var desk=(RectTransform)s.slots[i].transform; desk.anchoredPosition=new Vector2(points[i].x,-points[i].y); desk.localScale=Vector3.one*(i<3?.78f:.9f);
-                Label(desk,"AttackOrder",2,245,200,22,"공격 순서 "+(i+1),14);
+                Label(desk,"AttackOrder",2,245,200,22,(i+1).ToString(),14);
                 s.slots[i].gameObject.SetActive(i<6);
             }
             var obsolete=ui.Find("DeskHint"); if(obsolete!=null) obsolete.gameObject.SetActive(false);
