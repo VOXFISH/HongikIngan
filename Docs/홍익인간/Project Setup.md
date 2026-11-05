@@ -25,9 +25,10 @@ Unity Editor **6000.3.7f1** 프로젝트입니다.
 
 ## 저장소 구조
 
-- AGENTS.md: AI 에이전트 협업 규칙
-- CLAUDE.md: AGENTS.md 참조
-- Docs/: 기획 및 설계 문서
+- [AGENTS.md](../../AGENTS.md): 개발자와 AI 에이전트의 공통 작업 규칙
+- [CLAUDE.md](../../CLAUDE.md): 루트 AGENTS.md 참조
+- [Docs/홍익인간/](README.md): 기획·설계·협업·사용 안내 문서와 목차
+- `Docs/ai usage.csv`, `Docs/ai usage .md`: AI 사용 기록 (기존 위치 유지)
 - UnityProject/: Unity 프로젝트
 
-에이전트는 AGENTS.md와 Docs/를 먼저 읽습니다. 생성 캐시인 Library/ 등은 Git에 포함하지 않습니다.
+위 경로는 저장소 루트를 기준으로 합니다. 모든 팀원과 에이전트는 루트 `AGENTS.md`와 `Docs/홍익인간/README.md`를 먼저 읽습니다. 일반 Markdown 문서는 `Docs/홍익인간/` 아래에 작성하고, 생성 캐시인 Library/ 등은 Git에 포함하지 않습니다.
