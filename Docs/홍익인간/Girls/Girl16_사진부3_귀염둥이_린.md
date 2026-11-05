@@ -1,4 +1,4 @@
-# Girl7 - 유나
+# Girl16 - 린
 
 > 이 문서를 `Girl1.md`, `Girl2.md`처럼 복사하고 제목·파일명·식별자의 `%d`를 같은 정수로 바꾼다.
 > 위쪽은 JSON 모양으로 정보를 정리하고, 아래쪽은 설정·스킬 동작·기타 내용을 자유롭게 적는다. 엄격한 JSON 문법이나 고정된 형식에 맞출 필요는 없다.
@@ -11,22 +11,22 @@
 ```json
 {
   "schemaVersion": 1,
-  "girlId": "Girl7",
+  "girlId": "Girl11",
   "status": "draft", // draft 또는 ready. 미정 항목을 해결한 뒤 ready로 변경
-  "displayName": "유나",
+  "displayName": "다혜",
   "description": "", // 성격, 배경, 전투 컨셉을 자유롭게 설명
-  "grade": 3, // 1, 2, 3 중 하나. 가격은 공통 EconomySettings 사용
-  "role": "Dealer", // Buff / Debuff / Dealer. 표시 전용, 효과 조건에 사용하지 않음
+  "grade": 1, // 1, 2, 3 중 하나. 가격은 공통 EconomySettings 사용
+  "role": "Debuff", // Buff / Debuff / Dealer. 표시 전용, 효과 조건에 사용하지 않음
   "synergies": {
     "club": "선도부", // 부활동
-    "personality": "사랑꾼", // 성격
+    "personality": "독설가", // 성격
     "special": [], // 특수 시너지 ID/이름. 없으면 []
     "notes": "" // 시너지의 고유 효과나 기존 정의와 차이가 있으면 설명
   },
   "skill": {
-    "skillId": "Girl7_Skill",
-    "displayName": "사랑의 매",
-    "descriptionTemplate": "현재 공격력/2 만큼 공격", // 현재 변수는 {value}처럼 표기
+    "skillId": "Girl11_Skill",
+    "displayName": "독사",
+    "descriptionTemplate": "공격력 +50, 전체 공격력 10% 추가", // 현재 변수는 {value}처럼 표기
     "intent": "", // 어떤 조합과 배치에서 어떤 플레이를 유도하는지
     "variables": [
       { "id": "value", "initialValue": 0, "unit": "", "description": "" }
@@ -99,9 +99,6 @@
 
 <!-- 발동 계기, 조건, 대상 선택, 효과 순서, 예외 상황을 자연어로 설명. 위 항목에 담기 어려운 내용도 여기에 작성한다. -->
 
-혁명적인 마법
-
-(덱에 있는 인원수)x 100의 공격
 
 ## 강화와 수치 설명
 
