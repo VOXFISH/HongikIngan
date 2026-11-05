@@ -1,35 +1,35 @@
-# D09 — Character Card and Polaroid Ownership — 2026-11-05 16:40:26+09:00
+# D09 — 캐릭터 카드 연결과 폴라로이드 보유 정보 — 2026-11-05 16:40:26+09:00
 
-- Recorded: 2026-11-05 16:40:26+09:00 (Asia/Seoul). This is the recording time, not an inferred message time.
-- Status: Proposed / decision pending. Confirmed constraints below retain their existing authority.
-- Source comments: [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
-- References: [Game System Design](../Game%20System%20Design.md), [Magical Girl Attributes](../Magical%20Girl%20Attributes.md).
+- 기록 시각: 2026-11-05 16:40:26+09:00 (Asia/Seoul). 이 문서를 기록한 시각이며, 메시지 작성 시각을 추정한 값이 아니다.
+- 상태: 제안 · 결정 대기. 아래 확정 제약은 기존의 효력을 유지한다.
+- 출처 코멘트: [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
+- 참고 문서: [게임 시스템 기획서](../Game%20System%20Design.md), [마법소녀 속성 정의](../Magical%20Girl%20Attributes.md).
 
-## Confirmed constraints
+## 확정 제약
 
-The user wants keyword/action/Polaroid information on the character card. Polaroids can be obtained for characters not recruited.
+사용자는 캐릭터 카드에 키워드·액션·폴라로이드 정보를 담기를 원한다. 영입하지 않은 캐릭터의 폴라로이드도 획득할 수 있다.
 
-## Recommendation
+## 권고안
 
-Add a future Polaroid-definition reference to the card definition; keep the owned collection in run/inventory state, independent of recruited instances. Skill rules may reference keyword definitions.
+추후 카드 정의에 폴라로이드 정의 참조를 추가한다. 보유 목록은 영입 개체와 독립된 게임 진행(run)·인벤토리 상태에서 관리한다. 스킬 규칙은 키워드 정의를 참조할 수 있다.
 
-## Decision required
+## 결정할 사항
 
-Define the missing card-to-Polaroid connection and collection identity/count semantics. No new Polaroid values or acquisition mechanics are approved here.
+아직 빠져 있는 카드와 폴라로이드 사이의 연결, 보유 항목을 식별하는 방식과 개수의 의미를 정한다. 이 기록은 새로운 폴라로이드 수치나 획득 방식을 승인하지 않는다.
 
-## Planned impact
+## 예상 영향 범위
 
-Future character-card adapter, battle setup contribution, run/inventory integration. These are proposed responsibilities; no scripts are created by this record.
+추후 캐릭터 카드 어댑터, 전투 초기 설정으로의 정보 전달, 게임 진행(run)·인벤토리 연결. 위 항목은 제안된 책임이며, 이 기록을 작성하면서 스크립트를 생성하지는 않았다.
 
-## Acceptance evidence to collect later
+## 추후 검증 기준
 
-A Polaroid for an unowned character contributes without requiring a recruited character instance; totals are not duplicated on every character.
+영입 개체가 없어도 해당 캐릭터의 폴라로이드가 효과에 반영되는지 확인한다. 전체 보유량을 각 캐릭터에 중복 저장해서는 안 된다.
 
-## Decision record
+## 결정 기록
 
-- Owner: Unassigned.
-- Decision: Pending; no acceptance inferred from encouragement or documentation requests.
-- Decision time: Not yet recorded.
-- Implementation: Not started.
+- 담당자: 미지정.
+- 결정: 대기 중. 격려나 문서 작성 요청을 승인으로 해석하지 않는다.
+- 결정 시각: 미기록.
+- 구현: 시작하지 않음.
 
-[Decision index](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [Recommendation log](Recommendation-Log-2026-11-05_16-40-26_KST.md)
+[결정 요구사항 목차](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [권고 이력](Recommendation-Log-2026-11-05_16-40-26_KST.md)

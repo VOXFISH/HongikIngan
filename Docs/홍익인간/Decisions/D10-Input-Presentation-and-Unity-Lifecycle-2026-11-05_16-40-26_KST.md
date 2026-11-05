@@ -1,35 +1,35 @@
-# D10 — Input Presentation and Unity Lifecycle — 2026-11-05 16:40:26+09:00
+# D10 — 입력·연출과 Unity 생명주기 — 2026-11-05 16:40:26+09:00
 
-- Recorded: 2026-11-05 16:40:26+09:00 (Asia/Seoul). This is the recording time, not an inferred message time.
-- Status: Proposed / decision pending. Confirmed constraints below retain their existing authority.
-- Source comments: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
-- References: [Game System Design](../Game%20System%20Design.md), [Magical Girl Attributes](../Magical%20Girl%20Attributes.md).
+- 기록 시각: 2026-11-05 16:40:26+09:00 (Asia/Seoul). 이 문서를 기록한 시각이며, 메시지 작성 시각을 추정한 값이 아니다.
+- 상태: 제안 · 결정 대기. 아래 확정 제약은 기존의 효력을 유지한다.
+- 출처 코멘트: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
+- 참고 문서: [게임 시스템 기획서](../Game%20System%20Design.md), [마법소녀 속성 정의](../Magical%20Girl%20Attributes.md).
 
-## Confirmed constraints
+## 확정 제약
 
-UI assets are to be authored inside the Unity Editor. Relic throwing is cosmetic; attack-position movement and relic throwing are deferred.
+UI 에셋은 Unity Editor 안에서 제작한다. 유물 투척은 시각적 연출이며, 공격 포지션 이동과 유물 투척 구현은 추후로 미룬다.
 
-## Recommendation
+## 권고안
 
-Lock dragging and attack input synchronously on confirmation. Keep UI read-only except command requests. Use a resolution ID and cancellable playback; animation completion asks the controller to apply damage.
+공격 확정과 동시에 드래그와 공격 입력을 잠근다. UI는 명령 요청 외에는 상태를 읽기만 한다. 처리 회차를 구분하는 resolution ID와 취소 가능한 연출 재생을 사용하며, 애니메이션이 끝나면 컨트롤러에 데미지 적용을 요청한다.
 
-## Decision required
+## 결정할 사항
 
-Confirm input-lock policy, exact impact timing, interruption/re-entry behavior and whether cinematic movement fires gameplay events. Recommend visual-only movement remain separate from logical swaps.
+입력 잠금 정책, 정확한 타격 시점, 중단·재진입 처리, 연출용 이동이 게임 이벤트를 발생시키는지 정한다. 시각적 이동과 논리적인 위치 교환은 분리하는 것을 권장한다.
 
-## Planned impact
+## 예상 영향 범위
 
-BattleSceneInstaller, BattleHud, SlotView, CharacterCardView, BattlePresentation. These are proposed responsibilities; no scripts are created by this record.
+BattleSceneInstaller, BattleHud, SlotView, CharacterCardView, BattlePresentation. 위 항목은 제안된 책임이며, 이 기록을 작성하면서 스크립트를 생성하지는 않았다.
 
-## Acceptance evidence to collect later
+## 추후 검증 기준
 
-Awake validates references, Start initializes, OnDestroy disposes; listener binding works regardless of enable/bind order. Interrupted playback cannot leave a hidden permanent wait.
+Awake에서 참조를 검증하고 Start에서 초기화하며 OnDestroy에서 자원을 정리한다. 활성화와 바인딩 순서에 관계없이 리스너 연결이 동작해야 한다. 연출이 중단되어도 원인을 알 수 없는 무한 대기 상태에 빠져서는 안 된다.
 
-## Decision record
+## 결정 기록
 
-- Owner: Unassigned.
-- Decision: Pending; no acceptance inferred from encouragement or documentation requests.
-- Decision time: Not yet recorded.
-- Implementation: Not started.
+- 담당자: 미지정.
+- 결정: 대기 중. 격려나 문서 작성 요청을 승인으로 해석하지 않는다.
+- 결정 시각: 미기록.
+- 구현: 시작하지 않음.
 
-[Decision index](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [Recommendation log](Recommendation-Log-2026-11-05_16-40-26_KST.md)
+[결정 요구사항 목차](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [권고 이력](Recommendation-Log-2026-11-05_16-40-26_KST.md)

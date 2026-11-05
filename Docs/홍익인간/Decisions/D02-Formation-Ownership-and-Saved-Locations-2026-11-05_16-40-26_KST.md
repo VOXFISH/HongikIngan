@@ -1,35 +1,35 @@
-# D02 — Formation Ownership and Saved Locations — 2026-11-05 16:40:26+09:00
+# D02 — 배치 상태의 관리 주체와 위치 저장 — 2026-11-05 16:40:26+09:00
 
-- Recorded: 2026-11-05 16:40:26+09:00 (Asia/Seoul). This is the recording time, not an inferred message time.
-- Status: Proposed / decision pending. Confirmed constraints below retain their existing authority.
-- Source comments: [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
-- References: [Game System Design](../Game%20System%20Design.md), [Magical Girl Attributes](../Magical%20Girl%20Attributes.md).
+- 기록 시각: 2026-11-05 16:40:26+09:00 (Asia/Seoul). 이 문서를 기록한 시각이며, 메시지 작성 시각을 추정한 값이 아니다.
+- 상태: 제안 · 결정 대기. 아래 확정 제약은 기존의 효력을 유지한다.
+- 출처 코멘트: [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
+- 참고 문서: [게임 시스템 기획서](../Game%20System%20Design.md), [마법소녀 속성 정의](../Magical%20Girl%20Attributes.md).
 
-## Confirmed constraints
+## 확정 제약
 
-The user requires editable formation and remembered locations after swapping. slotIndex in the attributes document is a candidate field.
+사용자는 배치를 나중에 수정할 수 있어야 하며, 위치 교환 후에도 캐릭터의 위치를 기억해야 한다고 요청했다. 속성 문서의 slotIndex는 후보 필드다.
 
-## Recommendation
+## 권고안
 
-FormationState alone owns SlotId-to-participant assignments. Keep stable IDs separate from logical order and screen position. Derive slotIndex. Swap atomically; preserve mappings between turns and through visual layout changes.
+FormationState만 SlotId와 전투 참가자의 배정 관계를 관리한다. 고정된 ID, 논리적인 처리 순서, 화면 위치를 구분하고 slotIndex는 배정 정보에서 계산한다. 위치 교환은 한 번에 반영하며, 턴이 바뀌거나 화면 배치가 달라져도 배정 관계를 유지한다.
 
-## Decision required
+## 결정할 사항
 
-Confirm basic/max slots, empty-slot rules, extra-member selection and lifetime, occupied-slot removal, and whether persistence must survive restarting the application. Reject occupied-slot removal until relocation is defined.
+기본·최대 슬롯 수, 빈 슬롯 처리, 추가 인원의 선택 방식과 유지 기간, 사용 중인 슬롯의 제거, 앱 재실행 후에도 위치를 보존할지 정한다. 재배치 규칙이 정해지기 전에는 사용 중인 슬롯의 제거를 거부한다.
 
-## Planned impact
+## 예상 영향 범위
 
-FormationState, SlotView, CharacterCardView. These are proposed responsibilities; no scripts are created by this record.
+FormationState, SlotView, CharacterCardView. 위 항목은 제안된 책임이며, 이 기록을 작성하면서 스크립트를 생성하지는 않았다.
 
-## Acceptance evidence to collect later
+## 추후 검증 기준
 
-Swapping updates both occupants once; invalid drops preserve state; capture/restore validates all IDs before applying changes.
+위치 교환 시 두 참가자의 배정이 각각 한 번만 갱신되는지 확인한다. 잘못된 드롭은 상태를 바꾸지 않아야 하며, 스냅샷 저장·복원은 변경 반영 전에 모든 ID를 검증해야 한다.
 
-## Decision record
+## 결정 기록
 
-- Owner: Unassigned.
-- Decision: Pending; no acceptance inferred from encouragement or documentation requests.
-- Decision time: Not yet recorded.
-- Implementation: Not started.
+- 담당자: 미지정.
+- 결정: 대기 중. 격려나 문서 작성 요청을 승인으로 해석하지 않는다.
+- 결정 시각: 미기록.
+- 구현: 시작하지 않음.
 
-[Decision index](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [Recommendation log](Recommendation-Log-2026-11-05_16-40-26_KST.md)
+[결정 요구사항 목차](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [권고 이력](Recommendation-Log-2026-11-05_16-40-26_KST.md)

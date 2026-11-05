@@ -1,23 +1,23 @@
-# C04 — Decision Documentation Request — 2026-11-05 16:40:26+09:00
+# C04 — 결정 사항 문서화 요청 — 2026-11-05 16:40:26+09:00
 
-- Recorded: 2026-11-05 16:40:26+09:00 (Asia/Seoul).
-- Source: substantive request/response 04 of this battle-planning conversation.
-- Format: attributed summary, not a full verbatim transcript. No original message time is inferred.
+- 기록 시각: 2026-11-05 16:40:26+09:00 (Asia/Seoul).
+- 출처: 이 전투 설계 대화의 04번째 핵심 요청·응답.
+- 형식: 발언 주체를 구분한 요약이며, 대화 원문 전체가 아니다. 원래 메시지 시각은 추정하지 않는다.
 
-## User comment
+## 사용자 코멘트
 
-User: “Create /홍익인간/Decisions”; use a topic/current-time title; dissect conversation by comment into individual files; create a recommendation log.
+사용자는 /홍익인간/Decisions 생성, 주제와 현재 시각을 포함한 제목 사용, 대화를 코멘트별 개별 파일로 분리, 권고 기반 로그 작성을 요청했다.
 
-## Assistant assessment summary
+## AI 검토 요약
 
-Resolve the path to Docs/홍익인간/Decisions under repository documentation rules. Preserve separate substantive conversation comments, split decision requirements by topic, and cross-reference a recommendation log.
+저장소 문서 배치 규칙에 따라 경로를 Docs/홍익인간/Decisions로 해석했다. 실질적인 대화 코멘트는 각각 보존하고, 결정 요구사항은 주제별로 나누어 권고 로그와 상호 참조하도록 했다.
 
-## Current interpretation and corrections
+## 현재 해석과 수정 사항
 
-Documentation authorized; game creation remains on hold. This is a structured summary, not a verbatim chat export. Progress-only messages are grouped with their substantive response; original request text remains in the AI usage CSV.
+허용된 작업은 문서화이며 게임 제작은 계속 보류한다. 이 기록은 구조화된 요약으로, 대화 원문 전체를 내보낸 것이 아니다. 진행 상황만 알리는 메시지는 해당 본문 응답과 함께 묶었으며, 사용자 요청 원문은 AI 사용 기록 CSV에 보존되어 있다.
 
-## Related decision comments
+## 관련 결정 항목
 
-- [D12 — Implementation Stages and Validation](D12-Implementation-Stages-and-Validation-2026-11-05_16-40-26_KST.md)
+- [D12 — 구현 단계와 검증 계획](D12-Implementation-Stages-and-Validation-2026-11-05_16-40-26_KST.md)
 
-[Decision index](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [Recommendation log](Recommendation-Log-2026-11-05_16-40-26_KST.md)
+[결정 요구사항 목차](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [권고 이력](Recommendation-Log-2026-11-05_16-40-26_KST.md)

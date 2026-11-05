@@ -1,35 +1,35 @@
-# D03 — Action Scheduling and Turn Ownership — 2026-11-05 16:40:26+09:00
+# D03 — 행동 순서와 턴별 행동 상태 관리 — 2026-11-05 16:40:26+09:00
 
-- Recorded: 2026-11-05 16:40:26+09:00 (Asia/Seoul). This is the recording time, not an inferred message time.
-- Status: Proposed / decision pending. Confirmed constraints below retain their existing authority.
-- Source comments: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
-- References: [Game System Design](../Game%20System%20Design.md), [Magical Girl Attributes](../Magical%20Girl%20Attributes.md).
+- 기록 시각: 2026-11-05 16:40:26+09:00 (Asia/Seoul). 이 문서를 기록한 시각이며, 메시지 작성 시각을 추정한 값이 아니다.
+- 상태: 제안 · 결정 대기. 아래 확정 제약은 기존의 효력을 유지한다.
+- 출처 코멘트: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
+- 참고 문서: [게임 시스템 기획서](../Game%20System%20Design.md), [마법소녀 속성 정의](../Magical%20Girl%20Attributes.md).
 
-## Confirmed constraints
+## 확정 제약
 
-Actions begin from the left. Movement can occur. Post-movement action order remains undecided.
+액션은 왼쪽부터 시작하며, 처리 중 이동이 발생할 수 있다. 이동 이후의 행동 순서는 아직 정해지지 않았다.
 
-## Recommendation
+## 권고안
 
-TurnActionState owns normal-action consumption; expose hasResolvedSlotAction as a derived lookup. Initially propose capturing participant IDs after placement, with one normal opportunity each. Reactions are separate.
+TurnActionState가 일반 행동 기회의 사용 여부를 관리하고, hasResolvedSlotAction은 해당 상태를 조회해 제공한다. 초기안으로는 배치 완료 후 참가자 ID의 순서를 확정하고 각 참가자에게 일반 행동 기회를 한 번씩 부여한다. 반응 액션은 별도로 처리한다.
 
-## Decision required
+## 결정할 사항
 
-Choose captured order versus dynamic slot order; define moved/removed actors, skipped actions, and whether extra participants join an already-built schedule. Captured order is not approved gameplay.
+처음 확정한 순서를 유지할지, 현재 슬롯에 따라 순서를 바꿀지 선택한다. 이동·제거된 참가자와 건너뛴 액션을 어떻게 처리할지, 추가 참가자가 이미 생성된 행동 목록에 합류할지도 정한다. 순서 고정안은 승인된 게임 규칙이 아니다.
 
-## Planned impact
+## 예상 영향 범위
 
-ActionScheduler, TurnActionState, BattleParticipantState. These are proposed responsibilities; no scripts are created by this record.
+ActionScheduler, TurnActionState, BattleParticipantState. 위 항목은 제안된 책임이며, 이 기록을 작성하면서 스크립트를 생성하지는 않았다.
 
-## Acceptance evidence to collect later
+## 추후 검증 기준
 
-Swapping acted and unacted participants neither accidentally duplicates nor loses normal action opportunities under the selected policy.
+선택한 정책에 따라, 이미 행동한 참가자와 아직 행동하지 않은 참가자가 위치를 바꾸더라도 일반 행동 기회가 의도치 않게 중복되거나 누락되지 않는지 확인한다.
 
-## Decision record
+## 결정 기록
 
-- Owner: Unassigned.
-- Decision: Pending; no acceptance inferred from encouragement or documentation requests.
-- Decision time: Not yet recorded.
-- Implementation: Not started.
+- 담당자: 미지정.
+- 결정: 대기 중. 격려나 문서 작성 요청을 승인으로 해석하지 않는다.
+- 결정 시각: 미기록.
+- 구현: 시작하지 않음.
 
-[Decision index](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [Recommendation log](Recommendation-Log-2026-11-05_16-40-26_KST.md)
+[결정 요구사항 목차](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [권고 이력](Recommendation-Log-2026-11-05_16-40-26_KST.md)

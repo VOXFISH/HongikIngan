@@ -1,35 +1,35 @@
-# D04 — Trigger Ordering and Reaction Chains — 2026-11-05 16:40:26+09:00
+# D04 — 트리거 처리 순서와 연쇄 반응 — 2026-11-05 16:40:26+09:00
 
-- Recorded: 2026-11-05 16:40:26+09:00 (Asia/Seoul). This is the recording time, not an inferred message time.
-- Status: Proposed / decision pending. Confirmed constraints below retain their existing authority.
-- Source comments: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
-- References: [Game System Design](../Game%20System%20Design.md), [Magical Girl Attributes](../Magical%20Girl%20Attributes.md).
+- 기록 시각: 2026-11-05 16:40:26+09:00 (Asia/Seoul). 이 문서를 기록한 시각이며, 메시지 작성 시각을 추정한 값이 아니다.
+- 상태: 제안 · 결정 대기. 아래 확정 제약은 기존의 효력을 유지한다.
+- 출처 코멘트: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
+- 참고 문서: [게임 시스템 기획서](../Game%20System%20Design.md), [마법소녀 속성 정의](../Magical%20Girl%20Attributes.md).
 
-## Confirmed constraints
+## 확정 제약
 
-Simultaneous ordering is relic acquisition order then character slot order. Other-ally reactions exclude self.
+동시 발동 시 유물 획득순, 마법소녀 자리순으로 처리한다. 다른 아군의 액션에 반응할 때 자신은 제외한다.
 
-## Recommendation
+## 권고안
 
-Use an explicit resolver queue, event identity and parent identity; snapshot subscriber order per event. Drain the current actor's reactions before advancing. Keep slot opportunities, actions, effects and reactions distinct.
+명시적인 처리 큐와 이벤트 ID·부모 이벤트 ID를 사용하고, 이벤트마다 구독자 처리 순서를 스냅샷으로 고정한다. 현재 행동자의 반응 처리를 모두 마친 뒤 다음 행동자로 넘어간다. 슬롯 행동 기회, 액션, 개별 효과, 반응을 구분한다.
 
-## Decision required
+## 결정할 사항
 
-Define action-event timing, reaction-on-reaction eligibility, repeat limits and termination. Decide whether events produced within multi-effect actions resolve between effects or after the action.
+액션 이벤트의 발생 시점, 반응 액션에 대한 재반응 허용 여부, 반복 제한과 종료 조건을 정한다. 여러 효과로 구성된 액션에서 새 이벤트를 효과 사이에 처리할지, 액션 완료 후에 처리할지도 정한다.
 
-## Planned impact
+## 예상 영향 범위
 
-BattleEvent, BattleResolver, IReactionPolicy. These are proposed responsibilities; no scripts are created by this record.
+BattleEvent, BattleResolver, IReactionPolicy. 위 항목은 제안된 책임이며, 이 기록을 작성하면서 스크립트를 생성하지는 않았다.
 
-## Acceptance evidence to collect later
+## 추후 검증 기준
 
-A multi-effect action does not accidentally count as multiple ally actions. Diagnostic overflow faults visibly rather than silently discarding effects.
+효과가 여러 개인 액션을 아군 액션 여러 번으로 잘못 집계하지 않는지 확인한다. 진단용 처리 한도를 넘으면 효과를 조용히 버리지 않고 오류 상태를 명확히 드러내야 한다.
 
-## Decision record
+## 결정 기록
 
-- Owner: Unassigned.
-- Decision: Pending; no acceptance inferred from encouragement or documentation requests.
-- Decision time: Not yet recorded.
-- Implementation: Not started.
+- 담당자: 미지정.
+- 결정: 대기 중. 격려나 문서 작성 요청을 승인으로 해석하지 않는다.
+- 결정 시각: 미기록.
+- 구현: 시작하지 않음.
 
-[Decision index](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [Recommendation log](Recommendation-Log-2026-11-05_16-40-26_KST.md)
+[결정 요구사항 목차](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [권고 이력](Recommendation-Log-2026-11-05_16-40-26_KST.md)

@@ -1,6 +1,6 @@
-# Battle decisions
+# 전투 설계 결정 기록
 
-- [Battle decision requirements — 2026-11-05 16:40:26+09:00](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md): four substantive conversation comment records, twelve topic decisions, and status definitions.
-- [Recommendation log — 2026-11-05 16:40:26+09:00](Recommendation-Log-2026-11-05_16-40-26_KST.md): recommendations, corrections, and future decision tracking.
+- [전투 설계 결정 요구사항 — 2026-11-05 16:40:26+09:00](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md): 대화별 핵심 코멘트 기록 4개, 주제별 결정 문서 12개와 상태 구분 안내.
+- [권고 이력 — 2026-11-05 16:40:26+09:00](Recommendation-Log-2026-11-05_16-40-26_KST.md): 권고 내용, 수정 사항, 추후 결정 이력 관리.
 
-All files are documentation only. Game implementation remains on hold. [Project document index](../README.md).
+모든 파일은 문서화 결과이며, 게임 구현은 계속 보류한다. [프로젝트 문서 목차](../README.md).

@@ -1,35 +1,35 @@
-# D06 — Float Damage and Finalization — 2026-11-05 16:40:26+09:00
+# D06 — float 데미지 계산과 최종값 확정 — 2026-11-05 16:40:26+09:00
 
-- Recorded: 2026-11-05 16:40:26+09:00 (Asia/Seoul). This is the recording time, not an inferred message time.
-- Status: Proposed / decision pending. Confirmed constraints below retain their existing authority.
-- Source comments: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
-- References: [Game System Design](../Game%20System%20Design.md), [Magical Girl Attributes](../Magical%20Girl%20Attributes.md).
+- 기록 시각: 2026-11-05 16:40:26+09:00 (Asia/Seoul). 이 문서를 기록한 시각이며, 메시지 작성 시각을 추정한 값이 아니다.
+- 상태: 제안 · 결정 대기. 아래 확정 제약은 기존의 효력을 유지한다.
+- 출처 코멘트: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
+- 참고 문서: [게임 시스템 기획서](../Game%20System%20Design.md), [마법소녀 속성 정의](../Magical%20Girl%20Attributes.md).
 
-## Confirmed constraints
+## 확정 제약
 
-Damage uses float. Normal display truncates fractions and groups three digits; above ten digits scientific notation uses two decimal places. Final modifiers are Polaroids then boss keywords.
+데미지는 float를 사용한다. 일반 표시는 소수점을 버리고 세 자리마다 공백으로 구분하며, 열 자리를 초과하면 가수를 소수점 두 자리로 표시하는 과학적 표기를 사용한다. 최종 보정은 폴라로이드 다음 보스 키워드 순서다.
 
-## Recommendation
+## 권고안
 
-Keep calculation and formatting separate. Distinguish addition, percentage-point addition and multiplication. Freeze final damage and apply once per resolution ID.
+계산과 표시 형식을 분리한다. 합연산, 퍼센트포인트(%p) 합산, 곱연산을 구분한다. 최종 데미지를 확정한 뒤에는 변경하지 않고, 처리 회차를 구분하는 resolution ID마다 한 번만 적용한다.
 
-## Decision required
+## 결정할 사항
 
-Define initial value, percentage-point base, arithmetic ordering, actual modifier values, invalid/range-overflow behavior and scientific-rounding boundaries. Do not replace float with another numeric type.
+초기값, 퍼센트포인트 계산의 기준값, 연산 순서, 실제 보정 수치, 유효하지 않은 값과 범위 초과 처리, 과학적 표기의 반올림 경계 규칙을 정한다. float를 다른 수치 자료형으로 바꾸지 않는다.
 
-## Planned impact
+## 예상 영향 범위
 
-DamageAccumulator, DamageFormatter, IDamagePolicy, BattleController. These are proposed responsibilities; no scripts are created by this record.
+DamageAccumulator, DamageFormatter, IDamagePolicy, BattleController. 위 항목은 제안된 책임이며, 이 기록을 작성하면서 스크립트를 생성하지는 않았다.
 
-## Acceptance evidence to collect later
+## 추후 검증 기준
 
-Displayed truncation never changes applied damage; repeated/stale completion callbacks do not apply damage twice.
+화면 표시를 위한 소수점 버림이 실제 적용 데미지를 바꾸지 않는지 확인한다. 중복되거나 이전 회차에 속한 완료 콜백으로 데미지가 두 번 적용되어서는 안 된다.
 
-## Decision record
+## 결정 기록
 
-- Owner: Unassigned.
-- Decision: Pending; no acceptance inferred from encouragement or documentation requests.
-- Decision time: Not yet recorded.
-- Implementation: Not started.
+- 담당자: 미지정.
+- 결정: 대기 중. 격려나 문서 작성 요청을 승인으로 해석하지 않는다.
+- 결정 시각: 미기록.
+- 구현: 시작하지 않음.
 
-[Decision index](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [Recommendation log](Recommendation-Log-2026-11-05_16-40-26_KST.md)
+[결정 요구사항 목차](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [권고 이력](Recommendation-Log-2026-11-05_16-40-26_KST.md)

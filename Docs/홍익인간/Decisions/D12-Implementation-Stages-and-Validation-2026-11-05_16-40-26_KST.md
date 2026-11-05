@@ -1,35 +1,35 @@
-# D12 — Implementation Stages and Validation — 2026-11-05 16:40:26+09:00
+# D12 — 구현 단계와 검증 계획 — 2026-11-05 16:40:26+09:00
 
-- Recorded: 2026-11-05 16:40:26+09:00 (Asia/Seoul). This is the recording time, not an inferred message time.
-- Status: Proposed / decision pending. Confirmed constraints below retain their existing authority.
-- Source comments: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md), [C04](C04-Decision-Documentation-Request-2026-11-05_16-40-26_KST.md).
-- References: [Game System Design](../Game%20System%20Design.md), [Magical Girl Attributes](../Magical%20Girl%20Attributes.md).
+- 기록 시각: 2026-11-05 16:40:26+09:00 (Asia/Seoul). 이 문서를 기록한 시각이며, 메시지 작성 시각을 추정한 값이 아니다.
+- 상태: 제안 · 결정 대기. 아래 확정 제약은 기존의 효력을 유지한다.
+- 출처 코멘트: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md), [C04](C04-Decision-Documentation-Request-2026-11-05_16-40-26_KST.md).
+- 참고 문서: [게임 시스템 기획서](../Game%20System%20Design.md), [마법소녀 속성 정의](../Magical%20Girl%20Attributes.md).
 
-## Confirmed constraints
+## 확정 제약
 
-Implementation has not been authorized. This request authorizes documentation only.
+구현은 아직 승인되지 않았다. 이 기록을 요청한 지시는 문서화만 허용한다.
 
-## Recommendation
+## 권고안
 
-After authorization: types/setup → formation → turn flow → resolver and strategies → numeric/target boundaries → editor UI → presentation/results → integration tests. Validate IDs/references before battle. Update stale undecided lists when decisions are approved.
+구현 승인 후 자료형·초기 설정 → 배치 → 턴 흐름 → 처리기와 전략 → 수치·대상 처리 경계 → 에디터 UI → 연출·결과 → 통합 테스트 순으로 진행한다. 전투 전에 ID와 참조를 검증한다. 결정이 승인되면 오래된 미정 항목 목록도 갱신한다.
 
-## Decision required
+## 결정할 사항
 
-Assign decision owners and approve policies before dependent gameplay is implemented. Do not treat this log as acceptance. Confirm source-document updates separately from proposals.
+결정 담당자를 지정하고, 해당 정책에 의존하는 게임 동작을 구현하기 전에 정책을 확정한다. 이 로그 자체를 승인으로 해석하지 않는다. 원본 문서의 수정 확정과 제안 기록을 구분한다.
 
-## Planned impact
+## 예상 영향 범위
 
-ContentValidator, framework tests, project documentation. These are proposed responsibilities; no scripts are created by this record.
+ContentValidator, 프레임워크 테스트, 프로젝트 문서. 위 항목은 제안된 책임이며, 이 기록을 작성하면서 스크립트를 생성하지는 않았다.
 
-## Acceptance evidence to collect later
+## 추후 검증 기준
 
-Check duplicate IDs, missing variable/keyword/strategy references, atomic swaps, upgraded values, reaction separation, formatting and third-turn outcomes. Planned tests are not reported as executed.
+중복 ID, 누락된 변수·키워드·전략 참조, 위치 교환의 일괄 반영, 강화된 값, 반응과 일반 행동의 분리, 숫자 표시, 3턴 결과를 확인한다. 계획한 테스트를 실행한 것처럼 기록하지 않는다.
 
-## Decision record
+## 결정 기록
 
-- Owner: Unassigned.
-- Decision: Pending; no acceptance inferred from encouragement or documentation requests.
-- Decision time: Not yet recorded.
-- Implementation: Not started.
+- 담당자: 미지정.
+- 결정: 대기 중. 격려나 문서 작성 요청을 승인으로 해석하지 않는다.
+- 결정 시각: 미기록.
+- 구현: 시작하지 않음.
 
-[Decision index](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [Recommendation log](Recommendation-Log-2026-11-05_16-40-26_KST.md)
+[결정 요구사항 목차](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [권고 이력](Recommendation-Log-2026-11-05_16-40-26_KST.md)

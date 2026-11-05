@@ -1,35 +1,35 @@
-# D11 — Battle Phases and Result Boundaries — 2026-11-05 16:40:26+09:00
+# D11 — 전투 단계와 결과 판정 경계 — 2026-11-05 16:40:26+09:00
 
-- Recorded: 2026-11-05 16:40:26+09:00 (Asia/Seoul). This is the recording time, not an inferred message time.
-- Status: Proposed / decision pending. Confirmed constraints below retain their existing authority.
-- Source comments: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
-- References: [Game System Design](../Game%20System%20Design.md), [Magical Girl Attributes](../Magical%20Girl%20Attributes.md).
+- 기록 시각: 2026-11-05 16:40:26+09:00 (Asia/Seoul). 이 문서를 기록한 시각이며, 메시지 작성 시각을 추정한 값이 아니다.
+- 상태: 제안 · 결정 대기. 아래 확정 제약은 기존의 효력을 유지한다.
+- 출처 코멘트: [C01](C01-Initial-Battle-Assessment-2026-11-05_16-40-26_KST.md), [C02](C02-Modular-Framework-and-Slot-Planning-2026-11-05_16-40-26_KST.md), [C03](C03-Updated-Markdown-Review-2026-11-05_16-40-26_KST.md).
+- 참고 문서: [게임 시스템 기획서](../Game%20System%20Design.md), [마법소녀 속성 정의](../Magical%20Girl%20Attributes.md).
 
-## Confirmed constraints
+## 확정 제약
 
-Boss defeat returns to classroom. Surviving boss permits at most three turns; turn-three victory takes priority. Rewards and next-stage flow are outside current scope.
+보스를 처치하면 교실로 복귀한다. 보스가 살아 있으면 최대 세 턴까지 진행하며, 세 번째 턴에도 승리 판정을 우선한다. 보상과 다음 스테이지 진행은 현재 범위 밖이다.
 
-## Recommendation
+## 권고안
 
-Initialize → prepare → lock → extra slots/members → placement → actions/reactions → Polaroids → boss keywords → chant/beam → damage once → completed-turn count and outcome. Count synergies immediately before chanting.
+초기화 → 준비 → 입력 잠금 → 추가 슬롯·인원 반영 → 배치 → 액션·반응 → 폴라로이드 → 보스 키워드 → 영창·빔 → 데미지 한 번 적용 → 완료 턴 집계와 결과 판정 순으로 처리한다. 시너지는 영창 직전에 집계한다.
 
-## Decision required
+## 결정할 사항
 
-Define placement trigger count/targets and entry/exit integration. Preserve chant ties: region, job synergy, special synergy, then Korean alphabetical order; display-only role is not job synergy.
+배치 트리거의 발동 횟수·대상과 전투 진입·종료 연결 방식을 정한다. 영창 동률 시 지역, 직업 시너지, 특수 시너지, 가나다 순이라는 규칙을 유지한다. 표시 전용 역할군과 직업 시너지는 서로 다르다.
 
-## Planned impact
+## 예상 영향 범위
 
-BattleController, BattleSetup, IBattleTarget, BattlePresentation. These are proposed responsibilities; no scripts are created by this record.
+BattleController, BattleSetup, IBattleTarget, BattlePresentation. 위 항목은 제안된 책임이며, 이 기록을 작성하면서 스크립트를 생성하지는 않았다.
 
-## Acceptance evidence to collect later
+## 추후 검증 기준
 
-Exact-zero and negative HP win on turns 1–3; positive HP after turn 3 loses. Cosmetic randomness does not alter final damage.
+1~3턴 중 보스 HP가 정확히 0이거나 음수이면 승리하고, 3턴 후에도 양수이면 패배하는지 확인한다. 연출의 무작위성이 최종 데미지를 바꾸어서는 안 된다.
 
-## Decision record
+## 결정 기록
 
-- Owner: Unassigned.
-- Decision: Pending; no acceptance inferred from encouragement or documentation requests.
-- Decision time: Not yet recorded.
-- Implementation: Not started.
+- 담당자: 미지정.
+- 결정: 대기 중. 격려나 문서 작성 요청을 승인으로 해석하지 않는다.
+- 결정 시각: 미기록.
+- 구현: 시작하지 않음.
 
-[Decision index](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [Recommendation log](Recommendation-Log-2026-11-05_16-40-26_KST.md)
+[결정 요구사항 목차](Battle-Decision-Requirements-2026-11-05_16-40-26_KST.md) · [권고 이력](Recommendation-Log-2026-11-05_16-40-26_KST.md)
