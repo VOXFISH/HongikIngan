@@ -43,6 +43,8 @@ Unity 6000.3.7f1로 `UnityProject/`를 열고 `Assets/Scenes/School.unity`에서
 | `Assets/Scripts/Audio/` | 지속 SoundManager와 FMOD 연결 코드 |
 | `Assets/Resources/PrototypeEconomy.asset` | 단일 경제 설정 에셋 |
 
+연출용 읽기 전용 API(2026-11-06 추가, 규칙·수치 변경 없음): `BattleStep.Actor`·`Target`은 행동한 학생과 대상 학생이며 학생과 무관한 단계에서는 null이다. `PrototypeRun.CanStartBattle`·`StartBattleBlockReason`은 `StartBattle()`과 같은 조건을 상태 변경 없이 알려 준다. `PrototypeRun.VictoryReward`(항목별 `VictoryRewardBase`·`VictoryRewardStageBonus`·`VictoryRewardRelicBonus`)는 `ReturnToSchool()`이 지급하는 금액과 같다. 확인 항목을 `PrototypeChecks`에 추가했으며, 추가 직후에는 Unity에서 컴파일·실행하지 않았다. 사용처는 [UI 목업 구현 기획서](UI%20Mockup/README.md)를 따른다.
+
 역할군은 표시용이다. 데미지는 float로 발생 순서대로 계산하고 매 단계 갱신하며, 다음 턴 시작에 0으로 초기화한다. 반응 액션도 다른 반응을 발생시키고 위치 교환 시 새 슬롯의 작은 번호부터 재행동한다. 임의 연쇄 상한은 없다. 무한 콤보가 가능한 콘텐츠는 사후 조정 대상이며 기본 샘플은 진행 가능한 조합으로 구성했다.
 
 ## 임시 콘텐츠와 범위
