@@ -140,3 +140,4 @@ Pretty please."
 "2026-11-05 20:58:11+09:00","VOXFISH","PR #3를 gamesystem에 병합 승인"
 "2026-11-05 21:10:03+09:00","VOXFISH","Add a debug button inside the ""Battle"" scene in the branch test. It should be on top of the attack button.
 The button should give 99999 miracle energy. Make it quick, no tests. Do not commit"
+"2026-11-05 21:12:47+09:00","VOXFISH","jsonc가 아닌 json인 척 하는 md 파일이고, 아래에 설정이나 스킬 동작 같은 잡다한 내용도 들어갈 예정이야."
