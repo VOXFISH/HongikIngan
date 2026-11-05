@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -81,10 +80,11 @@ namespace HongikIngan.Editor
                 after.anchoredPosition3D = before.anchoredPosition3D;
                 after.localRotation = before.localRotation;
                 after.localScale = before.localScale;
-                var order = instance.transform.Find("AttackOrder")?.GetComponent<TMP_Text>();
+                var order = instance.transform.Find("AttackOrder")?.GetComponent<TMPro.TMP_Text>();
                 if (order != null)
                 {
-                    order.text = "공격 순서 " + (i + 1);
+                    order.text = (i + 1).ToString();
+                    order.transform.SetAsLastSibling();
                     PrefabUtility.RecordPrefabInstancePropertyModifications(order);
                 }
                 PrefabUtility.RecordPrefabInstancePropertyModifications(after);

@@ -64,6 +64,22 @@ namespace HongikIngan
         public static bool MoveRebelBack(PrototypeRun run, StudentState actor) =>
             actor.Definition.Personality == "반항아" && Count(run, "반항아") >= 5;
         public static int DebuffApplications(PrototypeRun run) => Count(run, "독설가") >= 6 ? 2 : 1;
+        public static float ArtReplayChance(PrototypeRun run)
+        {
+            int n = Count(run, "미술부");
+            return n >= 6 ? .5f : n >= 5 ? .3f : n >= 4 ? .2f : n >= 3 ? .1f : n >= 2 ? .05f : 0;
+        }
+        public static int ActiveKinds(PrototypeRun run)
+        {
+            int count = 0;
+            foreach (string name in new[] { "운동부", "선도부", "사진부", "천문부", "미술부", "반항아" })
+                if (Count(run, name) >= 2) count++;
+            if (Count(run, "연극부") == 1 || Count(run, "연극부") == 4) count++;
+            foreach (string name in new[] { "리더", "분위기메이커", "귀염둥이", "정밀화" }) if (Count(run, name) >= 1) count++;
+            if (Count(run, "독설가") >= 3) count++;
+            if (run.Battle.LoverBonusPercent > 0) count++;
+            return count;
+        }
         public static bool KeepAllyConsumables(PrototypeRun run) => Count(run, "귀염둥이") >= 7 && Count(run, "귀염둥이") < 9;
         public static int RelicApplications(PrototypeRun run, RelicDefinition relic) =>
             Count(run, "귀염둥이") >= 9 || Count(run, "귀염둥이") >= 5 && relic.DebuffRelated ? 2 : 1;
@@ -116,22 +132,41 @@ namespace HongikIngan
                 AddDamage(run, run.Battle.Damage * run.Battle.LoverBonusPercent / 100f);
                 yield return Step(run.Battle, "damage", "전투 시작의 인접 사랑꾼 - 데미지 +" + run.Battle.LoverBonusPercent + "%");
             }
+            if (run.StarPower > 0)
+            {
+                AddDamage(run, run.Battle.Damage == 0 ? 0 : run.Battle.Damage * run.StarPower * .3f);
+                yield return Step(run.Battle, "damage", "별의 힘 " + run.StarPower + " - 데미지 +" + run.StarPower * 30f + "%p");
+            }
+            int theatre = Count(run, "연극부");
+            if (theatre == 1 || theatre == 4)
+            {
+                int active = ActiveKinds(run);
+                double multiplier = theatre == 1 ? 1 + active : Math.Pow(1.5, active);
+                if (run.Battle.Damage != 0) run.Battle.Damage = (float)(run.Battle.Damage * multiplier);
+                run.NotifyDamage();
+                yield return Step(run.Battle, "damage", "연극부 - 활성 시너지 " + active + "종류 - x" + multiplier.ToString("0.##"));
+            }
         }
 
         public static int Income(PrototypeRun run, int amount)
         {
-            int discipline = Count(run, "선도부");
+            return IncomeForCount(amount, Count(run, "선도부"));
+        }
+        internal static int IncomeForCount(int amount, int discipline)
+        {
             double multiplier = discipline >= 6 ? 1 : discipline >= 3 ? 2 : discipline >= 2 ? 1.5 : 1;
             return checked((int)Math.Floor(Math.Max(0, amount) * multiplier));
         }
 
         public static void FinishBattle(PrototypeRun run)
         {
-            if (run.Battle == null || !run.Battle.Won && !run.Battle.Lost || run.Battle.SynergyRewardsApplied) return;
+            if (run.Battle == null || !run.Battle.Ended || run.Battle.SynergyRewardsApplied) return;
             run.Battle.SynergyRewardsApplied = true;
-            int discipline = Count(run, "선도부");
-            if (discipline >= 6) run.AddMoney(run.Money);
-            else if (discipline >= 4) run.AddMoney(100);
+            int discipline = run.Battle.EndDisciplineCount >= 0 ? run.Battle.EndDisciplineCount : Count(run, "선도부");
+            if (discipline >= 6) run.AddBattleEndMoney(run.Money, discipline);
+            else if (discipline >= 4) run.AddBattleEndMoney(100, discipline);
+            int astronomy = run.Battle.EndAstronomyCount >= 0 ? run.Battle.EndAstronomyCount : Count(run, "천문부");
+            run.StarPower += astronomy >= 6 ? 20 : astronomy >= 4 ? 4 : astronomy >= 2 ? 1 : 0;
         }
     }
 }

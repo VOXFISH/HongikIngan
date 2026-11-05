@@ -16,6 +16,41 @@ namespace HongikIngan.Editor
         static readonly Color Purple = new Color(.37f, .30f, .78f);
         static TMP_FontAsset font;
 
+        [MenuItem("HongikIngan/Add battle reward popup")]
+        public static void ApplyRewardPopup()
+        {
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            var scene = EditorSceneManager.OpenScene("Assets/Scenes/Battle.unity");
+            var screen = UnityEngine.Object.FindFirstObjectByType<BattleScreen>();
+            if (screen == null || screen.hud == null) throw new InvalidOperationException("Battle layout missing.");
+            if (screen.rewardPopup == null)
+            {
+                font = BattleUiFont.DefaultFont;
+                var layout = screen.hud.transform.Find("Layout");
+                if (layout == null) throw new InvalidOperationException("Battle Layout missing.");
+                var popup = screen.hud.gameObject.AddComponent<BattleRewardPopup>();
+                var modal = Image(layout, "RewardPopup", 0, 0, 1440, 900, new Color(0, 0, 0, .65f));
+                modal.raycastTarget = true;
+                var dialog = Image(modal.transform, "Dialog", 370, 170, 700, 560, new Color(.96f, .95f, 1f));
+                dialog.raycastTarget = true;
+                Text(dialog.transform, "Title", 35, 25, 630, 60, "전투 보상", 34, Ink, TextAlignmentOptions.Center);
+                popup.detailsLabel = Text(dialog.transform, "RewardDetails", 40, 100, 620, 340,
+                    "전투 종료! 보상을 수령하세요.", 23, Ink, TextAlignmentOptions.TopLeft);
+                popup.claimButton = Button(dialog.transform, "ClaimButton", 195, 465, 310, 65, "보상 수령");
+                popup.modal = modal.gameObject;
+                popup.modal.SetActive(false);
+                screen.rewardPopup = popup;
+                EditorUtility.SetDirty(screen);
+                EditorSceneManager.MarkSceneDirty(scene);
+                EditorSceneManager.SaveScene(scene);
+                AssetDatabase.SaveAssets();
+            }
+            Validate(screen);
+            ValidateReferences(screen.rewardPopup);
+            SettlementChecks.Run();
+            Debug.Log("BATTLE_REWARD_POPUP_SAVED");
+        }
+
         [MenuItem("HongikIngan/Apply editable Battle layout")]
         public static void Apply()
         {
@@ -69,6 +104,9 @@ namespace HongikIngan.Editor
                 slot.portrait = Image(slot.studentVisual, "Portrait", 12, 12, 35, 35, new Color(.9f, .8f, .95f));
                 Text(slot.portrait.transform, "Symbol", 0, 0, 35, 35, "✦", 20, Ink, TextAlignmentOptions.Center);
                 slot.nameLabel = Text(slot.studentVisual, "Name", 55, 12, 83, 35, "학생", 17);
+                slot.nameLabel.enableAutoSizing = true;
+                slot.nameLabel.fontSizeMin = 10;
+                slot.nameLabel.fontSizeMax = 17;
                 slot.roleLabel = Text(slot.studentVisual, "GradeAndRole", 12, 55, 119, 36, "1학년 - Dealer", 15);
                 slot.synergyLabel = Text(slot.studentVisual, "Synergies", 12, 94, 119, 48, "부활동 - 성격", 15);
                 slot.skillLabel = Text(slot.studentVisual, "Skill", 12, 146, 119, 42, "스킬 100", 16);

@@ -11,7 +11,10 @@ namespace HongikIngan
         AddDamage, MultiplyDamage, EmpowerNext, WeakenBoss, EarnMoney, SwapNext,
         TeamSizeDamage, AddThenPercentDamage, FourthBatter, Advance, AdvanceToFront,
         StrikeOnMove, Spite, LuckyClover, PowerDamage, RebelPercent,
-        Paparazzi, Spotlight, LightingDamage, GrantLove, CloneNext, BestSubject
+        Paparazzi, Spotlight, LightingDamage, GrantLove, CloneNext, BestSubject,
+        SingleStackBuffDamage, CloverStrike, BulletStrike, LoveAndClone,
+        StickyPaint, ArtBrush, MoonRabbit, ArtEncore, WildBrush, Eros,
+        StarLove, SaturnCurse, MarsJealousy, TomorrowSun, StarGift, Coffee, GrowingStrike, KeywordKindsDamage
     }
     public enum RelicKind { OpeningDamage, FinalMultiplier, ExtraSlots, VictoryMoney }
 
@@ -30,6 +33,7 @@ namespace HongikIngan
         public string SpecialSynergy;
         public float ValueAtUpgrade(int level)
         {
+            if (Action == ActionKind.GrowingStrike) return InitialValue * (float)Math.Pow(2, level);
             // Prototype content-specific replacement rules; these are temporary balance values.
             if (Action == ActionKind.MultiplyDamage) return InitialValue + UpgradeStep * level;
             if (Action == ActionKind.WeakenBoss) return InitialValue + UpgradeStep * (float)Math.Sqrt(level);
@@ -48,6 +52,7 @@ namespace HongikIngan
         public float SkillValue;
         public bool IsClone, CloneLastsBattle;
         public int PrecisionCopies;
+        public int LunarRoll;
         public readonly List<KeywordState> Keywords = new List<KeywordState>();
         public StudentState(StudentDefinition definition) { Definition = definition; SkillValue = definition.InitialValue; }
     }
@@ -114,7 +119,43 @@ namespace HongikIngan
                 Girl(16, "정윤", 3, "사진부", "독설가", StudentRole.Buff,
                     "이거 사진이라니까요", "다음 아군의 분신을 생성 - 턴 종료 시 삭제 (강화: 전투 종료). 정밀화: 복제마다 +3000씩 증가", ActionKind.CloneNext, 0, 1, specialSynergy: "정밀화"),
                 Girl(17, "치즈", 1, "사진부", "귀염둥이", StudentRole.Dealer,
-                    "최고의 피사체", "귀염둥이-1학년-사진부 아군 수의 합만큼 데미지 배율 (강화: 인원수의 곱)", ActionKind.BestSubject, 0, 1)
+                    "최고의 피사체", "귀염둥이-1학년-사진부 아군 수의 합만큼 데미지 배율 (강화: 인원수의 곱)", ActionKind.BestSubject, 0, 1),
+                Girl(18, "다나", 1, "미술부", "독설가", StudentRole.Debuff,
+                    "끈적이 페인트", "자신의 미감 수만큼 끈적함 부여. 미술부 피해 증가량 x1.3 (강화: 턴 종료 후에도 유지)", ActionKind.StickyPaint, 0, 1),
+                Girl(19, "예리", 1, "미술부", "반항아", StudentRole.Buff,
+                    "예리한 붓", "아군 모두에게 미감 1 (강화 2). 자신의 미감 수 x300 데미지 추가", ActionKind.ArtBrush, 1, 1),
+                Girl(20, "루나", 2, "미술부", "귀염둥이", StudentRole.Debuff,
+                    "달토끼", "매 전투 1~10 (강화 1~12) 추첨. 해당 수만큼 검은 클로버. 미감 사용 시 재추첨해 높은 값 유지", ActionKind.MoonRabbit, 10, 2),
+                Girl(21, "가영", 2, "미술부", "분위기메이커", StudentRole.Dealer,
+                    "가영가영", "데미지 +35%p (강화 50%p). 미감으로 재사용. 재사용마다 양옆에 미감 2", ActionKind.ArtEncore, 35, 15),
+                Girl(22, "지나", 2, "미술부", "리더", StudentRole.Dealer,
+                    "광란의 붓질", "재행동 시 자신과 양옆에 미감 5. 셋 중 미감 20 이상 (강화 15)이면 자신 복제", ActionKind.WildBrush, 20, -5),
+                Girl(23, "민영", 3, "미술부", "사랑꾼", StudentRole.Debuff,
+                    "에로스", "5+자신의 미감% (강화 15+미감%) 확률로 보스 HP를 1로 변경. 실패 시 모든 아군 미감 3", ActionKind.Eros, 5, 10),
+                Girl(24, "하나", 1, "천문부", "귀염둥이", StudentRole.Dealer,
+                    "하나밖에 없는 태양", "자신의 1스택 또는 중첩 불가 버프 종류마다 데미지 x1.11 (강화: 스택 수 조건 제거)", ActionKind.SingleStackBuffDamage, 1.11f, 0),
+                Girl(25, "예진", 2, "천문부", "사랑꾼", StudentRole.Buff,
+                    "하늘의 별만큼 사랑해", "별의 힘만큼 다음 아군에게 사랑 (강화: 다음 3명)", ActionKind.StarLove, 1, 2),
+                Girl(26, "하진", 2, "천문부", "독설가", StudentRole.Debuff,
+                    "토성의 저주", "별의 힘%만큼 현재 보스 HP 감소. 최대 50% (강화 60%)", ActionKind.SaturnCurse, 50, 10),
+                Girl(27, "혜림", 2, "천문부", "반항아", StudentRole.Dealer,
+                    "화성의 질투", "전대 정원 -2, 전투 제한 +1턴 (강화 -3, +2턴). 자신의 액션 데미지 x5", ActionKind.MarsJealousy, 2, 1),
+                Girl(28, "수현", 3, "천문부", "리더", StudentRole.Dealer,
+                    "내일의 태양", "게임당 한 번 게임오버 방어. 별의 힘 x100 에너지와 영구 버프: 매 행동 데미지 ^1.3 (강화: 재화 없이 ^1.5)", ActionKind.TomorrowSun, 1.3f, .2f),
+                Girl(29, "소미", 1, "천문부", "분위기메이커", StudentRole.Buff,
+                    "별이 돼 줄게", "공용 별의 힘 +1, 데미지 +500 (강화 1000)", ActionKind.StarGift, 500, 500),
+                Girl(30, "미네", 1, "연극부", "리더", StudentRole.Debuff,
+                    "별의 커피", "별의 힘만큼 커피 부여 (강화: 2배). 턴 시작에 스택 x20 보스 HP 감소 후 감소량만큼 스택 증가", ActionKind.Coffee, 1, 1),
+                Girl(31, "신아", 1, "연극부", "귀염둥이", StudentRole.Debuff,
+                    "무대의 꽃", "보스에게 검은 클로버 1스택 부여 후 데미지 +300 (강화 400)", ActionKind.CloverStrike, 300, 100),
+                Girl(32, "민희", 2, "연극부", "반항아", StudentRole.Dealer,
+                    "군필 여고생", "매 전투 총알 1발 (강화 2발). 액션마다 1발 소모해 데미지 +100000", ActionKind.BulletStrike, 1, 1),
+                Girl(33, "세아", 2, "연극부", "분위기메이커", StudentRole.Dealer,
+                    "세아isHere", "데미지 +10. 보충 학습 횟수마다 스킬 데미지 x2, 무한 강화 가능", ActionKind.GrowingStrike, 10, 0),
+                Girl(34, "마리", 3, "연극부", "사랑꾼", StudentRole.Buff,
+                    "돌돌마리", "모든 아군에게 사랑 3스택. 연극부가 정확히 3명 (강화 2명 또는 3명)이면 자신 복제", ActionKind.LoveAndClone, 3, -1),
+                Girl(35, "드미트리우스", 2, "연극부", "독설가", StudentRole.Dealer,
+                    "스파르타!!", "팀 전체의 서로 다른 버프 종류 수 /2만큼 데미지 배율 (강화: 종류 수 그대로)", ActionKind.KeywordKindsDamage, .5f, .5f)
             };
         }
 
@@ -127,6 +168,7 @@ namespace HongikIngan
                 Id = "Girl" + id, Name = name, Grade = grade, Club = club, Personality = personality,
                 Role = role, SkillName = skillName, SkillDescription = description, Description = "",
                 Action = action, InitialValue = value, UpgradeStep = upgrade, UpgradeEnabled = upgradeEnabled,
+                UnlimitedUpgrade = action == ActionKind.GrowingStrike,
                 InitialPercent = percent, PercentUpgradeStep = percentUpgrade, SpecialSynergy = specialSynergy
             };
         }

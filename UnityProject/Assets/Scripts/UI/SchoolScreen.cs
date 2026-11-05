@@ -18,6 +18,9 @@ namespace HongikIngan
         public Button restartButton, audioButton;
         public SchoolDialogs dialogs;
         public GameObject studentCard;
+        public Button previousRosterPage, nextRosterPage;
+        public TMP_Text rosterPageLabel;
+        public int RosterPage { get; private set; }
         public PrototypeRun CurrentRun => observedRun;
         int selected = -1;
         bool transitionWasBusy;
@@ -69,6 +72,8 @@ namespace HongikIngan
             sellButton.onClick.AddListener(() => { int index = selected; selected = -1; observedRun.Sell(index); });
             restartButton.onClick.AddListener(dialogs.ShowRestart);
             dialogs.Bind(this);
+            if (previousRosterPage != null) previousRosterPage.onClick.AddListener(() => ChangeRosterPage(-1));
+            if (nextRosterPage != null) nextRosterPage.onClick.AddListener(() => ChangeRosterPage(1));
             var sound = HongikIngan.Audio.SoundManager.EnsureExists();
             if (sound.BackendAvailable) sound.PlayBgm("event:/BGM/School");
             Refresh();
@@ -102,16 +107,22 @@ namespace HongikIngan
             energyLabel.text = $"미라클 에너지\n{observedRun.Money}";
             rosterLabel.text = $"전대 인원\n{observedRun.Students.Count} / {observedRun.Capacity}";
             stageLabel.text = $"STAGE {observedRun.Stage:00}  -  방과 전";
-            photosLabel.text = $"폴라로이드 {observedRun.PhotoCount}\n분위기 {observedRun.Atmosphere}";
+            photosLabel.text = $"폴라로이드 {observedRun.PhotoCount}\n분위기 {observedRun.Atmosphere} / 별의 힘 {observedRun.StarPower}";
             ownedRelicsLabel.text = observedRun.Relics.Count == 0 ? "아직 획득한 유물이 없어요" : string.Join("   /   ", observedRun.Relics.Select(r => r.Name));
-            int visible = Mathf.Max(6, observedRun.Capacity);
+            int pages = Mathf.Max(1, Mathf.CeilToInt(observedRun.SchoolDeskCount / 9f));
+            RosterPage = Mathf.Clamp(RosterPage, 0, pages - 1);
+            if (rosterPageLabel != null) rosterPageLabel.text = $"학생 {RosterPage + 1} / {pages}";
+            if (previousRosterPage != null) previousRosterPage.interactable = free && RosterPage > 0;
+            if (nextRosterPage != null) nextRosterPage.interactable = free && RosterPage + 1 < pages;
+            int visible = Mathf.Max(6, Mathf.Max(observedRun.Capacity, observedRun.SchoolDeskCount));
             for (int i = 0; i < slots.Length; i++)
             {
                 var slot = slots[i];
-                slot.gameObject.SetActive(i < visible);
-                if (i >= visible) continue;
-                var seated = observedRun.StudentAtSchoolDesk(i);
-                slot.Bind(this, i, seated?.Definition, i < observedRun.Capacity,
+                int desk = RosterPage * 9 + i;
+                slot.gameObject.SetActive(desk < visible);
+                if (desk >= visible) continue;
+                var seated = observedRun.StudentAtSchoolDesk(desk);
+                slot.Bind(this, desk, seated?.Definition, desk < Mathf.Max(observedRun.Capacity, observedRun.SchoolDeskCount),
                     seated != null && observedRun.Students.IndexOf(seated) == selected);
             }
             for (int i = 0; i < relicButtons.Length; i++)
@@ -131,11 +142,11 @@ namespace HongikIngan
                 .Where(s => !string.IsNullOrEmpty(s)).GroupBy(s => s).OrderByDescending(g => g.Count()).ThenBy(g => g.Key);
             synergyLabel.text = groups.Any() ? string.Join("\n", groups.Select(g => $"{g.Key}   {BattleSynergies.Count(observedRun, g.Key)}명")) : "학생을 영입하면\n시너지가 표시됩니다";
             SetButtonText(expandButton, $"책상 확장  +  {observedRun.Settings.slotExpansionPrice}");
-            expandButton.interactable = observedRun.Capacity < 7;
+            expandButton.interactable = observedRun.OpenCapacity < 7;
             SetButtonText(rerollButton, observedRun.RelicPurchasedThisBattle ? "유물 구매 완료" : $"유물 리롤\n{observedRun.RerollCost} 에너지");
             rerollButton.interactable = observedRun.CanRerollRelic;
             battleButton.interactable = observedRun.CanStartBattle;
-            statusLabel.text = observedRun.LastMessage;
+            statusLabel.text = observedRun.Students.Count > observedRun.Capacity ? observedRun.StartBattleBlockReason : observedRun.LastMessage;
             bool owned = selected >= 0 && selected < observedRun.Students.Count;
             studentCard.SetActive(owned);
             learnButton.gameObject.SetActive(owned);
@@ -165,6 +176,13 @@ namespace HongikIngan
                 detailTitle.text = "우리들의 교실";
                 detailBody.text = "학생을 눌러 자세히 살펴보세요.\n빈 책상에 놓으면 그 자리로 이동합니다.\n다른 학생 위에 놓으면 자리를 바꿉니다.";
             }
+        }
+        void ChangeRosterPage(int direction)
+        {
+            if (!CanInteract) return;
+            foreach (var slot in slots) slot.CancelDrag();
+            RosterPage += direction;
+            DeselectStudent();
         }
         static void SetButtonText(Button target, string value) => target.GetComponentInChildren<TMP_Text>().text = value;
         public void DeselectStudent() { selected = -1; Refresh(); }

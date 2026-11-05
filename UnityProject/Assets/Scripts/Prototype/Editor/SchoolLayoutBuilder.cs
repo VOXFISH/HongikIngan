@@ -17,6 +17,33 @@ namespace HongikIngan.Editor
         static readonly Color Cream = Hex("FFF6E4"), Gold = Hex("CFA76C"), Paper = Hex("FFFDF7");
         static TMP_FontAsset font;
 
+        [MenuItem("HongikIngan/Apply overflow recruitment controls")]
+        public static void ApplyOverflowRecruitment()
+        {
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            var scene = EditorSceneManager.OpenScene("Assets/Scenes/School.unity");
+            var screen = UnityEngine.Object.FindFirstObjectByType<SchoolScreen>();
+            if (screen == null || screen.dialogs == null) throw new InvalidOperationException("School layout missing.");
+            foreach (string name in new[] { "Replace", "ReplacementPanel" })
+            {
+                var obsolete = screen.dialogs.candidates.transform.Find(name);
+                if (obsolete != null) UnityEngine.Object.DestroyImmediate(obsolete.gameObject);
+            }
+            if (screen.previousRosterPage == null)
+            {
+                font = BattleUiFont.DefaultFont;
+                var layout = screen.schoolCanvas.transform.Find("Layout") ?? screen.schoolCanvas.transform;
+                var pages = Rect(layout, "RosterPages", 480, 20, 380, 50);
+                screen.previousRosterPage = Button(pages, "Previous", 0, 0, 100, 45, "이전", Paper, Ink);
+                screen.rosterPageLabel = Text(pages, "Page", 110, 0, 150, 45, "학생 1 / 1", 20, Ink, TextAlignmentOptions.Center);
+                screen.nextRosterPage = Button(pages, "Next", 270, 0, 100, 45, "다음", Paper, Ink);
+            }
+            EditorUtility.SetDirty(screen); EditorUtility.SetDirty(screen.dialogs);
+            EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene); AssetDatabase.SaveAssets();
+            ValidateBindings(screen);
+            Debug.Log("OVERFLOW_RECRUITMENT_UI_SAVED");
+        }
+
         [MenuItem("HongikIngan/Apply School reference layout")]
         public static void Apply()
         {
@@ -204,9 +231,8 @@ namespace HongikIngan.Editor
                     if (book.transform.Find("Spine") == null || book.transform.Find("PageBlock") == null)
                         throw new InvalidOperationException("Book cover/spine/pages are missing.");
             }
-            foreach (var image in screen.schoolCanvas.GetComponentsInChildren<Image>(true))
-                if (image.sprite != null) throw new InvalidOperationException("School placeholders should not contain artwork.");
-            Debug.Log("SCHOOL_LAYOUT_BINDINGS_PASS: nine desks, one relic, three pets, blank images, book geometry.");
+            // The authored school now uses background/desk sprites; artwork is valid scene content.
+            Debug.Log("SCHOOL_LAYOUT_BINDINGS_PASS: nine desks, one relic, three pets, book geometry.");
         }
         [MenuItem("HongikIngan/Verify School cursor drag (Play Mode)")]
         public static void VerifyDrag()

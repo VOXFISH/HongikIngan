@@ -30,6 +30,8 @@ namespace HongikIngan
                 StartupChecks.Run();
                 GirlContentChecks.Run();
                 PhotographyChecks.Run();
+                SettlementChecks.Run();
+                ExpansionChecks.Run();
                 Debug.Log("PROTOTYPE_CHECKS_PASS assertions=" + assertions);
             }
             finally
@@ -190,11 +192,12 @@ namespace HongikIngan
             Check(run.OpenPet(0), "Full team can pay for pet choice");
             int paid = run.Money;
             var chosen = run.PendingCandidates[0];
-            Check(!run.ChoosePet(0) && run.PendingPet && run.Money == paid, "Full team keeps paid choice pending");
+            Check(run.ChoosePet(0) && !run.PendingPet && run.Money == paid, "Full team may recruit without another charge");
+            Check(run.Students.Count == 4 && !run.CanStartBattle, "Overflow blocks departure");
             int sale = run.Settings.SalePrice(run.Students[0].Definition.Grade);
             Check(run.Sell(0), "Replacement sale permitted during choice");
-            Check(run.PendingPet && run.Money == paid + sale, "Replacement preserves paid session and credits sale");
-            Check(run.ChoosePet(0) && run.Owns(chosen.Id) && run.Students.Count == 3, "Replacement makes room for pending candidate");
+            Check(!run.PendingPet && run.Money == paid + sale, "School dismissal credits sale");
+            Check(run.CanStartBattle && run.Owns(chosen.Id) && run.Students.Count == 3, "Dismissal resolves overflow");
         }
 
         private static void CapacityAndRelics()
