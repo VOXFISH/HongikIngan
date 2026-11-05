@@ -35,13 +35,23 @@ namespace HongikIngan
         IEnumerator CheckScene()
         {
             while(!UnityEngine.Rendering.SplashScreen.isFinished)yield return null;
-            Screen.SetResolution(1440,900,FullScreenMode.Windowed);
+            bool fullHd=Environment.GetCommandLineArgs().Contains("--full-hd");
+            int width=fullHd?1920:1440, height=fullHd?1080:900;
+            Screen.SetResolution(width,height,FullScreenMode.Windowed);
             var session=PrototypeSession.Ensure(); var run=session.Run;
             run.AddMoney(10000); for(int i=0;i<4;i++)run.ExpandSlots();
             run.Students.Clear(); foreach(int id in new[]{0,8,9})run.Students.Add(new StudentState(PrototypeCatalog.Students[id]));
-            run.Settings.bossBaseHp=100000; run.Settings.bossGrowth=1;
+            Check(run.Settings.bossBaseHp==2000 && run.Settings.bossGrowth==2,"runtime boss balance");
             session.EnterBattle(); yield return new WaitForSeconds(1.8f);
             var screen=FindFirstObjectByType<BattleScreen>(); var formation=screen.formation;
+            Check(Screen.width==width && Screen.height==height,"requested render resolution");
+            OnScreen(screen.hud.turnLabel.rectTransform);
+            OnScreen(screen.hud.synergyLabel.rectTransform);
+            OnScreen(screen.hud.bossHpLabel.rectTransform);
+            OnScreen(screen.hud.bossDebuffsLabel.rectTransform);
+            OnScreen(screen.hud.damageLabel.rectTransform);
+            OnScreen(screen.hud.logLabel.rectTransform);
+            OnScreen((RectTransform)screen.hud.actionButton.transform);
             Check(screen.CanReorder,"ready for input");
             Check(screen.presentation.stepDuration==1 && screen.presentation.beamDuration==1,"one second authored timings");
             var actual=run.Students.ToArray();
@@ -57,6 +67,9 @@ namespace HongikIngan
                     var slot=formation.slots[positions[i]];
                     Check(slot.Index==i && slot.orderLabel.text==(i+1).ToString() && slot.Student==run.Students[i],"left-to-right binding "+positions.Length+"/"+i);
                     Check(!slot.roleLabel.gameObject.activeSelf && !slot.skillLabel.gameObject.activeSelf,"compact sprite view");
+                    OnScreen(slot.portrait.rectTransform);
+                    OnScreen(slot.nameLabel.rectTransform);
+                    OnScreen(slot.orderLabel.rectTransform);
                     if(i>0)Check(slot.transform.position.x>formation.slots[positions[i-1]].transform.position.x,"ordered spatial positions");
                 }
                 yield return null;
@@ -82,6 +95,8 @@ namespace HongikIngan
             first.OnPointerEnter(e);Check(formation.tooltip.effectLabel.text.Contains("0.5"),"fractional skill parameter stays precise");
             first.OnPointerExit(e);formation.Render(run);
             first.OnPointerEnter(e);Check(formation.tooltip.IsOpen && formation.tooltip.nameLabel.text==first.Student.Definition.Name && formation.tooltip.effectLabel.text.Contains(first.Student.Definition.SkillDescription),"hover details");
+            OnScreen(formation.tooltip.nameLabel.rectTransform);
+            OnScreen(formation.tooltip.effectLabel.rectTransform);
             BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"hover.png"));yield return new WaitForSeconds(.3f);
             first.OnPointerExit(e);Check(!formation.tooltip.IsOpen,"exit hides tooltip");
             first.OnPointerEnter(e);screen.audioPanel.openButton.onClick.Invoke();Check(!formation.tooltip.IsOpen,"modal hides tooltip");
@@ -130,5 +145,11 @@ namespace HongikIngan
             formation.StudentSlot(0).OnPointerEnter(e);Check(formation.tooltip.IsOpen,"next preparation hover restored");
         }
         void Check(bool condition,string message){assertions++;if(!condition)throw new InvalidOperationException(message);}
+        void OnScreen(RectTransform rect)
+        {
+            var corners=new Vector3[4]; rect.GetWorldCorners(corners);
+            Check(corners.All(c=>c.x>=-.5f && c.y>=-.5f && c.x<=Screen.width+.5f && c.y<=Screen.height+.5f),
+                "visible at "+Screen.width+"x"+Screen.height+": "+rect.name);
+        }
     }
 }

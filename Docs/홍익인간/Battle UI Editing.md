@@ -133,3 +133,9 @@ Unity 6000.3.7f1의 컴파일·씬 참조·Windows 빌드와 기존 규칙 4,000
 SchoolStudentSlot.Bind가 현재 학생의 Id로 Assets/UI/StudentPortraitCatalog.asset을 조회하고 StudentPlaceholder의 Image.sprite를 갱신한다. 사진이 있을 때는 Fill을 숨기고 흰색 tint와 Preserve Aspect를 적용하며, 빈 슬롯이나 이미지 누락 시 기존 초상화를 지우고 자리표시자로 되돌린다. 학생 이동·교환·영입은 기존 Refresh/Bind 흐름을 사용한다.
 
 Assets/sprite/characters/Girl00.png는 Girl0, Girl01.png는 Girl1로 연결한다. 현재 34장이고 Girl05.png와 Girl11.png는 없다. 이미지를 추가한 뒤 HongikIngan > Connect School student portraits를 실행하면 카탈로그와 공통 책상 프리팹 연결을 갱신한다. 각 PNG는 전체 그림 한 장이므로 Sprite Mode Single로 가져오며 원본 PNG는 수정하지 않는다. 카탈로그를 프리팹이 직접 참조하므로 플레이어 빌드에도 포함된다. 학생 이미지 적용은 실행 중이며 편집 상태에는 특정 학생을 고정하지 않는다.
+
+## 1920×1080 확인 (2026-11-06)
+
+Battle Canvas는 1440×900 편집 좌표와 CanvasScaler의 Expand를 유지한다. 1920×1080에서는 1.2배로 표시되어 주요 배치 영역은 1728×1080이고 좌우 여백은 각각 96px이다. 스프라이트 비율을 유지하며, Inspector에서 작성한 호 좌표를 런타임에 덮어쓰지 않는다. 화면 해상도가 1920×1080이라고 편집 좌표도 같은 수치로 변경할 필요는 없다.
+
+실제 Windows 플레이어에서 `--battle-arc-smoke --full-hd --smoke-output <폴더>`로 렌더 해상도를 확인한다. 3·4·5·7·9명 초상화·이름·번호, 턴·시너지·보스 HP·디버프·원기옥 로그·공격 버튼과 호버 텍스트의 화면 경계를 검사하고 계산·빔을 캡처했다. 기본 보스 체력 2,000으로 UI 검사 209개와 규칙 검사 4,010개, 초기 지급 2,000시드를 통과했다. 결과는 `UnityProject/Builds/Battle1080Final/`, 로그는 `UnityProject/Logs/Battle1080Build.log`와 `Battle1080FinalPlayer.log`에 있다. 일반 실행의 창 크기는 이 검증 옵션이 변경하지 않는다.
