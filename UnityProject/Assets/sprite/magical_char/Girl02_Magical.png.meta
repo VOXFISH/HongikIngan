@@ -1,0 +1,481 @@
+fileFormatVersion: 2
+guid: 8165f2cc7c1e8284b83a0f60816df358
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5786009119118383078
+    second: Girl02_Magical_0
+  - first:
+      213: -2183930877309751253
+    second: Girl02_Magical_1
+  - first:
+      213: 2884837953576793577
+    second: Girl02_Magical_2
+  - first:
+      213: -1285706004296519649
+    second: Girl02_Magical_3
+  - first:
+      213: -5021961211727942234
+    second: Girl02_Magical_4
+  - first:
+      213: -4296876337500015196
+    second: Girl02_Magical_5
+  - first:
+      213: 41156742038001048
+    second: Girl02_Magical_6
+  - first:
+      213: 589283783647218527
+    second: Girl02_Magical_7
+  - first:
+      213: 7812446712409592541
+    second: Girl02_Magical_8
+  - first:
+      213: 8479690310105480796
+    second: Girl02_Magical_9
+  - first:
+      213: 7108976838763674003
+    second: Girl02_Magical_10
+  - first:
+      213: 5969954868598085310
+    second: Girl02_Magical_11
+  - first:
+      213: 3576006014338951562
+    second: Girl02_Magical_12
+  - first:
+      213: -7695034254253437802
+    second: Girl02_Magical_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Girl02_Magical_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1011
+        height: 1530
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e7d83463a80c4050800000000000000
+      internalID: 5786009119118383078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_1
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 1495
+        width: 23
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b20f1f3207e11b1e0800000000000000
+      internalID: -2183930877309751253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_2
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 1415
+        width: 61
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e5728195d0090820800000000000000
+      internalID: 2884837953576793577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_3
+      rect:
+        serializedVersion: 2
+        x: 912
+        y: 1223
+        width: 110
+        height: 164
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f10b1587331482ee0800000000000000
+      internalID: -1285706004296519649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_4
+      rect:
+        serializedVersion: 2
+        x: 980
+        y: 1199
+        width: 29
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ad6a2ba2e86e4ab0800000000000000
+      internalID: -5021961211727942234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_5
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 985
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a5b783acbd6e54c0800000000000000
+      internalID: -4296876337500015196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_6
+      rect:
+        serializedVersion: 2
+        x: 934
+        y: 899
+        width: 75
+        height: 183
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 895994db6d7329000800000000000000
+      internalID: 41156742038001048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_7
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 975
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5bc034aa7e8d2800800000000000000
+      internalID: 589283783647218527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_8
+      rect:
+        serializedVersion: 2
+        x: 968
+        y: 967
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd297df84e26b6c60800000000000000
+      internalID: 7812446712409592541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 709
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5eb823e869eda570800000000000000
+      internalID: 8479690310105480796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_10
+      rect:
+        serializedVersion: 2
+        x: 964
+        y: 709
+        width: 43
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 399fcf615c828a260800000000000000
+      internalID: 7108976838763674003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_11
+      rect:
+        serializedVersion: 2
+        x: 984
+        y: 647
+        width: 25
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb617e3a25a89d250800000000000000
+      internalID: 5969954868598085310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_12
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 551
+        width: 23
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a896557068680a130800000000000000
+      internalID: 3576006014338951562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Girl02_Magical_13
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 147
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69cc2c4ad1fb53590800000000000000
+      internalID: -7695034254253437802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Girl02_Magical_0: 5786009119118383078
+      Girl02_Magical_1: -2183930877309751253
+      Girl02_Magical_10: 7108976838763674003
+      Girl02_Magical_11: 5969954868598085310
+      Girl02_Magical_12: 3576006014338951562
+      Girl02_Magical_13: -7695034254253437802
+      Girl02_Magical_2: 2884837953576793577
+      Girl02_Magical_3: -1285706004296519649
+      Girl02_Magical_4: -5021961211727942234
+      Girl02_Magical_5: -4296876337500015196
+      Girl02_Magical_6: 41156742038001048
+      Girl02_Magical_7: 589283783647218527
+      Girl02_Magical_8: 7812446712409592541
+      Girl02_Magical_9: 8479690310105480796
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
