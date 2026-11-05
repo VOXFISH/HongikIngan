@@ -121,9 +121,9 @@ namespace HongikIngan
             bool free = CanInteract;
             schoolCanvas.interactable = free;
             if (!free) foreach (var slot in slots) slot.CancelDrag();
-            energyLabel.text = $"미라클 에너지\n{observedRun.Money}";
-            rosterLabel.text = $"전대 인원\n{observedRun.Students.Count} / {observedRun.Capacity}";
-            stageLabel.text = $"STAGE {observedRun.Stage:00}  -  방과 전";
+            energyLabel.text = observedRun.Money.ToString();
+            rosterLabel.text = $"{observedRun.Students.Count} / {observedRun.Capacity}";
+            stageLabel.text = $"STAGE {observedRun.Stage:00}";
             photosLabel.text = $"폴라로이드 {observedRun.PhotoCount}\n분위기 {observedRun.Atmosphere} / 별의 힘 {observedRun.StarPower}";
             ownedRelicsLabel.text = observedRun.Relics.Count == 0 ? "아직 획득한 유물이 없어요" : string.Join("   /   ", observedRun.Relics.Select(r => r.Name));
             int pages = Mathf.Max(1, Mathf.CeilToInt(observedRun.SchoolDeskCount / 9f));
