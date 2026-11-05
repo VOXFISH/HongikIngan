@@ -62,3 +62,11 @@ Requirements :
 6. 슬롯과 대상 선택 : 기본 슬롯 수는 3, 최대 슬롯 수는 7. 만약 유물 중에서 슬롯 증가가 있다면 9까지 증가. (유물로 증가한 슬롯과 기존 슬롯은 연출을 위해서만 구분)
 7. 강화값 산출 : 강화 대상 변수는 스킬당 하나로만 제한, 강화값을 지정하는 로직은 마법소녀마다 다름
 8. 경제와 재영입 : 밸런싱을 위해 경제 관련 값들은 모아서 하나의 ScriptableObject로 관리. 일단은 임시값을 적용. 계약 해제한 소녀는 다시 영입 가능, 강화 상태는 유지되지 않음."
+2026-11-05 16:32:56+09:00,qwerty,"There are new and updates .md files. Read them and assess them even more, I'll leave it up to you. Good job, this is to cheer you up. Don't make mistakes."
+2026-11-05 16:44:18+09:00,qwerty,"Do the following:
+-Create /홍익인간/Decisions
+-Create an .md file with a title that contains the topic of the decision requirements & current time.
+-Dissect the current conversation by comment & create individual files.
+-Create a log based on recommendations."
+2026-11-05 16:53:56+09:00,qwerty,"Translate the files you've just created into natural korean language, retaining important keywords from the original scripts. Commit them when you are finished."
+2026-11-05 17:18:42+09:00,VOXFISH,푸시해줘잉
