@@ -11,12 +11,13 @@ namespace HongikIngan
         public BattleFormationView formation;
         public BattlePresentation presentation;
         public BattleAudioPanel audioPanel;
+        public TurnTransitionView turnTransition;
         PrototypeRun run;
         IEnumerator<BattleStep> resolution;
-        bool running, interrupted, initialized;
+        bool running, interrupted, initialized, preparing;
         string current = "준비가 되면 합동 공격을 시작하세요.";
 
-        public bool CanReorder => isActiveAndEnabled && initialized && !running && !interrupted &&
+        public bool CanReorder => isActiveAndEnabled && initialized && !running && !preparing && !interrupted &&
             !audioPanel.IsOpen && run.Battle != null && !run.Battle.IsResolving && !run.Battle.Won && !run.Battle.Lost;
         public bool IsRunning => running;
 
@@ -35,6 +36,7 @@ namespace HongikIngan
             Subscribe();
             presentation.BeginBattle();
             Refresh();
+            StartCoroutine(PrepareTurn());
         }
         void OnEnable() { if (initialized) { Subscribe(); Refresh(); } }
         void Subscribe()
@@ -50,6 +52,8 @@ namespace HongikIngan
             hud.actionButton.onClick.RemoveListener(PerformAction);
             audioPanel.VisibilityChanged -= ModalChanged;
             formation.CancelDrag();
+            preparing = false;
+            if (turnTransition != null) turnTransition.Hide();
             // Partial effects cannot safely be replayed after interruption.
             if (running)
             {
@@ -61,6 +65,7 @@ namespace HongikIngan
                 running = false;
                 presentation.Clear();
             }
+            else StopAllCoroutines();
         }
         void ModalChanged() { formation.CancelDrag(); Refresh(); }
         public void Swap(int first, int second)
@@ -69,10 +74,25 @@ namespace HongikIngan
         }
         public void PerformAction()
         {
-            if (!initialized || !isActiveAndEnabled || running || audioPanel.IsOpen) return;
-            if (interrupted || run.Battle == null || run.Battle.Lost) PrototypeSession.Instance.Restart();
-            else if (run.Battle.Won) PrototypeSession.Instance.BackToSchool();
+            if (!initialized || !isActiveAndEnabled || running || preparing || audioPanel.IsOpen ||
+                (SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy)) return;
+            if (interrupted || run.Battle == null || run.Battle.Lost)
+                ChangeScene("새로운 시작", () => PrototypeSession.Instance.Restart());
+            else if (run.Battle.Won) ChangeScene("학교로!", () => PrototypeSession.Instance.BackToSchool());
             else if (!run.Battle.IsResolving) StartCoroutine(Attack());
+        }
+        static void ChangeScene(string message, System.Action action)
+        {
+            if (SceneTransitionOverlay.Current != null) SceneTransitionOverlay.Current.Go(message, action);
+            else action();
+        }
+        IEnumerator PrepareTurn()
+        {
+            if (run.Battle == null || run.Battle.Won || run.Battle.Lost) yield break;
+            preparing = true; formation.CancelDrag(); Refresh();
+            while (SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy) yield return null;
+            if (turnTransition != null) yield return turnTransition.Show(run.Battle.Turn + 1);
+            preparing = false; Refresh();
         }
         IEnumerator Attack()
         {
@@ -100,11 +120,12 @@ namespace HongikIngan
                 presentation.Clear();
                 Refresh();
             }
+            if (!run.Battle.Won && !run.Battle.Lost) yield return PrepareTurn();
         }
         void Refresh()
         {
             if (!initialized) return;
-            hud.Render(run, current, running, audioPanel.IsOpen, interrupted);
+            hud.Render(run, current, running || preparing, audioPanel.IsOpen, interrupted);
             formation.Render(run);
         }
         // Kept for existing callers and formatting checks.

@@ -23,6 +23,7 @@
 - [키워드 효과 목록](Girls/keywords.md): 표독·검은 클로버·넌 내 꺼야·조명·사랑의 수치·소모·중첩·유지 규칙과 이전 호환 항목.
 - [마법소녀 작성 서식과 원본 기획](Girls/README.md): `Girl%d.md` 서식, Girl0–Girl17 문서, 자연어 우선 해석과 현재 구현 범위.
 - [FMOD 설정 안내](Audio%20Setup.md): 지속 SoundManager와 채널별 볼륨·음소거.
+- [UI 목업 구현·Inspector 편집 v4](UI%20Mockup/UI%20Mockup%20Implementation%20v4.md): 교실·전투 인터랙티브 목업을 프로젝트 규칙·씬 구조에 맞춰 옮기는 배치·연출 기획과 버전 이력.
 
 ## 팀 공통 문서 관리 규칙
 

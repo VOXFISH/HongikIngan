@@ -52,6 +52,14 @@ namespace HongikIngan
         private bool Done(string message) { LastMessage = message; Changed?.Invoke(); return true; }
         private bool SchoolAvailable => !InBattle && !GameOver;
         private bool SchoolUnlocked => SchoolAvailable && !PendingPet;
+        public bool CanStartBattle => StartBattleBlockReason == null;
+        public string StartBattleBlockReason => !SchoolUnlocked ? "펫 선택을 먼저 마쳐 주세요." :
+            Students.Count == 0 ? "마법소녀를 한 명 이상 영입해 주세요." : null;
+        public int VictoryRewardBase => Settings.victoryReward;
+        public int VictoryRewardStageBonus => Settings.victoryRewardPerStage * (Stage - 1);
+        public int VictoryRewardRelicBonus => Relics.Where(r => r.Kind == RelicKind.VictoryMoney)
+            .Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r));
+        public int VictoryReward => BattleSynergies.Income(this, VictoryRewardBase + VictoryRewardStageBonus + VictoryRewardRelicBonus);
         public bool Owns(string id) => Students.Any(s => s.Definition.Id == id);
 
         public bool BuyRelic(int index)
@@ -303,8 +311,7 @@ namespace HongikIngan
 
         public bool StartBattle()
         {
-            if (!SchoolUnlocked) return Fail("펫 선택을 먼저 마쳐 주세요.");
-            if (Students.Count == 0) return Fail("마법소녀를 한 명 이상 영입해 주세요.");
+            if (!CanStartBattle) return Fail(StartBattleBlockReason);
             EnsureSchoolDesks();
             Students.Sort((first, second) => schoolDesks[first].CompareTo(schoolDesks[second]));
             RerollCost = Math.Max(0, Settings.rerollInitial);
@@ -358,7 +365,7 @@ namespace HongikIngan
         public bool ReturnToSchool()
         {
             if (!InBattle || Battle == null || !Battle.Won || Battle.IsResolving) return Fail("보스 처치 후 교실로 돌아갈 수 있습니다.");
-            int reward = Settings.victoryReward + Settings.victoryRewardPerStage * (Stage - 1) + Relics.Where(r => r.Kind == RelicKind.VictoryMoney).Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r));
+            int reward = VictoryRewardBase + VictoryRewardStageBonus + VictoryRewardRelicBonus;
             int earned = BattleSynergies.Income(this, reward);
             AddMoney(reward);
             BattleSynergies.FinishBattle(this);

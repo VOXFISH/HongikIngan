@@ -13,7 +13,7 @@
 | Presentation / Beam | 빔 표시 오브젝트 |
 | SoundModal / Dialog | BGM·SFX·Voice 볼륨/음소거와 닫기 버튼 |
 
-Rect Tool 또는 Inspector의 `RectTransform`에서 위치·크기·앵커를 변경하고 씬을 저장한다. `Formation`을 옮기면 슬롯 전체가, 각 `Slot`을 옮기면 해당 슬롯만 이동한다. 자동 LayoutGroup이나 실행 중 위치 초기화는 없다. CanvasScaler 기준은 1440×900이며 Expand 방식으로 화면 안에 전체 레이아웃을 맞춘다. Layout 루트는 중앙에 고정된다. 학생 수·확장 슬롯 수에 따라 표시 여부만 바뀌며 슬롯 배치는 유지된다. 런타임에서 바뀌는 텍스트 값은 상태에서 갱신되므로 제목 외의 동적 문구는 해당 뷰에서 변경한다.
+Rect Tool 또는 Inspector의 `RectTransform`에서 위치·크기·앵커를 변경하고 씬을 저장한다. `Formation`을 옮기면 슬롯 전체가, 각 `Slot`을 옮기면 해당 슬롯만 이동한다. 자동 LayoutGroup이나 실행 중 위치 초기화는 없다. CanvasScaler 기준은 1440×900이며 Expand 방식으로 화면 안에 전체 레이아웃을 맞춘다. Layout 루트는 중앙에 고정된다. 학생 수·확장 슬롯 수에 따라 표시 여부만 바뀌며 슬롯 배치는 유지된다. 현재 배치는 HTML 목업에 따라 왼쪽 부유 슬롯, 중앙 원기옥·보너스 로그, 오른쪽 괴수·HP로 구성한다. 런타임에서 바뀌는 텍스트 값은 상태에서 갱신되므로 제목 외의 동적 문구는 해당 뷰에서 변경한다.
 
 `BattleFormationView.slots` 배열 순서가 논리적인 공격 순서다. 시각 위치 변경으로 공격 순서가 바뀌지 않는다. 실제 플레이에서는 학생을 다른 학생 위에 드래그하면 순서가 교환된다. 빈 슬롯으로의 이동은 기존 전투 모델이 지원하지 않아 교환하지 않는다. 잘못된 위치에 놓으면 원래 자리로 돌아간다. 공격 중, 결과 화면, 사운드 창에서는 드래그와 공격 재입력이 잠긴다.
 
@@ -25,7 +25,7 @@ Rect Tool 또는 Inspector의 `RectTransform`에서 위치·크기·앵커를 �
 - `BattlePresentation`: 빔과 전투 사운드, 단계별 표시 시간.
 - `BattleAudioPanel`: 사운드 설정과 모달 입력 차단.
 - `BattleUiFont`: 기존 프로토타입의 OS 폰트 대체. Inspector의 Font를 지정하면 해당 폰트 사용.
-- `CombatEngine` / `PrototypeRun`: 기존 전투 계산·거래·승패 규칙. UI 분리로 변경하지 않는다.
+- `CombatEngine` / `PrototypeRun`: 기존 전투 계산·거래·승패 규칙. UI 분리로 변경하지 않는다. `BattleStep.Actor`·`Target`은 어느 슬롯을 강조할지 알려 주는 연출용 정보이며 규칙에 쓰지 않는다.
 
 기존 `BattleScreen` GUID와 `FormatDamage` 호출 호환성을 보존한다. 전투 진행 중 컨트롤러가 비활성화되면 중간 효과가 적용된 턴을 재실행하지 않고 재시작을 안내한다.
 
@@ -36,3 +36,13 @@ Rect Tool 또는 Inspector의 `RectTransform`에서 위치·크기·앵커를 �
 배치 실행 진입점은 `HongikIngan.Editor.BattleLayoutBuilder.Apply`, 기존 규칙 검사는 `HongikIngan.PrototypeChecks.Run`이다. 실제 플레이 검사에는 `--battle-ui-smoke --smoke-output <폴더>`를 사용한다. 검사 결과는 출력 폴더의 `battle-ui-result.txt`에 기록한다.
 
 2026-11-05 검증: Unity 6000.3.7f1 컴파일·씬 참조·Missing Script 검사, 기존 2,219개 규칙 검사, Windows 실행 파일에서 26개 UI/씬 전환 검사를 통과했다. 1440×900과 1280×720 캡처에서 9개 슬롯, 보스 체력 바, 하단 버튼 표시를 확인했다. 로그와 캡처는 로컬 `UnityProject/Logs/BattleLayout.log`, `BattleLayoutFix.log`, `BattlePlayerFinal.log`, `UnityProject/Builds/BattleUiSmokeFinal/`에 있으며 버전 관리에서 제외한다. 입력 검사는 실제 UI 이벤트 핸들러를 호출하는 자동 검사이며 사람의 수동 플레이와 FMOD 실제 재생은 포함하지 않는다.
+
+## HTML 목업 배치와 전환 오브젝트 (v4)
+
+현재 전체 구조는 [목업 구현 v4](UI%20Mockup/UI%20Mockup%20Implementation%20v4.md)를 따른다. `Presentation/Orb`, `Actor`, `Chant`, `DamagePop`과 `BonusPanel`, `CityBack/BossVisual`도 독립적으로 편집할 수 있다.
+
+`BattleCanvas/Layout/TurnTransition/Band/TurnTitle`이 매 턴 준비 전 `Turn x`를 표시한다. `BattleScreen`의 `TurnTransitionView` 참조를 통해 연결되며 표시 시간은 해당 컴포넌트의 `duration`이다. 표시 중에는 공격·드래그를 잠그고, 승리·패배가 확정되면 다음 턴을 표시하지 않는다.
+
+별도 루트 `SceneTransitionOverlay/Curtain/Band`는 출동·학교 복귀·새 게임 전환을 표시한다. 위치·크기는 RectTransform으로 조절하고, `SceneTransitionOverlay`의 `fadeDuration`, `holdDuration`으로 시간을 조절한다. 실행 중 하나만 유지하며 씬 로드 동안 화면을 덮는다. 기본 배치를 수정할 때는 School과 Battle에 저장된 전환 오브젝트를 함께 맞춘다.
+
+학교 팝업과 책상 위치도 씬에 저장되며 UI 갱신에서 강제 재배치하지 않는다. 이전 test 전용 디버그/중도 복귀 오브젝트는 공통 씬에 존재하지 않는다.

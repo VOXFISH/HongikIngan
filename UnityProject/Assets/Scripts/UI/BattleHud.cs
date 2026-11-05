@@ -15,7 +15,8 @@ namespace HongikIngan
         {
             summaryLabel.text = $"마법소녀전대  ·  STAGE {run.Stage}  ·  미라클 에너지 {run.Money}  ·  폴라로이드 {run.PhotoCount}  ·  분위기 {run.Atmosphere}";
             var battle = run.Battle;
-            turnLabel.text = battle == null ? "전투를 시작할 수 없습니다." : $"TURN {battle.Turn}/3  ·  조합을 바꿔 보스를 물리치세요";
+            int displayedTurn = battle == null ? 1 : battle.IsResolving || battle.Won || battle.Lost ? battle.Turn : Mathf.Min(3, battle.Turn + 1);
+            turnLabel.text = battle == null ? "전투를 시작할 수 없습니다." : $"TURN {displayedTurn}/3  ·  조합을 바꿔 보스를 물리치세요";
             damageLabel.text = "합동 데미지  " + BattleScreen.FormatDamage(battle?.Damage ?? 0);
             bossHpLabel.text = battle == null ? "" : $"HP {BattleScreen.FormatDamage(battle.BossHp)} / {BattleScreen.FormatDamage(battle.MaxBossHp)}";
             bossHpBar.SetValueWithoutNotify(battle == null ? 0 : Mathf.Clamp01(battle.BossHp / battle.MaxBossHp));

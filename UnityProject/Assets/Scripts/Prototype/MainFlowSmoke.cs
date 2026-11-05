@@ -55,9 +55,9 @@ namespace HongikIngan
             Check(SceneManager.GetActiveScene().name == "Main" && menu != null, "Main is the first build scene");
             Check(menu.startButton.interactable && menu.exitButton.interactable, "menu controls are enabled");
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "main-1440x900.png"));
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             menu.startButton.onClick.Invoke();
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             var session = PrototypeSession.Ensure(); var run = session.Run;
             Check(SceneManager.GetActiveScene().name == "School", "start enters School");
             Check(run.Money == 100 && run.Students.Count == 3 && run.Stage == 1, "starting resources and roster");
@@ -71,20 +71,20 @@ namespace HongikIngan
             }
             var roster = run.Students.ToArray();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "initial-school-1440x900.png"));
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             school.battleButton.onClick.Invoke();
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             Check(SceneManager.GetActiveScene().name == "Battle" && session.Run == run, "School battle control preserves the run");
             Check(run.Students.SequenceEqual(roster) && run.Money == 100, "battle entry does not reroll or recharge starters");
             Check(FindFirstObjectByType<BattleScreen>().CanReorder, "Battle controller is ready");
             SceneManager.LoadScene("Main");
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             menu = FindFirstObjectByType<MainMenuScreen>();
             menu.startButton.onClick.Invoke();
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             Check(session.Run != run && session.Run.Money == 100 && session.Run.Students.Count == 3, "new start replaces prior progress");
             SceneManager.LoadScene("Main");
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(1.5f);
             awaitingQuit = true;
             FindFirstObjectByType<MainMenuScreen>().exitButton.onClick.Invoke();
             yield return new WaitForSeconds(3);

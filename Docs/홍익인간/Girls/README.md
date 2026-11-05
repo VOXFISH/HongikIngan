@@ -56,3 +56,26 @@ Girl0–Girl17의 이름·학년·시너지·스킬·역할군을 구현한다. 
 문서의 한글 필드명은 코드의 변수명을 강제하지 않는다. AI는 기존 코드 구조에 맞춰 연결한다. 표시 역할군 `지원`·`약화`·`공격`은 현재 구현의 `Buff`·`Debuff`·`Dealer`에 각각 대응한다. 현재 카탈로그와 행동 처리기는 Girl0–Girl17의 복수 효과·강화·이동 연쇄를 지원한다. 새 캐릭터의 동작도 자동으로 지원된다고 가정하지 말고 필요한 확장과 공용 코드에 미치는 영향을 정리한다. 마법소녀 식별자는 영구 식별자로 사용하고 목록 순서로 다시 생성하지 않는다.
 
 실제 콘텐츠는 사용자가 작성한 후 구현한다. 서식의 공란이나 예시는 새 마법소녀·시너지·키워드를 추가하라는 지시가 아니다.
+
+## 보존된 후속 기획
+
+Girl18–Girl35와 중복 식별자의 Girl17 메리 문서는 test에서 작성한 원본 기획으로 보존했다. 현재 구현은 Girl0–Girl17 치즈까지이며 이 후속 문서는 이번 UI 변경에서 구현하지 않았다.
+- [Girl17_사진부3_독설가_메리](Girl17_%EC%82%AC%EC%A7%84%EB%B6%803_%EB%8F%85%EC%84%A4%EA%B0%80_%EB%A9%94%EB%A6%AC.md)
+- [Girl18_미술부1_독설가_다나](Girl18_%EB%AF%B8%EC%88%A0%EB%B6%801_%EB%8F%85%EC%84%A4%EA%B0%80_%EB%8B%A4%EB%82%98.md)
+- [Girl19_미술부1_반항아_예리](Girl19_%EB%AF%B8%EC%88%A0%EB%B6%801_%EB%B0%98%ED%95%AD%EC%95%84_%EC%98%88%EB%A6%AC.md)
+- [Girl20_미술부2_귀염둥이_루나](Girl20_%EB%AF%B8%EC%88%A0%EB%B6%802_%EA%B7%80%EC%97%BC%EB%91%A5%EC%9D%B4_%EB%A3%A8%EB%82%98.md)
+- [Girl21_미술부2_분위기메이커_가영](Girl21_%EB%AF%B8%EC%88%A0%EB%B6%802_%EB%B6%84%EC%9C%84%EA%B8%B0%EB%A9%94%EC%9D%B4%EC%BB%A4_%EA%B0%80%EC%98%81.md)
+- [Girl22_미술부3_리더_지나](Girl22_%EB%AF%B8%EC%88%A0%EB%B6%803_%EB%A6%AC%EB%8D%94_%EC%A7%80%EB%82%98.md)
+- [Girl23_미술부3_사랑꾼_미영](Girl23_%EB%AF%B8%EC%88%A0%EB%B6%803_%EC%82%AC%EB%9E%91%EA%BE%BC_%EB%AF%B8%EC%98%81.md)
+- [Girl24_천문부1_귀염둥이_하나](Girl24_%EC%B2%9C%EB%AC%B8%EB%B6%801_%EA%B7%80%EC%97%BC%EB%91%A5%EC%9D%B4_%ED%95%98%EB%82%98.md)
+- [Girl25_천문부1_사랑꾼_예진](Girl25_%EC%B2%9C%EB%AC%B8%EB%B6%801_%EC%82%AC%EB%9E%91%EA%BE%BC_%EC%98%88%EC%A7%84.md)
+- [Girl26_천문부2_독설가_하진](Girl26_%EC%B2%9C%EB%AC%B8%EB%B6%802_%EB%8F%85%EC%84%A4%EA%B0%80_%ED%95%98%EC%A7%84.md)
+- [Girl27_천문부2_반항아_혜림](Girl27_%EC%B2%9C%EB%AC%B8%EB%B6%802_%EB%B0%98%ED%95%AD%EC%95%84_%ED%98%9C%EB%A6%BC.md)
+- [Girl28_천문부3_리더_수현](Girl28_%EC%B2%9C%EB%AC%B8%EB%B6%803_%EB%A6%AC%EB%8D%94_%EC%88%98%ED%98%84.md)
+- [Girl29_천문부3_분위기메이커_소미](Girl29_%EC%B2%9C%EB%AC%B8%EB%B6%803_%EB%B6%84%EC%9C%84%EA%B8%B0%EB%A9%94%EC%9D%B4%EC%BB%A4_%EC%86%8C%EB%AF%B8.md)
+- [Girl30_연극부1_리더_미네](Girl30_%EC%97%B0%EA%B7%B9%EB%B6%801_%EB%A6%AC%EB%8D%94_%EB%AF%B8%EB%84%A4.md)
+- [Girl31_연극부1_귀염둥이_신아](Girl31_%EC%97%B0%EA%B7%B9%EB%B6%801_%EA%B7%80%EC%97%BC%EB%91%A5%EC%9D%B4_%EC%8B%A0%EC%95%84.md)
+- [Girl32_연극부2_반항아_민희](Girl32_%EC%97%B0%EA%B7%B9%EB%B6%802_%EB%B0%98%ED%95%AD%EC%95%84_%EB%AF%BC%ED%9D%AC.md)
+- [Girl33_연극부2_분위기메이커_세아](Girl33_%EC%97%B0%EA%B7%B9%EB%B6%802_%EB%B6%84%EC%9C%84%EA%B8%B0%EB%A9%94%EC%9D%B4%EC%BB%A4_%EC%84%B8%EC%95%84.md)
+- [Girl34_연극부3_사랑꾼_마리](Girl34_%EC%97%B0%EA%B7%B9%EB%B6%803_%EC%82%AC%EB%9E%91%EA%BE%BC_%EB%A7%88%EB%A6%AC.md)
+- [Girl35_연극부3_독설가_다혜](Girl35_%EC%97%B0%EA%B7%B9%EB%B6%803_%EB%8F%85%EC%84%A4%EA%B0%80_%EB%8B%A4%ED%98%9C.md)

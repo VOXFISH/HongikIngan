@@ -12,7 +12,7 @@ namespace HongikIngan
         public Slider bgmVolume, sfxVolume, voiceVolume;
         public Toggle bgmMute, sfxMute, voiceMute;
         public Text statusLabel;
-        public bool IsOpen => modal.activeSelf;
+        public bool IsOpen => modal != null && modal.activeSelf;
         public event Action VisibilityChanged;
         void OnEnable()
         {

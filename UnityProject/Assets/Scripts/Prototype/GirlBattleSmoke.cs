@@ -59,7 +59,7 @@ namespace HongikIngan
                 run.Students.AddRange(roster.Select(d => new StudentState(d)));
                 if (group >= 1) for (int i = 0; i < run.Students.Count; i++) Check(run.Upgrade(i), "upgrade girl " + group + "/" + i);
                 session.EnterBattle();
-                yield return new WaitForSeconds(.3f);
+                yield return new WaitForSeconds(1.5f);
                 var screen = FindFirstObjectByType<BattleScreen>();
                 Check(screen != null && screen.CanReorder && SceneManager.GetActiveScene().name == "Battle", "battle scene ready " + group);
                 for (int i = 0; i < run.Students.Count; i++)
@@ -73,7 +73,7 @@ namespace HongikIngan
                 Screen.SetResolution(group == 0 ? 1440 : 1280, group == 0 ? 900 : 720, FullScreenMode.Windowed);
                 yield return new WaitForSeconds(.5f);
                 ScreenCapture.CaptureScreenshot(Path.Combine(output, group == 0 ? "girls-sports-1440x900.png" : group == 1 ? "girls-discipline-1280x720.png" : "girls-photography-1280x720.png"));
-                yield return new WaitForSeconds(.3f);
+                yield return new WaitForSeconds(1.5f);
                 screen.presentation.stepDuration = .001f;
                 screen.hud.actionButton.onClick.Invoke();
                 float deadline = Time.realtimeSinceStartup + 90;
@@ -93,7 +93,7 @@ namespace HongikIngan
                 float atmosphere = run.Atmosphere;
                 Check(atmosphere > 0, "mood maker changes persistent atmosphere " + group);
                 screen.hud.actionButton.onClick.Invoke();
-                yield return new WaitForSeconds(.3f);
+                yield return new WaitForSeconds(1.5f);
                 Check(SceneManager.GetActiveScene().name == "School" && run.Atmosphere == atmosphere, "victory preserves atmosphere " + group);
                 Check(run.Stage == group + 2, "advance stage " + group);
             }

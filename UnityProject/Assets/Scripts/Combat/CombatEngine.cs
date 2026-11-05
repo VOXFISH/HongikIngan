@@ -89,7 +89,9 @@ namespace HongikIngan
     {
         public readonly string Kind, Message;
         public readonly float Damage;
-        public BattleStep(string kind, string message, float damage) { Kind = kind; Message = message; Damage = damage; }
+        public readonly StudentState Actor, Target;
+        public BattleStep(string kind, string message, float damage, StudentState actor = null, StudentState target = null)
+        { Kind = kind; Message = message; Damage = damage; Actor = actor; Target = target; }
     }
 
     public sealed class BattleState
@@ -185,10 +187,10 @@ namespace HongikIngan
         }
 
         internal static void AddDamage(PrototypeRun run, float amount) { run.Battle.Damage += amount; run.NotifyDamage(); }
-        internal static BattleStep Step(BattleState battle, string kind, string text)
+        internal static BattleStep Step(BattleState battle, string kind, string text, StudentState actor = null, StudentState target = null)
         {
             battle.Log.Add(text);
-            return new BattleStep(kind, text, battle.Damage);
+            return new BattleStep(kind, text, battle.Damage, actor, target);
         }
 
         public static string BuildChant(IEnumerable<StudentState> students)
