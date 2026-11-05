@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aa888410cd7b77448d5b6f61122c870, type: 3}
+  m_Name: StudentPortraitCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::HongikIngan.StudentPortraitCatalog
+  entries:
+  - studentId: Girl0
+    sprite: {fileID: 21300000, guid: a4807bb330460c04cb89c4938cb03773, type: 3}
+  - studentId: Girl1
+    sprite: {fileID: 21300000, guid: 1bd43890a60b45b4aafe792201acd2d5, type: 3}
+  - studentId: Girl2
+    sprite: {fileID: 21300000, guid: 4bf1ddd49de97874b8f58d51589787ba, type: 3}
+  - studentId: Girl3
+    sprite: {fileID: 21300000, guid: 10fe74c9f8a75d644b09d32de8aaf631, type: 3}
+  - studentId: Girl4
+    sprite: {fileID: 21300000, guid: 1a97f3bccd6d64e4eaeca35b90e8e191, type: 3}
+  - studentId: Girl6
+    sprite: {fileID: 21300000, guid: e6ba26ed8ede4e049ad7f7be84776251, type: 3}
+  - studentId: Girl7
+    sprite: {fileID: 21300000, guid: 3bc1aff4caba759468f3df6835ae94ee, type: 3}
+  - studentId: Girl8
+    sprite: {fileID: 21300000, guid: ba9e8f0ab60fdde439a98ece3edd17fd, type: 3}
+  - studentId: Girl9
+    sprite: {fileID: 21300000, guid: 9c7e09d59132a51428b302f9c9d8afd1, type: 3}
+  - studentId: Girl10
+    sprite: {fileID: 21300000, guid: 05db6fd1ca6280541a23d5149d854efd, type: 3}
+  - studentId: Girl12
+    sprite: {fileID: 21300000, guid: 75666c8201468394f89f6ddd64092ef1, type: 3}
+  - studentId: Girl13
+    sprite: {fileID: 21300000, guid: e723f7f00cb6579469927b930dc94101, type: 3}
+  - studentId: Girl14
+    sprite: {fileID: 21300000, guid: c7606954545f9874080cec411ae77b07, type: 3}
+  - studentId: Girl15
+    sprite: {fileID: 21300000, guid: 1be90cb345f79c34585d25ea9a8d00f7, type: 3}
+  - studentId: Girl16
+    sprite: {fileID: 21300000, guid: 42928ad1050f29d47828e86e6ebadc10, type: 3}
+  - studentId: Girl17
+    sprite: {fileID: 21300000, guid: 2eaca740d87cd23458e5e320f86b944b, type: 3}
+  - studentId: Girl18
+    sprite: {fileID: 21300000, guid: 95c016c289817e543aae1eebd4da6908, type: 3}
+  - studentId: Girl19
+    sprite: {fileID: 21300000, guid: e2344e0487b929d4a977137fb9cc1f10, type: 3}
+  - studentId: Girl20
+    sprite: {fileID: 21300000, guid: 57bf88905817f404da04d9eb37a38797, type: 3}
+  - studentId: Girl21
+    sprite: {fileID: 21300000, guid: 6eacf32ab8d9a5f4e97b3fb38d8d209d, type: 3}
+  - studentId: Girl22
+    sprite: {fileID: 21300000, guid: 5064bb07edecdd241990f1d90ba6e623, type: 3}
+  - studentId: Girl23
+    sprite: {fileID: 21300000, guid: 52ace77210604ab43b63ef8a95db825d, type: 3}
+  - studentId: Girl24
+    sprite: {fileID: 21300000, guid: d914639fa37dfc149abe7f2f1228c7dd, type: 3}
+  - studentId: Girl25
+    sprite: {fileID: 21300000, guid: cf7c4fcb7b03cd44d890a4345f4d8c72, type: 3}
+  - studentId: Girl26
+    sprite: {fileID: 21300000, guid: dcb1e58e48c78b94e99085e173f2098b, type: 3}
+  - studentId: Girl27
+    sprite: {fileID: 21300000, guid: 58db3a58b53d28c418f696007c812314, type: 3}
+  - studentId: Girl28
+    sprite: {fileID: 21300000, guid: 5c484d5df8f6b964f803101f5cfbe234, type: 3}
+  - studentId: Girl29
+    sprite: {fileID: 21300000, guid: 56cf5a81d1628bc4a96ea60f296a8703, type: 3}
+  - studentId: Girl30
+    sprite: {fileID: 21300000, guid: 6e236b3767c8eea42b49a3f5b97bd8c9, type: 3}
+  - studentId: Girl31
+    sprite: {fileID: 21300000, guid: 8991e9570d910a142a2591afe10b77e2, type: 3}
+  - studentId: Girl32
+    sprite: {fileID: 21300000, guid: 24a8ee156ea6e9e479e8ce3a41ab45a5, type: 3}
+  - studentId: Girl33
+    sprite: {fileID: 21300000, guid: 82462ac029c4643478cbcb2a891f8279, type: 3}
+  - studentId: Girl34
+    sprite: {fileID: 21300000, guid: af7cd94402e012b46baf16747da983ed, type: 3}
+  - studentId: Girl35
+    sprite: {fileID: 21300000, guid: e1089d77a88ced9429d28c12beff4533, type: 3}

@@ -331,3 +331,8 @@ If there's any other thing that can be a prefab, get confirmation from me and ma
 각 마법소녀는 스프라이트가 들어갈 예정이고, 전투 이전에 마우스를 올리면 플로팅 박스가 뜨면서 이름, 스킬명, 스킬 효과를 볼 수 있어. 플로팅 박스가 없다면 머리에 이름만 있고, 그 위에 적용된 버프가 표시돼. (전투 등에는 뜨지 않아)
 현재 데미지가 들어가는 숫자가 조금 빠른 상태인데, 검증을 위해서 하나의 항목은 1초에 뜨게 만들어. 데미지는 각 마법소녀의 머리 위에서 계산식을 띄우고, 동시에 원기옥의 숫자가 오르게 만들어.
 첨부 이미지: C:/Users/yelte/AppData/Local/Temp/codex-clipboard-04aca135-c8ff-4154-b3b9-305a0d0b4231.png"
+"2026-11-06 06:29:58+09:00","qwerty","In the ""school"" scene, under student desks, schooldeskslot. There's an object called StudentPlaceholder.
+
+In Assets/Sprite/Characters, there are student pngs with the coresponding IDs to the students.
+
+Replace the placeholder with the correct student pngs, according to the student occupying the slot."

@@ -125,6 +125,11 @@ Unity 6000.3.7f1의 컴파일·씬 참조·Windows 빌드와 기존 규칙 4,000
 
 ### 기본 이미지 연결
 
-원격 test의 기본 이미지 커밋도 병합해 보존했다. Assets/sprite/characters/Girl00.png부터 Girl35까지 존재하는 34개 이미지를 Girl 식별자로 연결했다. Girl05와 Girl11 파일은 아직 없어 임시 도형으로 표시한다. HongikIngan/Bind available Girl artwork 메뉴는 비어 있는 Artwork 항목만 채우며 수동 지정은 보존한다. 여러 Sprite로 분할된 원본은 면적이 가장 큰 본체를 선택하고, 기존 분할 설정과 GUID를 유지한다. 가키(Girl04)도 작은 장식 조각 대신 본체 Sprite를 연결했다.
+원격 test의 기본 이미지와 학교 초상화 커밋을 병합해 보존했다. Assets/sprite/characters/Girl00.png부터 Girl35까지 36개 이미지를 Girl 식별자로 연결했다. 원격에 확정된 이미지 GUID와 단일 스프라이트 설정을 사용한다. HongikIngan/Bind available Girl artwork 메뉴는 비어 있는 Artwork 항목만 채우며 수동 지정은 보존한다. 여러 Sprite로 분할된 원본은 면적이 가장 큰 본체를 선택하고, 기존 분할 설정과 GUID를 유지한다. 가키(Girl04)도 원격의 단일 스프라이트를 사용해 본체와 장식을 함께 표시한다.
 
 이미지 통합 후 빌드 로그는 Logs/BattleArcFinalBuild.log, 호 배치 검증 결과와 화면 캡처는 Builds/BattleArcFinal/에서 확인한다.
+## School 학생 초상화
+
+SchoolStudentSlot.Bind가 현재 학생의 Id로 Assets/UI/StudentPortraitCatalog.asset을 조회하고 StudentPlaceholder의 Image.sprite를 갱신한다. 사진이 있을 때는 Fill을 숨기고 흰색 tint와 Preserve Aspect를 적용하며, 빈 슬롯이나 이미지 누락 시 기존 초상화를 지우고 자리표시자로 되돌린다. 학생 이동·교환·영입은 기존 Refresh/Bind 흐름을 사용한다.
+
+Assets/sprite/characters/Girl00.png는 Girl0, Girl01.png는 Girl1로 연결한다. 현재 34장이고 Girl05.png와 Girl11.png는 없다. 이미지를 추가한 뒤 HongikIngan > Connect School student portraits를 실행하면 카탈로그와 공통 책상 프리팹 연결을 갱신한다. 각 PNG는 전체 그림 한 장이므로 Sprite Mode Single로 가져오며 원본 PNG는 수정하지 않는다. 카탈로그를 프리팹이 직접 참조하므로 플레이어 빌드에도 포함된다. 학생 이미지 적용은 실행 중이며 편집 상태에는 특정 학생을 고정하지 않는다.
