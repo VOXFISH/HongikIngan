@@ -35,7 +35,7 @@ namespace HongikIngan
             formation.Bind(this);
             initialized = true;
             Subscribe();
-            presentation.BeginBattle();
+            presentation.BeginBattle(run, hud, formation);
             Refresh();
             StartCoroutine(PrepareTurn());
         }
@@ -117,9 +117,8 @@ namespace HongikIngan
                 {
                     var step = resolution.Current;
                     current = step.Message;
-                    presentation.Show(step);
                     Refresh();
-                    yield return new WaitForSeconds(presentation.stepDuration);
+                    yield return presentation.Play(step, run);
                     presentation.Clear();
                 }
             }

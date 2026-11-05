@@ -17,8 +17,8 @@ namespace HongikIngan
         public int slotExpansionPrice = 40;
         public int victoryReward = 70;
         public int victoryRewardPerStage = 15;
-        public float bossBaseHp = 450f;
-        public float bossGrowth = 1.65f;
+        public float bossBaseHp = 2000f;
+        public float bossGrowth = 2f;
         public float polaroidDamage = 10f;
 
         public int RecruitPrice(int grade) => Price(recruitPrices, grade);
