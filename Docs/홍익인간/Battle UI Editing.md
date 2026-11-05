@@ -70,6 +70,15 @@ School의 `DragLayer`는 책상 프리팹 밖의 `SchoolCanvas/Layout` 아래에
 
 텍스트 구분자: 폰트에 없는 U+00B7 대신 모든 씬, 공통 책상 프리팹, 런타임/Editor 문구 생성 코드에서 ASCII 하이픈(-)을 사용한다. 2026-11-06에 로컬 스크립트 UnityProject/Logs/ReplaceMiddleDot.ps1로 124곳을 치환했으며 원본은 UnityProject/Logs/MiddleDotBackup-20261106-043514-997/에 보관했다. Logs의 스크립트와 백업은 버전 관리 대상이 아니다. 씬 5개 중 SampleScene과 URP2DSceneTemplate에는 해당 문자가 없어 변경하지 않았다.
 
+
+## 전투 보상 팝업
+
+`BattleCanvas/Layout/RewardPopup/Dialog`는 전투 종료 후 보상을 수령하는 임시 네모 창이다. `Title`, `RewardDetails`, `ClaimButton`을 Inspector의 RectTransform에서 조절한다. `BattleRewardPopup`은 표시 내용과 활성 상태만 갱신하며 배치를 덮어쓰지 않는다. 생성 메뉴는 `HongikIngan/Add battle reward popup`이며 이미 연결된 팝업은 재생성하지 않는다.
+
+보스 처치가 확정되면 정산 전 소유 에너지와 남은 턴을 저장한다. 기본 보상은 `50 + 남은 턴 × 100 + 정산 전 소유 에너지의 10%`이며 정수 에너지의 소수 부분은 버린다. 기존 선도부 획득 배율과 유물 추가 보상을 유지한다. 전투 연출이 끝난 뒤 팝업을 표시하고 수령 버튼을 누를 때 한 번만 지급한 뒤 학교로 돌아간다. 게임오버에는 지급·표시하지 않는다.
+
+학교 모집 창의 Replace·ReplacementPanel을 삭제했다. 정원 초과 영입 후 학교 학생 상세에서 계약을 해제할 수 있다. SchoolCanvas/Layout/RosterPages의 Previous·Page·Next는 보유 학생 9명 단위의 페이지를 바꾸는 독립 UI이며 Inspector에서 위치를 조절한다. 출전 정원과 보유 인원은 별도로 검사한다.
+
 책상 프리팹의 표시용 AttackOrder 라벨은 사용자 요청으로 제거했다. 슬롯별 텍스트 오버라이드와 생성 코드도 제거했으며, 실제 학생 배치 및 공격 순서 처리에는 변경이 없다.
 
 후속 요청으로 AttackOrder 라벨을 복구했다. 현재 표시는 설명 문구 없이 슬롯별 숫자 1~9만 사용하며, 생성 코드도 같은 형식을 적용한다.
@@ -78,6 +87,11 @@ School의 `DragLayer`는 책상 프리팹 밖의 `SchoolCanvas/Layout` 아래에
 
 Assets/UI/Prefabs/SchoolSynergyBook.prefab이 책 한 권의 공통 배치다. SchoolDeskSlot 안의 SynergyBook0~2는 이 프리팹의 중첩 인스턴스이며, 모든 학교 책상에 적용된다. 책의 공통 구조는 책 프리팹에서 편집하고, 쌓인 위치와 가운데 책의 색상은 책상 프리팹의 인스턴스 설정으로 유지한다. SchoolStudentSlot.books와 bookLabels는 각 책 및 시너지 텍스트를 참조하며 실제 문구와 표시 여부는 기존 Bind가 담당한다. 최초 변환 메뉴는 HongikIngan > Use synergy book prefab in School desks이며 이미 연결된 경우 재생성하지 않는다.
 
+
+전투 카드의 Name 텍스트는 긴 이름(드미트리우스 등)을 위해 TMP Auto Size를 사용한다. Inspector에서 최소 10, 최대 17로 설정되어 있으며, RectTransform 위치와 크기는 그대로 편집할 수 있다. 런타임 코드는 이름만 갱신한다.
+
 ## Battle 공통 프리팹
 
 Assets/UI/Prefabs/BattleStudentSlot.prefab은 Slot01 기반의 학생 슬롯이다. Formation/Slot01~09가 이를 사용하며 BattleFormationView.slots 배열과 드래그 연결을 유지한다. Assets/UI/Prefabs/BattleBuilding.prefab은 Building0 기반 배경 건물이며 CityBack/Building0~13에 적용된다. 기존 개별 위치·크기·색상과 텍스트 차이는 인스턴스 오버라이드로 보존했다. 공통 변경이 특정 인스턴스의 오버라이드와 겹치면 해당 인스턴스 설정이 우선한다. 생성 메뉴는 HongikIngan > Use Battle slot and building prefabs이다. 이미 연결된 프리팹은 재생성하지 않는다. 건물은 사용자 추가 승인 후 변환했으며 SoundModal과 SceneTransitionOverlay는 이번 프리팹화 범위에 포함하지 않았다.
+
+Girl35 확장 통합에서는 main의 이 프리팹 구조를 보존했다. 학생 이름의 Auto Size 설정은 공통 BattleStudentSlot 프리팹에 두며, 보상 팝업은 Battle 씬의 독립 오브젝트다. HongikIngan.Editor.PrototypeBuilder.BuildExpansion은 필요한 팝업·모집 UI 연결과 규칙 검사를 마친 뒤 Windows 빌드를 생성한다.

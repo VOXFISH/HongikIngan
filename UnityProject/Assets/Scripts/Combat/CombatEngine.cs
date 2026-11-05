@@ -19,7 +19,10 @@ namespace HongikIngan
         public readonly KeywordDefinition Definition;
         // Each stack keeps the strength it had when granted; no stack count gameplay limit.
         public readonly List<float> Values = new List<float>();
-        public int Stacks => Values.Count;
+        // Coffee grows geometrically. Store repeated equal stacks compactly instead of allocating one entry per stack.
+        public double AdditionalStacks;
+        public double StackCount => Values.Count + AdditionalStacks;
+        public int Stacks => (int)Math.Min(int.MaxValue, StackCount);
         public KeywordState(KeywordDefinition definition, float value) { Definition = definition; Values.Add(value); }
     }
 
@@ -32,6 +35,12 @@ namespace HongikIngan
         public static readonly KeywordDefinition Mine = new KeywordDefinition("you_are_mine", "넌 내 꺼야", false, false, false);
         public static readonly KeywordDefinition Lighting = new KeywordDefinition("lighting", "조명", false, false, true);
         public static readonly KeywordDefinition Love = new KeywordDefinition("love", "사랑", true, true, true);
+        public static readonly KeywordDefinition Bullet = new KeywordDefinition("bullet", "총알", true, true, false);
+        public static readonly KeywordDefinition Art = new KeywordDefinition("art", "미감", true, true, false);
+        public static readonly KeywordDefinition Sticky = new KeywordDefinition("sticky", "끈적함", false, true, true);
+        public static readonly KeywordDefinition StickyPersistent = new KeywordDefinition("sticky_persistent", "끈적끈적함", false, true, false);
+        public static readonly KeywordDefinition Sun = new KeywordDefinition("tomorrow_sun", "내일의 태양", false, false, false);
+        public static readonly KeywordDefinition Coffee = new KeywordDefinition("coffee", "커피", false, true, false);
 
         public static void Add(List<KeywordState> states, KeywordDefinition definition, float value, int stacks = 1)
         {
@@ -103,11 +112,17 @@ namespace HongikIngan
         public bool IsResolving { get; internal set; }
         public bool Won { get; internal set; }
         public bool Lost { get; internal set; }
+        public bool Saved { get; internal set; }
+        public bool CanReturnToSchool => Won || Saved;
+        public bool Ended => CanReturnToSchool || Lost;
+        public int TurnLimit { get; internal set; } = 3;
+        public BattleReward Reward { get; internal set; }
         public readonly List<string> Log = new List<string>();
         public readonly List<KeywordState> BossKeywords = new List<KeywordState>();
         internal readonly HashSet<StudentState> MoodReplays = new HashSet<StudentState>();
         public float LoverBonusPercent { get; internal set; }
         internal bool SynergyRewardsApplied;
+        internal int EndDisciplineCount = -1, EndAstronomyCount = -1;
         public BattleState(float hp) { BossHp = hp; MaxBossHp = hp; }
     }
 
@@ -116,7 +131,7 @@ namespace HongikIngan
         public static IEnumerable<BattleStep> ResolveTurn(PrototypeRun run)
         {
             var battle = run.Battle;
-            if (battle == null || battle.IsResolving || battle.Won || battle.Lost) yield break;
+            if (battle == null || battle.IsResolving || battle.Ended) yield break;
             battle.IsResolving = true;
             try
             {
@@ -125,6 +140,20 @@ namespace HongikIngan
                 battle.Damage = 0f;
                 run.NotifyDamage();
                 yield return Step(battle, "turn", "턴 " + battle.Turn + " - 합동 데미지 0으로 초기화");
+
+                var coffee = battle.BossKeywords.FirstOrDefault(k => k.Definition.Id == KeywordRules.Coffee.Id);
+                if (coffee != null)
+                {
+                    double reduction = Math.Min(battle.BossHp, coffee.StackCount * 20);
+                    battle.BossHp = (float)Math.Max(0, battle.BossHp - reduction);
+                    coffee.AdditionalStacks += reduction;
+                    yield return Step(battle, "damage", "커피 - 보스 HP -" + reduction.ToString("0") + ", 커피 " + coffee.StackCount.ToString("0"));
+                    if (battle.BossHp <= 0)
+                    {
+                        foreach (var result in FinishTurn(run)) yield return result;
+                        yield break;
+                    }
+                }
 
                 // Relics are processed in acquisition order before character slot order.
                 foreach (var relic in run.Relics)
@@ -156,7 +185,8 @@ namespace HongikIngan
                 }
                 foreach (var keyword in battle.BossKeywords.ToArray())
                 {
-                    if (keyword.Definition.Id == KeywordRules.Mine.Id) continue; // Reacts to individual attacks, not the final beam.
+                    if (keyword.Definition.Id == KeywordRules.Mine.Id || keyword.Definition.Id == KeywordRules.Coffee.Id ||
+                        keyword.Definition.Id == KeywordRules.Sticky.Id || keyword.Definition.Id == KeywordRules.StickyPersistent.Id) continue;
                     if (keyword.Definition.Id == KeywordRules.BlackClover.Id)
                     {
                         while (keyword.Stacks > 0)
@@ -175,15 +205,30 @@ namespace HongikIngan
                 yield return Step(battle, "chant", BuildChant(run.Students));
                 yield return Step(battle, "beam", "합동 필살기! " + PrototypeCatalog.FormatDamage(battle.Damage));
                 battle.BossHp = Math.Max(0f, battle.BossHp - battle.Damage);
-                battle.Won = battle.BossHp <= 0f;
-                battle.Lost = !battle.Won && battle.Turn >= 3;
-                if (battle.Lost) BattleSynergies.FinishBattle(run);
-                foreach (var student in run.Students) KeywordRules.EndTurn(student.Keywords);
-                KeywordRules.EndTurn(battle.BossKeywords);
-                run.RemoveExpiredClones(battle.Won || battle.Lost);
-                yield return Step(battle, "result", battle.Won ? "보스 처치! 교실로 돌아가세요." : battle.Lost ? "3턴 종료 - 게임 오버" : "보스 생존 - 배치를 바꾸고 다음 턴에 도전하세요.");
+                foreach (var result in FinishTurn(run)) yield return result;
             }
             finally { battle.IsResolving = false; }
+        }
+
+        static IEnumerable<BattleStep> FinishTurn(PrototypeRun run)
+        {
+            var battle = run.Battle;
+            battle.Won = battle.BossHp <= 0;
+            if (!battle.Won && battle.Turn >= battle.TurnLimit)
+                battle.Lost = !run.TrySunRescue();
+            if (battle.Ended)
+            {
+                battle.EndDisciplineCount = BattleSynergies.Count(run, "선도부");
+                battle.EndAstronomyCount = BattleSynergies.Count(run, "천문부");
+            }
+            if (battle.CanReturnToSchool) run.PrepareBattleReward();
+            if (battle.Lost) BattleSynergies.FinishBattle(run);
+            foreach (var student in run.Students) KeywordRules.EndTurn(student.Keywords);
+            KeywordRules.EndTurn(battle.BossKeywords);
+            run.RemoveExpiredClones(battle.Ended);
+            yield return Step(battle, "result", battle.Won ? "보스 처치! 보상을 수령하세요." :
+                battle.Saved ? "내일의 태양이 게임오버를 막았습니다. 보상을 수령하세요." :
+                battle.Lost ? battle.TurnLimit + "턴 종료 - 게임 오버" : "보스 생존 - 다음 턴에 도전하세요.");
         }
 
         internal static void AddDamage(PrototypeRun run, float amount) { run.Battle.Damage += amount; run.NotifyDamage(); }

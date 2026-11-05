@@ -18,18 +18,21 @@ namespace HongikIngan
             public readonly float? ForcedDamage;
             public readonly bool RebelRepeat;
             public readonly bool LightingRepeat, MovementChain;
+            public readonly bool IsRepeat;
+            public readonly int ArtReplayRemaining;
             public Command(StudentState actor, CommandKind kind = CommandKind.Action, int remaining = 0,
-                int direction = -1, float? forcedDamage = null, bool rebelRepeat = false, bool lightingRepeat = false, bool movementChain = false)
-            { Actor = actor; Kind = kind; Remaining = remaining; Direction = direction; ForcedDamage = forcedDamage; RebelRepeat = rebelRepeat; LightingRepeat = lightingRepeat; MovementChain = movementChain; }
+                int direction = -1, float? forcedDamage = null, bool rebelRepeat = false, bool lightingRepeat = false, bool movementChain = false,
+                bool isRepeat = true, int artReplayRemaining = -1)
+            { Actor = actor; Kind = kind; Remaining = remaining; Direction = direction; ForcedDamage = forcedDamage; RebelRepeat = rebelRepeat; LightingRepeat = lightingRepeat; MovementChain = movementChain; IsRepeat = isRepeat; ArtReplayRemaining = artReplayRemaining; }
         }
         static readonly IStudentTargetStrategy NextAlly = new NextAllyTarget();
         static readonly IStudentTargetStrategy OtherAllies = new OtherAlliesTarget();
         public static IEnumerable<BattleStep> Resolve(PrototypeRun run)
         {
                 var battle = run.Battle;
-                var queue = new LinkedList<Command>(run.Students.Select(s => new Command(s)));
+                var queue = new LinkedList<Command>(run.Students.Select(s => new Command(s, isRepeat: false)));
                 var movementStarted = new HashSet<StudentState>();
-                while (queue.Count > 0)
+                while (queue.Count > 0 && battle.BossHp > 0)
                 {
                     var command = queue.First.Value; queue.RemoveFirst();
                     var actor = command.Actor;
@@ -40,11 +43,20 @@ namespace HongikIngan
                         continue;
                     }
                     yield return Step(battle, "action", actor.Definition.Name + " - " + actor.Definition.SkillDescription, actor);
-                    float attackFactor = command.ForcedDamage.HasValue || IsAttack(actor.Definition.Action) ? TakeLove(run, actor) : 1;
+                    // Count single-stack buffs before a consumable such as love is spent.
+                    int singleBuffs = actor.Keywords.Count(k => k.Stacks > 0 && (actor.UpgradeCount > 0 || k.Stacks == 1 || !k.Definition.Stackable));
+                    int teamBuffs = run.Students.SelectMany(s => s.Keywords).Where(k => k.Stacks > 0).Select(k => k.Definition.Id).Distinct().Count();
+                    int art = !command.ForcedDamage.HasValue && ExpansionActions.UsesArt(actor.Definition.Action) ? ExpansionActions.TakeArt(run, actor) : 0;
+                    bool attacks = command.ForcedDamage.HasValue || IsAttack(actor.Definition.Action) &&
+                        (actor.Definition.Action != ActionKind.BulletStrike || actor.Keywords.Any(k => k.Definition.Id == KeywordRules.Bullet.Id && k.Stacks > 0)) &&
+                        (actor.Definition.Action != ActionKind.TomorrowSun || actor.Keywords.Any(k => k.Definition.Id == KeywordRules.Sun.Id));
+                    float attackFactor = attacks ? TakeLove(run, actor) * ExpansionActions.ArtDamageFactor(run, actor) : 1;
 
                     foreach (var keyword in actor.Keywords.ToArray())
                     {
-                        if (keyword.Definition.Id == KeywordRules.Lighting.Id || keyword.Definition.Id == KeywordRules.Love.Id) continue;
+                        if (keyword.Definition.Id == KeywordRules.Lighting.Id || keyword.Definition.Id == KeywordRules.Love.Id ||
+                            keyword.Definition.Id == KeywordRules.Bullet.Id || keyword.Definition.Id == KeywordRules.Art.Id ||
+                            keyword.Definition.Id == KeywordRules.Sun.Id) continue;
                         float bonus = KeywordRules.Apply(actor.Keywords, keyword, BattleSynergies.KeepAllyConsumables(run));
                         AddDamage(run, bonus);
                         yield return Step(battle, "damage", actor.Definition.Name + "의 " + keyword.Definition.Name + " +" + PrototypeCatalog.FormatDamage(bonus), actor);
@@ -57,6 +69,40 @@ namespace HongikIngan
                     }
                     else switch (actor.Definition.Action)
                     {
+                        case ActionKind.SingleStackBuffDamage:
+                            ReplaceAttackDamage(run, battle.Damage == 0 ? 0 : (float)(battle.Damage * Math.Pow(actor.SkillValue, singleBuffs)), attackFactor);
+                            yield return Step(battle, "damage", "하나밖에 없는 태양 - 버프 " + singleBuffs + "종류", actor);
+                            break;
+                        case ActionKind.CloverStrike:
+                            KeywordRules.Add(battle.BossKeywords, KeywordRules.BlackClover, 1.2f, BattleSynergies.DebuffApplications(run));
+                            yield return Step(battle, "keyword", "무대의 꽃 - 검은 클로버 부여", actor);
+                            AddAttackDamage(run, actor.SkillValue, attackFactor);
+                            yield return Step(battle, "damage", "무대의 꽃 - 데미지 +" + actor.SkillValue, actor);
+                            break;
+                        case ActionKind.BulletStrike:
+                            var bullet = actor.Keywords.FirstOrDefault(k => k.Definition.Id == KeywordRules.Bullet.Id && k.Stacks > 0);
+                            if (bullet != null)
+                            {
+                                KeywordRules.Apply(actor.Keywords, bullet, BattleSynergies.KeepAllyConsumables(run));
+                                AddAttackDamage(run, 100000, attackFactor);
+                                yield return Step(battle, "damage", "총알 발사 - 데미지 +100000", actor);
+                            }
+                            break;
+                        case ActionKind.LoveAndClone:
+                            foreach (var ally in run.Students) KeywordRules.Add(ally.Keywords, KeywordRules.Love, 1.1f, 3);
+                            yield return Step(battle, "keyword", "돌돌마리 - 모든 아군에게 사랑 3스택", actor);
+                            foreach (var step in BattleSynergies.LeaderBuff(run, actor)) yield return step;
+                            int theatre = run.Students.Count(s => s.Definition.Club == "연극부");
+                            if (theatre == 3 || actor.UpgradeCount > 0 && theatre == 2)
+                            {
+                                var selfClone = run.CloneStudent(actor, actor, false);
+                                if (selfClone != null)
+                                {
+                                    queue.AddFirst(new Command(selfClone, lightingRepeat: command.LightingRepeat, movementChain: command.MovementChain, isRepeat: false));
+                                    yield return Step(battle, "clone", "돌돌마리 - 분신 생성", actor, selfClone);
+                                }
+                            }
+                            break;
                         case ActionKind.FourthBatter:
                             float hit = actor.SkillValue * (run.Students.IndexOf(actor) == 3 ? 3 : 1);
                             AddAttackDamage(run, hit, attackFactor);
@@ -173,7 +219,7 @@ namespace HongikIngan
                             }
                             var pending = queue.First;
                             while (pending != null && (pending.Value.Kind != CommandKind.Action || pending.Value.Actor != cloneTarget)) pending = pending.Next;
-                            var copiedAction = new Command(clone, lightingRepeat: command.LightingRepeat, movementChain: command.MovementChain);
+                            var copiedAction = new Command(clone, lightingRepeat: command.LightingRepeat, movementChain: command.MovementChain, isRepeat: false);
                             if (pending != null) queue.AddAfter(pending, copiedAction); else queue.AddFirst(copiedAction);
                             AddDamage(run, 3000f * actor.PrecisionCopies);
                             yield return Step(battle, "clone", cloneTarget.Definition.Name + " 분신 생성 - 정밀화 +" + (3000f * actor.PrecisionCopies), actor);
@@ -190,11 +236,28 @@ namespace HongikIngan
                                 yield return Step(battle, "move", "자리 교환 후 작은 번호부터 재행동", actor, other);
                             }
                             break;
+                        default:
+                            foreach (var step in ExpansionActions.Resolve(run, actor, command.IsRepeat, art, attackFactor, teamBuffs,
+                                command.ArtReplayRemaining,
+                                remaining => queue.AddFirst(new Command(actor, lightingRepeat: command.LightingRepeat, movementChain: command.MovementChain, artReplayRemaining: remaining)),
+                                created => queue.AddFirst(new Command(created, lightingRepeat: command.LightingRepeat, movementChain: command.MovementChain, isRepeat: false))))
+                                yield return step;
+                            break;
                     }
 
-                    if (command.ForcedDamage.HasValue || IsAttack(actor.Definition.Action))
+                    if (actor.Definition.Action == ActionKind.TomorrowSun && actor.Keywords.Any(k => k.Definition.Id == KeywordRules.Sun.Id))
+                    {
+                        ReplaceAttackDamage(run, (float)Math.Pow(battle.Damage, actor.SkillValue), attackFactor);
+                        yield return Step(battle, "damage", "내일의 태양 - 데미지 ^" + actor.SkillValue, actor);
+                    }
+                    if (attacks)
                         foreach (var step in AfterAttack(run, command, queue)) yield return step;
                     foreach (var step in BattleSynergies.AfterAction(run, actor)) yield return step;
+                    if (actor.Definition.Club == "미술부" && run.RollCombatChance(BattleSynergies.ArtReplayChance(run)))
+                    {
+                        queue.AddFirst(new Command(actor, lightingRepeat: command.LightingRepeat, movementChain: command.MovementChain));
+                        yield return Step(battle, "synergy", "미술부 - 자신 재행동", actor);
+                    }
                     if (BattleSynergies.TakeMoodReplay(run, actor))
                         queue.AddFirst(new Command(actor, forcedDamage: command.ForcedDamage, lightingRepeat: command.LightingRepeat, movementChain: command.MovementChain));
                     if (!command.RebelRepeat && BattleSynergies.DoubleRebelAction(run, actor))
@@ -269,7 +332,9 @@ namespace HongikIngan
                 action == ActionKind.TeamSizeDamage || action == ActionKind.AddThenPercentDamage ||
                 action == ActionKind.PowerDamage || action == ActionKind.MultiplyDamage ||
                 action == ActionKind.RebelPercent || action == ActionKind.Spotlight ||
-                action == ActionKind.LightingDamage || action == ActionKind.BestSubject;
+                action == ActionKind.LightingDamage || action == ActionKind.BestSubject ||
+                action == ActionKind.SingleStackBuffDamage || action == ActionKind.CloverStrike || action == ActionKind.BulletStrike ||
+                action == ActionKind.TomorrowSun || ExpansionActions.IsAttack(action);
         }
 
         static float TakeLove(PrototypeRun run, StudentState actor)
@@ -284,13 +349,13 @@ namespace HongikIngan
             return (float)factor;
         }
 
-        static void AddAttackDamage(PrototypeRun run, float amount, float factor)
+        internal static void AddAttackDamage(PrototypeRun run, float amount, float factor)
         {
             // A zero-valued attack remains zero even if an exceptionally large stack count overflows the multiplier.
             AddDamage(run, amount == 0 ? 0 : amount * factor);
         }
 
-        static void ReplaceAttackDamage(PrototypeRun run, float replacement, float factor)
+        internal static void ReplaceAttackDamage(PrototypeRun run, float replacement, float factor)
         {
             float previous = run.Battle.Damage;
             if (factor != 1 && !float.IsInfinity(replacement) && replacement > previous)

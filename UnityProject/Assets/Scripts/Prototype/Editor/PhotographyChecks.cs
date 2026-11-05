@@ -45,8 +45,9 @@ namespace HongikIngan
             economy.startingMoney = 10000; economy.bossBaseHp = 1e30f;
             var run = new PrototypeRun(economy, 719);
             for (int i = 0; i < 4; i++) run.ExpandSlots();
-            run.Students.Clear(); run.Students.AddRange(students);
-            Check(run.StartBattle(), "battle fixture starts"); return run;
+            run.Students.Clear(); run.Students.AddRange(students.Take(7));
+            Check(run.StartBattle(), "battle fixture starts");
+            run.Students.Clear(); run.Students.AddRange(students); return run;
         }
         static void Resolve(PrototypeRun run, Action<BattleStep> inspect = null)
         {
@@ -76,7 +77,7 @@ namespace HongikIngan
         }
         static void Roster()
         {
-            Check(PrototypeCatalog.Students.Count == 18 && PrototypeCatalog.Students.Select(s => s.Id).Distinct().Count() == 18, "exactly Girl0 through Girl17, no duplicate Mary");
+            Check(Enumerable.Range(0, 18).All(id => PrototypeCatalog.Students.Count(s => s.Id == "Girl" + id) == 1), "original Girl0 through Girl17 remain unique");
             string[] names = { "지수", "수지", "지우", "나미", "정윤", "치즈" };
             int[] grades = { 1, 2, 1, 2, 3, 1 };
             StudentRole[] roles = { StudentRole.Debuff, StudentRole.Dealer, StudentRole.Dealer, StudentRole.Buff, StudentRole.Buff, StudentRole.Dealer };

@@ -4,6 +4,19 @@ using System.Linq;
 
 namespace HongikIngan
 {
+    /// <summary>Immutable settlement snapshot, captured before any end-of-battle income.</summary>
+    public sealed class BattleReward
+    {
+        public readonly int EnergyBeforeSettlement, RemainingTurns, Base, TurnBonus, Interest, RelicBonus, Total;
+        public bool Claimed { get; internal set; }
+        public BattleReward(int energy, int remainingTurns, int relicBonus, Func<int, int> income)
+        {
+            EnergyBeforeSettlement = energy; RemainingTurns = remainingTurns;
+            Base = 50; TurnBonus = remainingTurns * 100; Interest = energy / 10; RelicBonus = relicBonus;
+            Total = income(checked(Base + TurnBonus + Interest + RelicBonus));
+        }
+    }
+
     /// <summary>Scene-independent run state. Prices and sample balance live in EconomySettings.</summary>
     public sealed class PrototypeRun
     {
@@ -22,8 +35,12 @@ namespace HongikIngan
         public int Money { get; private set; }
         public int Stage { get; private set; } = 1;
         public int BaseCapacity { get; private set; } = 3;
-        public int Capacity => Math.Min(7, BaseCapacity + Relics.Where(r => r.Kind == RelicKind.ExtraSlots).Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r)));
+        public int OpenCapacity => Math.Min(7, BaseCapacity + Relics.Where(r => r.Kind == RelicKind.ExtraSlots).Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r)));
+        public int Capacity => Math.Max(0, OpenCapacity - Students.Where(s => s.Definition.Action == ActionKind.MarsJealousy && !s.IsClone)
+            .Select(s => s.UpgradeCount > 0 ? 3 : 2).DefaultIfEmpty(0).Max());
         public float Atmosphere { get; internal set; }
+        public int StarPower { get; internal set; }
+        public bool SunRescueUsed { get; private set; }
         public int RerollCost { get; private set; }
         public bool PendingPet { get; private set; }
         public bool RelicPurchasedThisBattle { get; private set; }
@@ -54,12 +71,17 @@ namespace HongikIngan
         private bool SchoolUnlocked => SchoolAvailable && !PendingPet;
         public bool CanStartBattle => StartBattleBlockReason == null;
         public string StartBattleBlockReason => !SchoolUnlocked ? "펫 선택을 먼저 마쳐 주세요." :
-            Students.Count == 0 ? "마법소녀를 한 명 이상 영입해 주세요." : null;
-        public int VictoryRewardBase => Settings.victoryReward;
-        public int VictoryRewardStageBonus => Settings.victoryRewardPerStage * (Stage - 1);
+            Students.Count == 0 ? "마법소녀를 한 명 이상 영입해 주세요." :
+            Students.Count > Capacity ? "출전 정원 초과입니다. 학교에서 계약을 해제하거나 책상을 확장해 주세요." : null;
+        public int VictoryRewardBase => 50;
+        // Kept for existing presentation callers; stage no longer affects settlement.
+        public int VictoryRewardStageBonus => 0;
+        public int VictoryRewardRemainingTurns => Math.Max(0, (Battle?.TurnLimit ?? 3) - (Battle?.Turn ?? 0));
+        public int VictoryRewardInterest => Battle?.Reward?.Interest ?? Money / 10;
         public int VictoryRewardRelicBonus => Relics.Where(r => r.Kind == RelicKind.VictoryMoney)
             .Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r));
-        public int VictoryReward => BattleSynergies.Income(this, VictoryRewardBase + VictoryRewardStageBonus + VictoryRewardRelicBonus);
+        public int VictoryReward => Battle?.Reward?.Total ?? BattleSynergies.Income(this,
+            VictoryRewardBase + VictoryRewardRemainingTurns * 100 + VictoryRewardInterest + VictoryRewardRelicBonus);
         public bool Owns(string id) => Students.Any(s => s.Definition.Id == id);
 
         public bool BuyRelic(int index)
@@ -104,10 +126,9 @@ namespace HongikIngan
             if (index < 0 || index >= PendingCandidates.Count) return Fail("없는 후보입니다.");
             var chosen = PendingCandidates[index];
             if (Owns(chosen.Id)) return Fail("이미 영입한 학생입니다.");
-            if (Students.Count >= Capacity) return Fail("교체 버튼에서 학생을 계약 해제한 후 선택하세요.");
             Students.Add(new StudentState(chosen));
             CompletePet(chosen.Id);
-            return Done(chosen.Name + " 영입! 나머지 후보의 폴라로이드를 받았습니다.");
+            return Done(chosen.Name + " 영입! 나머지 후보의 폴라로이드를 받았습니다." + (Students.Count > Capacity ? " 정원 초과: 출전 전에 인원을 정리해 주세요." : ""));
         }
 
         public bool SkipPet()
@@ -179,11 +200,13 @@ namespace HongikIngan
             EnsureSchoolDesks();
             return Students.FirstOrDefault(s => schoolDesks[s] == desk);
         }
+        public int SchoolDeskCount { get { EnsureSchoolDesks(); return schoolDesks.Count == 0 ? 0 : schoolDesks.Values.Max() + 1; } }
 
         public bool MoveSchoolStudent(int fromDesk, int toDesk)
         {
             if (!SchoolUnlocked) return Fail("지금은 교실 배치를 바꿀 수 없습니다.");
-            if (fromDesk < 0 || toDesk < 0 || fromDesk >= Capacity || toDesk >= Capacity)
+            int deskLimit = Math.Max(Capacity, SchoolDeskCount);
+            if (fromDesk < 0 || toDesk < 0 || fromDesk >= deskLimit || toDesk >= deskLimit)
                 return Fail("확장된 책상 안에서 이동해 주세요.");
             var moving = StudentAtSchoolDesk(fromDesk);
             if (moving == null) return Fail("옮길 학생이 없습니다.");
@@ -206,7 +229,7 @@ namespace HongikIngan
         public bool ExpandSlots()
         {
             if (!SchoolUnlocked) return Fail("먼저 진행 중인 선택을 마쳐 주세요.");
-            if (Capacity >= 7) return Fail("일반 전대는 최대 7명입니다. 추가 두 칸은 복제 분신 전용입니다.");
+            if (OpenCapacity >= 7) return Fail("일반 전대는 최대 7칸입니다. 추가 두 칸은 복제 분신 전용입니다.");
             int price = Math.Max(0, Settings.slotExpansionPrice);
             if (Money < price) return Fail("미라클 에너지가 부족합니다.");
             Money -= price; BaseCapacity++;
@@ -318,8 +341,17 @@ namespace HongikIngan
             float hp = Settings.bossBaseHp * (float)Math.Pow(Settings.bossGrowth, Stage - 1);
             if (float.IsInfinity(hp) || hp <= 0) hp = float.MaxValue;
             Battle = new BattleState(hp);
+            Battle.TurnLimit += Students.Where(s => s.Definition.Action == ActionKind.MarsJealousy && !s.IsClone)
+                .Select(s => s.UpgradeCount > 0 ? 2 : 1).DefaultIfEmpty(0).Max();
+            foreach (var student in Students.Where(s => s.Definition.Action == ActionKind.MoonRabbit))
+                student.LunarRoll = DrawCombatInt(1, (int)student.SkillValue + 1);
+            foreach (var student in Students.Where(s => s.Definition.Action == ActionKind.BulletStrike))
+            {
+                student.Keywords.RemoveAll(k => k.Definition.Id == KeywordRules.Bullet.Id);
+                KeywordRules.Add(student.Keywords, KeywordRules.Bullet, 1, (int)student.SkillValue);
+            }
             InBattle = true;
-            return Done("방과 후! 최대 3턴 안에 보스를 처치하세요.");
+            return Done("방과 후! 최대 " + Battle.TurnLimit + "턴 안에 보스를 처치하세요.");
         }
 
         internal StudentState CloneNext(StudentState source)
@@ -327,10 +359,19 @@ namespace HongikIngan
             int index = Students.IndexOf(source);
             if (source.IsClone || index < 0 || index + 1 >= Students.Count || Students.Count >= 9) return null;
             var target = Students[index + 1];
+            var clone = CloneStudent(source, target, source.UpgradeCount > 0);
+            if (clone != null) source.PrecisionCopies++;
+            return clone;
+        }
+
+        internal StudentState CloneStudent(StudentState source, StudentState target, bool lastsBattle)
+        {
+            int index = Students.IndexOf(target);
+            if (source.IsClone || index < 0 || Students.Count >= 9) return null;
             var clone = new StudentState(target.Definition)
             {
                 UpgradeCount = target.UpgradeCount, SkillValue = target.SkillValue,
-                IsClone = true, CloneLastsBattle = source.UpgradeCount > 0
+                IsClone = true, CloneLastsBattle = lastsBattle, LunarRoll = target.LunarRoll
             };
             foreach (var keyword in target.Keywords)
             {
@@ -339,8 +380,7 @@ namespace HongikIngan
                 copy.Values.Clear(); copy.Values.AddRange(keyword.Values);
                 clone.Keywords.Add(copy);
             }
-            Students.Insert(index + 2, clone);
-            source.PrecisionCopies++;
+            Students.Insert(index + 1, clone);
             return clone;
         }
 
@@ -351,7 +391,7 @@ namespace HongikIngan
 
         public IEnumerable<BattleStep> ResolveTurn()
         {
-            if (!InBattle || Battle == null || Battle.IsResolving || Battle.Won || Battle.Lost) yield break;
+            if (!InBattle || Battle == null || Battle.IsResolving || Battle.Ended) yield break;
             foreach (var step in CombatEngine.ResolveTurn(this))
             {
                 Changed?.Invoke();
@@ -364,22 +404,45 @@ namespace HongikIngan
 
         public bool ReturnToSchool()
         {
-            if (!InBattle || Battle == null || !Battle.Won || Battle.IsResolving) return Fail("보스 처치 후 교실로 돌아갈 수 있습니다.");
-            int reward = VictoryRewardBase + VictoryRewardStageBonus + VictoryRewardRelicBonus;
-            int earned = BattleSynergies.Income(this, reward);
-            AddMoney(reward);
+            if (!InBattle || Battle == null || !Battle.CanReturnToSchool || Battle.IsResolving) return Fail("전투 종료 후 보상을 수령하면 교실로 돌아갈 수 있습니다.");
+            PrepareBattleReward();
+            var reward = Battle.Reward;
+            if (reward.Claimed) return Fail("이미 수령한 전투 보상입니다.");
+            int earned = reward.Total;
+            Money = checked(Money + earned);
+            reward.Claimed = true;
             BattleSynergies.FinishBattle(this);
             Stage++;
             InBattle = false;
             RemoveExpiredClones(true);
-            foreach (var student in Students) student.Keywords.Clear();
+            foreach (var student in Students) student.Keywords.RemoveAll(k => k.Definition.Id != KeywordRules.Sun.Id);
             Battle = null;
             RelicPurchasedThisBattle = false;
             RefreshOffers();
             return Done("보스 처치 보상 +" + earned + ". 다음 스테이지를 준비하세요!");
         }
 
+        internal void PrepareBattleReward()
+        {
+            if (Battle == null || !Battle.CanReturnToSchool || Battle.Reward != null) return;
+            Battle.Reward = new BattleReward(Money, VictoryRewardRemainingTurns, VictoryRewardRelicBonus,
+                amount => BattleSynergies.Income(this, amount));
+        }
+
         internal void AddMoney(int amount) { Money = checked(Money + BattleSynergies.Income(this, amount)); }
+        internal void AddBattleEndMoney(int amount, int discipline) { Money = checked(Money + BattleSynergies.IncomeForCount(amount, discipline)); }
+        internal bool TrySunRescue()
+        {
+            if (SunRescueUsed) return false;
+            var owner = Students.FirstOrDefault(s => s.Definition.Action == ActionKind.TomorrowSun && !s.IsClone);
+            if (owner == null) return false;
+            SunRescueUsed = true;
+            KeywordRules.Add(owner.Keywords, KeywordRules.Sun, 0);
+            if (owner.UpgradeCount == 0) AddMoney(checked(StarPower * 100));
+            Battle.Saved = true;
+            return true;
+        }
+        internal int DrawCombatInt(int min, int max) => random.Next(min, max);
         internal bool RollCombatChance(float probability) => random.NextDouble() < probability;
         internal void NotifyDamage() { DamageChanged?.Invoke(Battle.Damage); }
     }

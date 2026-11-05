@@ -168,18 +168,13 @@ namespace HongikIngan.Editor
             d.candidateButtons=new Button[5]; d.candidateLabels=new TMP_Text[5];
             for(int i=0;i<5;i++) { d.candidateButtons[i]=Button(d.candidates.transform,"Candidate"+i,60+i*267,175,252,400,"",Paper); d.candidateLabels[i]=d.candidateButtons[i].GetComponentInChildren<TMP_Text>(); d.candidateLabels[i].fontSize=18; }
             d.candidateStatus=Label(d.candidates.transform,"Status",80,595,1280,45,"",18,Paper);
-            d.replace=Button(d.candidates.transform,"Replace",100,665,330,54,"교체 - 기존 학생 판매",Gold);
             d.skip=Button(d.candidates.transform,"Skip",975,665,365,54,"영입하지 않음 (환불 없음)",Paper);
-            d.replacement=Modal(d.candidates.transform,"ReplacementPanel","계약을 해제할 학생을 선택하세요");
-            d.replacementButtons=new Button[7]; d.replacementLabels=new TMP_Text[7];
-            for(int i=0;i<7;i++) { d.replacementButtons[i]=Button(d.replacement.transform,"Student"+i,65+i*188,300,175,165,"",Paper); d.replacementLabels[i]=d.replacementButtons[i].GetComponentInChildren<TMP_Text>(); }
-            d.closeReplacement=Button(d.replacement.transform,"Close",600,620,240,52,"후보로 돌아가기",Paper);
             d.restart=Modal(ui,"RestartConfirmPopup","새 게임을 시작할까요?");
             Label(d.restart.transform,"Warning",300,270,840,100,"현재 학생-재화-유물-사진과 진행이 초기화됩니다.",25,Paper);
             d.cancelRestart=Button(d.restart.transform,"Cancel",420,500,260,60,"취소",Paper);
             d.acceptRestart=Button(d.restart.transform,"Accept",750,500,310,60,"새 게임 시작",Gold);
             d.audioPanel=Audio(s,ui);
-            d.offers.SetActive(false); d.candidates.SetActive(false); d.replacement.SetActive(false); d.restart.SetActive(false);
+            d.offers.SetActive(false); d.candidates.SetActive(false); d.restart.SetActive(false);
             EditorUtility.SetDirty(d);
         }
         static BattleAudioPanel Audio(SchoolScreen s,Transform ui)
