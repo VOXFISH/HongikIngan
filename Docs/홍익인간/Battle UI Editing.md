@@ -77,3 +77,7 @@ School의 `DragLayer`는 책상 프리팹 밖의 `SchoolCanvas/Layout` 아래에
 ## 시너지 책 프리팹
 
 Assets/UI/Prefabs/SchoolSynergyBook.prefab이 책 한 권의 공통 배치다. SchoolDeskSlot 안의 SynergyBook0~2는 이 프리팹의 중첩 인스턴스이며, 모든 학교 책상에 적용된다. 책의 공통 구조는 책 프리팹에서 편집하고, 쌓인 위치와 가운데 책의 색상은 책상 프리팹의 인스턴스 설정으로 유지한다. SchoolStudentSlot.books와 bookLabels는 각 책 및 시너지 텍스트를 참조하며 실제 문구와 표시 여부는 기존 Bind가 담당한다. 최초 변환 메뉴는 HongikIngan > Use synergy book prefab in School desks이며 이미 연결된 경우 재생성하지 않는다.
+
+## Battle 공통 프리팹
+
+Assets/UI/Prefabs/BattleStudentSlot.prefab은 Slot01 기반의 학생 슬롯이다. Formation/Slot01~09가 이를 사용하며 BattleFormationView.slots 배열과 드래그 연결을 유지한다. Assets/UI/Prefabs/BattleBuilding.prefab은 Building0 기반 배경 건물이며 CityBack/Building0~13에 적용된다. 기존 개별 위치·크기·색상과 텍스트 차이는 인스턴스 오버라이드로 보존했다. 공통 변경이 특정 인스턴스의 오버라이드와 겹치면 해당 인스턴스 설정이 우선한다. 생성 메뉴는 HongikIngan > Use Battle slot and building prefabs이다. 이미 연결된 프리팹은 재생성하지 않는다. 건물은 사용자 추가 승인 후 변환했으며 SoundModal과 SceneTransitionOverlay는 이번 프리팹화 범위에 포함하지 않았다.

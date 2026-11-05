@@ -290,3 +290,8 @@
 
 - 사용자: qwerty
 - 요약: SchoolSynergyBook.prefab을 생성하고 SchoolDeskSlot의 책 3개를 중첩 프리팹 인스턴스로 교체하여 Unity Editor에서 저장했다. 위치·배율·활성 상태·색상을 유지하고 SchoolStudentSlot의 books/bookLabels를 새 인스턴스에 연결했다. 기존 브랜치에서 작업했으며 플레이 테스트·커밋·main 동기화는 하지 않았다.
+
+## 2026-11-06 — Battle 슬롯과 배경 건물 프리팹
+
+- 사용자: qwerty
+- 요약: Battle의 Slot01~09를 BattleStudentSlot.prefab 인스턴스로 교체하고 추가 승인을 받은 Building0~13도 BattleBuilding.prefab으로 교체하여 Unity Editor에서 저장했다. 위치·크기·배율·색상·문구·외부 참조를 보존했으며 사운드 설정창과 씬 전환은 변경하지 않았다. 새 브랜치·플레이 테스트·커밋·main 동기화는 수행하지 않았다.

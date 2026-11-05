@@ -290,3 +290,6 @@ Replace every \u00B7 character with another character. DO NOT attempt to make it
 "2026-11-06 05:03:09+09:00","qwerty","Revert, reinclude, only the number"
 "2026-11-06 05:06:02+09:00","qwerty","It didn't come back. Think"
 "2026-11-06 05:09:28+09:00","qwerty","Make the syngergie books (syngergies) also a prefab too."
+"2026-11-06 05:42:56+09:00","qwerty","In the scene ""Battle"", change the SlotXX to a prefab.
+If there's any other thing that can be a prefab, get confirmation from me and make them a prefab"
+"2026-11-06 05:42:56+09:00","qwerty","배경 건물도 추가"
