@@ -345,3 +345,8 @@ The students will turn into 'white' color.
 There will be a faint glow and the student images will swithc over to the coresponding variants in 'magical_char'.
 
 You're almost out of tokens, work fast."
+"2026-11-06 07:31:18+09:00","VOXFISH","Edit the scene ""Battle"" to fit a 1920x1080 screen. The side is still filled with white bars.
+
+Make the combat text more visible, and add fade in/fade out effects that can be altered by a simple in-editor toggle
+
+Make the 'student's move while they act. Hopping up and down slightly while they're receiving or sending out effects. The animation should be smooth and also be editable"

@@ -107,3 +107,27 @@ Assets/sprite/characters/Girl00.png는 Girl0, Girl01.png는 Girl1로 연결한�
 SchoolScreen의 transformationDuration(기본 1.2초) 동안 흰색 실루엣과 약한 외곽 발광을 적용하고, 중간 시점에서 같은 Girl ID의 magical_char PNG로 바꾼다. 변신 완료 후 0.25초 동안 보여 준 다음 기존 씬 전환을 계속한다. SceneTransitionOverlay.Go의 선택적 beforeFade 코루틴을 사용하며 연출 중 입력은 기존 IsBusy로 잠근다. 다른 씬 전환은 기존 호출 방식대로 동작한다.
 
 StudentPortraitCatalog.Entry.magicalSprite가 변신 이미지를 보관한다. Connect School student portraits 메뉴가 Girl00_Magical_Char와 Girl5_Magical 같은 파일명도 숫자 ID로 연결하며, 변신 이미지가 없으면 원래 이미지를 유지한다. StudentTransformation 셰이더와 머티리얼은 Assets/UI에 있으며 기존 StudentPlaceholder Image 하나에 적용한다. 원본 PNG 변경이나 추가 사각형 생성 없이 투명도 외곽에만 은은한 발광을 표시한다.
+
+## 최신 Battle 전체 화면과 전투 연출 (2026-11-06)
+
+이 절이 앞의 이전 배치 안내보다 우선한다. BattleCanvas는 1600×900(16:9) 기준 좌표를 사용하며 1920×1080에서 1.2배로 표시된다. BattleCanvas/Background를 Canvas 양끝까지 Stretch하여 흰 여백을 없앴다. Layout은 1600×900이며 괴수·HP·원기옥·학생 호는 가운데, 공격·사운드 버튼은 오른쪽이다. 배치는 런타임에 다시 계산하지 않고 RectTransform으로 편집한다.
+
+### 페이드
+
+BattleCanvas/Layout/Presentation의 BattlePresentation에서 **Fade Combat Text**를 켜거나 끈다. 학생 계산식 패널·원기옥 로그·필살기 문구에 적용하며 HP와 합계 숫자는 항상 표시한다. **Fade In Duration**과 **Fade Out Duration**은 기본 0.12초 / 0.2초이고 Step Duration은 기존 1초다. 각 페이드는 항목 시간의 최대 40%까지만 사용해 읽을 시간을 확보한다. 빈 로그의 배경은 숨긴다.
+
+계산식은 어두운 CalculationPanel에 흰색 굵은 글씨로 표시하고, 변경 전후 데미지 숫자를 효과 설명보다 먼저 보여 준다. Assets/UI/Prefabs/BattleStudentSlot.prefab의 패널 크기·색상과 텍스트 Auto Size(20–24)를 편집한다. 원기옥의 CombatLogPanel도 별도 오브젝트다.
+
+### 학생 효과 동작
+
+BattlePresentation의 **Animate Students**는 전체 토글이다. 각 BattleStudentSlot의 **Animate Effects**는 개별 토글이며 **Hop Height**(14), **Hop Duration**(0.5초), **Hop Curve**로 동작을 편집한다. 공통 프리팹에서 기본값을 바꾸거나 씬 슬롯에서 개별로 조절한다.
+
+액션의 주체·명시적인 대상과 키워드 수치가 바뀐 아군이 반응한다. 전대 버프의 수신자도 포함한다. Portrait만 부드럽게 위아래로 움직이므로 이름·계산식·클릭 영역은 고정된다. 끝나거나 중단·비활성화·학생 교체가 일어나면 원래 위치를 복구하며 전투 수치와 트리거 순서는 바꾸지 않는다.
+
+최초 적용 메뉴는 HongikIngan > Polish full-screen Battle presentation이며 FullBleedPresentationV1 표식이 있는 씬은 다시 덮어쓰지 않는다. 빌드 진입점은 HongikIngan.Editor.BattlePolishBuilder.Build다.
+
+### 검증
+
+열려 있던 에디터 작업을 보호하기 위해 별도 프로젝트 복사본에서 Unity 6000.3.7f1 Windows 빌드·씬/프리팹 참조·규칙 4,010개·초기 지급 2,000시드를 검사했다. 실제 1080p 플레이어 검사 222개는 배경 가장자리, 3·4·5·7·9명 배치, 페이드 시작/읽기/종료, 송신/수신/전대 버프 대상의 홉, 전체/개별 토글, 중단 후 위치 복구를 포함한다. 복구 오차 허용은 0.01 UI 단위 미만이다.
+
+검증한 Battle 씬·학생 프리팹과 동일한 소스를 원본에 반영했고 기존 GUID를 유지했다. 캡처와 결과는 UnityProject/Builds/BattlePolishComplete/, 로그는 UnityProject/Logs/BattlePolishIsolatedBuild.log에 있다. 수동 마우스 인수 검사와 FMOD 청취는 미실시다. 이전 Battle을 열어 둔 에디터는 디스크의 씬을 다시 불러온다.
