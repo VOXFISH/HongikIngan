@@ -7355,77 +7355,77 @@ MonoBehaviour:
   tooltip: {fileID: 1008072169}
   artwork:
   - girlId: Girl0
-    sprite: {fileID: 8776473535912100585, guid: c1a00eca85a466243822535e98e9f77a, type: 3}
+    sprite: {fileID: 21300000, guid: a4807bb330460c04cb89c4938cb03773, type: 3}
   - girlId: Girl1
-    sprite: {fileID: -6295091549796939105, guid: 63f412facaf738344b8d697d32169f64, type: 3}
+    sprite: {fileID: 21300000, guid: 1bd43890a60b45b4aafe792201acd2d5, type: 3}
   - girlId: Girl2
-    sprite: {fileID: 7968388600391821456, guid: e438a559a8d76254893a6cfcd9fb1fb7, type: 3}
+    sprite: {fileID: 21300000, guid: 4bf1ddd49de97874b8f58d51589787ba, type: 3}
   - girlId: Girl3
-    sprite: {fileID: -4012083898475457080, guid: 16d6e848365186141a0b1c34a85a4ee3, type: 3}
+    sprite: {fileID: 21300000, guid: 10fe74c9f8a75d644b09d32de8aaf631, type: 3}
   - girlId: Girl4
-    sprite: {fileID: -3091759315974539136, guid: eae1272fac618a646901022165daa338, type: 3}
+    sprite: {fileID: 21300000, guid: 1a97f3bccd6d64e4eaeca35b90e8e191, type: 3}
   - girlId: Girl5
-    sprite: {fileID: 0}
+    sprite: {fileID: 1938212753918881187, guid: d4f86720b3be29f4082a7b27ef2f0410, type: 3}
   - girlId: Girl6
-    sprite: {fileID: -4691932533027682182, guid: f3cf504a2af99cd4188a0957bb24e200, type: 3}
+    sprite: {fileID: 21300000, guid: e6ba26ed8ede4e049ad7f7be84776251, type: 3}
   - girlId: Girl7
-    sprite: {fileID: -1469356315231916475, guid: fdf101962825d1b449572d1235f6a2cf, type: 3}
+    sprite: {fileID: 21300000, guid: 3bc1aff4caba759468f3df6835ae94ee, type: 3}
   - girlId: Girl8
-    sprite: {fileID: -9137914785533993669, guid: c59c4514f32da04469d0cc1e5afbad22, type: 3}
+    sprite: {fileID: 21300000, guid: ba9e8f0ab60fdde439a98ece3edd17fd, type: 3}
   - girlId: Girl9
-    sprite: {fileID: 1238593250908401124, guid: 4036162b44e8a1e44a585bcb5bf58904, type: 3}
+    sprite: {fileID: 21300000, guid: 9c7e09d59132a51428b302f9c9d8afd1, type: 3}
   - girlId: Girl10
-    sprite: {fileID: -3363205999875257432, guid: e9a3262db58979946a60ca39e6cedc37, type: 3}
+    sprite: {fileID: 21300000, guid: 05db6fd1ca6280541a23d5149d854efd, type: 3}
   - girlId: Girl11
-    sprite: {fileID: 0}
+    sprite: {fileID: -1828459003528418436, guid: 8f4979037b089684292fd84024ec4afa, type: 3}
   - girlId: Girl12
-    sprite: {fileID: -6208310788489298435, guid: 2c2fd903b3b79f44a815003b136c8b2f, type: 3}
+    sprite: {fileID: 21300000, guid: 75666c8201468394f89f6ddd64092ef1, type: 3}
   - girlId: Girl13
-    sprite: {fileID: 8686703144989606627, guid: 6c8b2c72ee8bd85489478e098b2eab55, type: 3}
+    sprite: {fileID: 21300000, guid: e723f7f00cb6579469927b930dc94101, type: 3}
   - girlId: Girl14
-    sprite: {fileID: 1125041734318113322, guid: 9e04fe2b232c3e541b4b9d8812455fa5, type: 3}
+    sprite: {fileID: 21300000, guid: c7606954545f9874080cec411ae77b07, type: 3}
   - girlId: Girl15
-    sprite: {fileID: 1161574512470949665, guid: a2cacdb6a16f278479bd0ac25a0cf5cc, type: 3}
+    sprite: {fileID: 21300000, guid: 1be90cb345f79c34585d25ea9a8d00f7, type: 3}
   - girlId: Girl16
-    sprite: {fileID: -4702747841880507895, guid: cc94d1b4e7122dc43b883d78a6a38643, type: 3}
+    sprite: {fileID: 21300000, guid: 42928ad1050f29d47828e86e6ebadc10, type: 3}
   - girlId: Girl17
-    sprite: {fileID: 8718640103902084306, guid: 5c4947f8a230bb3439d72c666d842656, type: 3}
+    sprite: {fileID: 21300000, guid: 2eaca740d87cd23458e5e320f86b944b, type: 3}
   - girlId: Girl18
-    sprite: {fileID: 5604655525322267053, guid: a76d359aabec11f4a92f04126d9612e1, type: 3}
+    sprite: {fileID: 21300000, guid: 95c016c289817e543aae1eebd4da6908, type: 3}
   - girlId: Girl19
-    sprite: {fileID: 5066537987249983476, guid: 295c1ad1b3241274fbbbc7d528247564, type: 3}
+    sprite: {fileID: 21300000, guid: e2344e0487b929d4a977137fb9cc1f10, type: 3}
   - girlId: Girl20
-    sprite: {fileID: 1768559038165667357, guid: 3f3eb303836368042bdf22b06b9b2980, type: 3}
+    sprite: {fileID: 21300000, guid: 57bf88905817f404da04d9eb37a38797, type: 3}
   - girlId: Girl21
-    sprite: {fileID: -8669545370873418892, guid: 7586379023a7f394ca474d18b0c9717c, type: 3}
+    sprite: {fileID: 21300000, guid: 6eacf32ab8d9a5f4e97b3fb38d8d209d, type: 3}
   - girlId: Girl22
-    sprite: {fileID: -6768309212033693245, guid: 795471552eda79e48b1b07f84347b813, type: 3}
+    sprite: {fileID: 21300000, guid: 5064bb07edecdd241990f1d90ba6e623, type: 3}
   - girlId: Girl23
-    sprite: {fileID: -592652840900443122, guid: e485afbbfaf725b40bf8d5491801e888, type: 3}
+    sprite: {fileID: 21300000, guid: 52ace77210604ab43b63ef8a95db825d, type: 3}
   - girlId: Girl24
-    sprite: {fileID: -2577313805883662923, guid: 7a31d7d133555b844ac2e7376ad93d95, type: 3}
+    sprite: {fileID: 21300000, guid: d914639fa37dfc149abe7f2f1228c7dd, type: 3}
   - girlId: Girl25
-    sprite: {fileID: -1485961517604589027, guid: eb2c37c35660d5d4a9f039da7e945e62, type: 3}
+    sprite: {fileID: 21300000, guid: cf7c4fcb7b03cd44d890a4345f4d8c72, type: 3}
   - girlId: Girl26
-    sprite: {fileID: -6063140369577576903, guid: 56b4205573a29ec4785d425809f0fcfd, type: 3}
+    sprite: {fileID: 21300000, guid: dcb1e58e48c78b94e99085e173f2098b, type: 3}
   - girlId: Girl27
-    sprite: {fileID: -4208693579005440289, guid: ee3d67f37347cb04e95e6f4bef851e40, type: 3}
+    sprite: {fileID: 21300000, guid: 58db3a58b53d28c418f696007c812314, type: 3}
   - girlId: Girl28
-    sprite: {fileID: 2944672718297743981, guid: 4d3beba4ebc9dcc409beac78568c3e96, type: 3}
+    sprite: {fileID: 21300000, guid: 5c484d5df8f6b964f803101f5cfbe234, type: 3}
   - girlId: Girl29
-    sprite: {fileID: 6620658748321897768, guid: c5c2ba6d30fba3145b0b185392ed3c4d, type: 3}
+    sprite: {fileID: 21300000, guid: 56cf5a81d1628bc4a96ea60f296a8703, type: 3}
   - girlId: Girl30
-    sprite: {fileID: -9103529347076424735, guid: a9ddec65576eee048b81198b8cb3f5fe, type: 3}
+    sprite: {fileID: 21300000, guid: 6e236b3767c8eea42b49a3f5b97bd8c9, type: 3}
   - girlId: Girl31
-    sprite: {fileID: -5077124495095293598, guid: be4d696b0afed0c4393f73836eadc0a0, type: 3}
+    sprite: {fileID: 21300000, guid: 8991e9570d910a142a2591afe10b77e2, type: 3}
   - girlId: Girl32
-    sprite: {fileID: 2244782072476660635, guid: ea007340a7d94194db37b4e73e004d91, type: 3}
+    sprite: {fileID: 21300000, guid: 24a8ee156ea6e9e479e8ce3a41ab45a5, type: 3}
   - girlId: Girl33
-    sprite: {fileID: -1297205769577350563, guid: b8fb905b3898b5a43a358f3317c376e6, type: 3}
+    sprite: {fileID: 21300000, guid: 82462ac029c4643478cbcb2a891f8279, type: 3}
   - girlId: Girl34
-    sprite: {fileID: 1083989809939958915, guid: 9adbac8e7921d9e44a86005a59c1cdbf, type: 3}
+    sprite: {fileID: 21300000, guid: af7cd94402e012b46baf16747da983ed, type: 3}
   - girlId: Girl35
-    sprite: {fileID: -9044985923290717443, guid: 7f0a08d1a45289c4c8bf183790952b37, type: 3}
+    sprite: {fileID: 21300000, guid: e1089d77a88ced9429d28c12beff4533, type: 3}
 --- !u!1 &1227845582
 GameObject:
   m_ObjectHideFlags: 0
