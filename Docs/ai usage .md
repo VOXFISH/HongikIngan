@@ -348,3 +348,8 @@
 
 - 사용자: VOXFISH
 - 요약: Battle의 Girl0·Girl1·Girl2를 magical_char_back의 같은 ID 스프라이트로 교체하고 세 참조의 GUID와 Sprite 하위 식별자를 확인했다. 폴더에 나머지 Girl 이미지가 없어 기존 연결을 보존했으며 원본 이미지와 메타데이터는 변경하지 않았다. 플레이 모드 검증은 수행하지 않았다.
+
+## 2026-11-06 — 전체 뒷모습 폴더 재검색 및 연결 정정
+
+- 사용자: VOXFISH
+- 요약: Assets/magical_char_back만 확인해 전체 폴더를 누락했던 오류를 바로잡았다. Assets/sprite/magical_char_back의 Girl00–Girl35 전체 36장을 찾아 Battle의 모든 Girl에 연결하고 ID·GUID·Sprite 하위 참조를 각각 검증했다. 기존 이미지와 메타데이터는 보존했으며 플레이 모드 검사는 수행하지 않았다.

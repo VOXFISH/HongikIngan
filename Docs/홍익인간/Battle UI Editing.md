@@ -134,4 +134,4 @@ BattlePresentation의 **Animate Students**는 전체 토글이다. 각 BattleStu
 
 ### Battle 뒷모습 이미지 (2026-11-06)
 
-BattleFormationView.Artwork의 Girl0·Girl1·Girl2를 Assets/magical_char_back의 같은 ID 이미지로 연결했다. 기존 여러 Sprite 분할 중 캐릭터 본체를 참조하며 원본 PNG·GUID·가져오기 설정은 유지한다. 현재 해당 폴더에는 3개만 있으므로 나머지 Girl은 기존 이미지를 유지한다. 추가 이미지는 같은 Artwork 목록에서 Girl ID에 맞게 연결한다. 기존 홉·페이드·드래그와 비율 유지 설정도 그대로 사용한다.
+BattleFormationView.Artwork의 Girl0–Girl35 전체 36명을 Assets/sprite/magical_char_back의 같은 ID 이미지로 연결한다. 이 폴더가 전체 뒷모습 이미지 폴더이며, Assets/magical_char_back에는 별도의 3장만 있으므로 혼동하지 않는다. 기존 여러 Sprite 분할 중 면적이 가장 큰 캐릭터 본체를 참조하며 원본 PNG·GUID·가져오기 설정은 유지한다. 기존 홉·페이드·드래그와 비율 유지 설정도 그대로 사용한다. 36개 파일의 ID·GUID·Sprite 하위 식별자를 각각 확인했다.
