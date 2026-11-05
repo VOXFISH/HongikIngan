@@ -21,7 +21,7 @@
 - [Girl0–Girl11 전투 구현](Girl%20Battle%20Implementation.md): 자연어 우선 해석, 12명 스킬·강화와 공통 시너지, 검증 결과.
 - [전체 시너지 효과 목록](Girls/synergy.md): 구현된 8종의 단계·발동 시점과 미구현 부활동 4종의 기획.
 - [키워드 효과 목록](Girls/keywords.md): 표독·검은 클로버의 수치·소모·중첩·유지 규칙과 이전 호환 항목.
-- [마법소녀 작성 서식](Girls/README.md): `Girl%d.jsonc` 복사·작성과 AI 일괄 구현 안내.
+- [마법소녀 작성 서식과 원본 기획](Girls/README.md): `Girl%d.md` 서식, Girl0–Girl16 문서, 자연어 우선 해석과 현재 구현 범위.
 - [FMOD 설정 안내](Audio%20Setup.md): 지속 SoundManager와 채널별 볼륨·음소거.
 
 ## 팀 공통 문서 관리 규칙
