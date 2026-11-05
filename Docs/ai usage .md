@@ -353,3 +353,7 @@
 
 - 사용자: VOXFISH
 - 요약: Assets/magical_char_back만 확인해 전체 폴더를 누락했던 오류를 바로잡았다. Assets/sprite/magical_char_back의 Girl00–Girl35 전체 36장을 찾아 Battle의 모든 Girl에 연결하고 ID·GUID·Sprite 하위 참조를 각각 검증했다. 기존 이미지와 메타데이터는 보존했으며 플레이 모드 검사는 수행하지 않았다.
+
+## 2026-11-06 — VOXFISH — School 전환 중앙 정렬 및 순백색 변신 복구
+School 커튼의 위치 오프셋을 제거하고, 기존 참조 GUID를 보존해 변신 셰이더·머티리얼의 미해결 메타 충돌을 정리했다. 학생은 순백색 유지 후 새 옷을 페이드로 드러내며 유지 비율·시간을 Inspector에서 조절할 수 있고, Girl0의 끊어진 스프라이트 참조도 복구했다.
+격리된 Unity 6000.3.7f1 Windows 빌드와 1920×1080 플레이어 검증을 통과했다. 36명 이미지 쌍, 실제 순백색/새 옷 렌더링, 중앙 커튼, 입력 잠금 및 School/Battle 왕복을 확인했다.

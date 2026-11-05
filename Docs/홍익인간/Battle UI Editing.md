@@ -104,9 +104,11 @@ Assets/sprite/characters/Girl00.png는 Girl0, Girl01.png는 Girl1로 연결한�
 
 ### School 전투 시작 변신
 
-SchoolScreen의 transformationDuration(기본 1.2초) 동안 흰색 실루엣과 약한 외곽 발광을 적용하고, 중간 시점에서 같은 Girl ID의 magical_char PNG로 바꾼다. 변신 완료 후 0.25초 동안 보여 준 다음 기존 씬 전환을 계속한다. SceneTransitionOverlay.Go의 선택적 beforeFade 코루틴을 사용하며 연출 중 입력은 기존 IsBusy로 잠근다. 다른 씬 전환은 기존 호출 방식대로 동작한다.
+SchoolScreen의 transformationDuration(기본 1.2초) 동안 원래 옷을 순백색 실루엣으로 페이드하고, 완전히 흰 상태를 유지하면서 같은 Girl ID의 magical_char 스프라이트로 바꾼 뒤 새 옷의 색상을 서서히 드러낸다. Inspector의 transformationWhiteHold(기본 0.25)는 전체 시간 중 순백색 유지 비율이며, transformedOutfitHoldDuration(기본 0.25초)은 새 옷을 보여 준 뒤 씬 전환을 시작하기까지의 대기 시간이다. SceneTransitionOverlay.Go의 beforeFade 동안 커튼은 투명하게 유지하고 입력은 IsBusy로 잠근다. 입력 잠금으로 Refresh가 발생해도 변신 진행 상태를 유지한다.
 
-StudentPortraitCatalog.Entry.magicalSprite가 변신 이미지를 보관한다. Connect School student portraits 메뉴가 Girl00_Magical_Char와 Girl5_Magical 같은 파일명도 숫자 ID로 연결하며, 변신 이미지가 없으면 원래 이미지를 유지한다. StudentTransformation 셰이더와 머티리얼은 Assets/UI에 있으며 기존 StudentPlaceholder Image 하나에 적용한다. 원본 PNG 변경이나 추가 사각형 생성 없이 투명도 외곽에만 은은한 발광을 표시한다.
+StudentPortraitCatalog.Entry.magicalSprite가 변신 이미지를 보관한다. Connect School student portraits 메뉴가 Girl00_Magical_Char와 Girl5_Magical 같은 파일명도 숫자 ID로 연결한다. 이미 Sprite Mode Multiple로 잘린 변신 이미지는 기존 슬라이싱을 보존하며 면적이 가장 큰 캐릭터 스프라이트를 연결한다. 이전 Single 모드의 fileID를 그대로 사용하면 이미지 참조가 끊기므로 재슬라이싱 후 이 메뉴로 카탈로그를 갱신한다. 변신 이미지가 없으면 원래 이미지를 유지한다. StudentTransformation 셰이더와 머티리얼은 Assets/UI에 있으며 기존 StudentPlaceholder Image 하나에 적용한다. 원본 PNG 변경이나 추가 사각형 생성 없이 투명도 외곽에만 은은한 발광을 표시한다.
+
+School의 SceneTransitionOverlay/Curtain은 전체 화면 stretch, 위치 (0, 0), 크기 차이 (0, 0)으로 화면에 맞춘다. Band는 중앙 앵커와 위치 (0, 0)를 사용한다. 배치는 씬의 RectTransform에서 편집하며 런타임 코드가 좌표를 덮어쓰지 않는다. `SchoolPortraitBuilder.BuildTransitionValidation`으로 36명의 이미지 참조와 플레이어 빌드를 검증하고, 플레이어의 `--school-transition-smoke --smoke-output <폴더>`로 1920×1080 정렬·순백색 유지·새 옷 페이드·학교/전투 왕복을 확인할 수 있다.
 
 ## 최신 Battle 전체 화면과 전투 연출 (2026-11-06)
 

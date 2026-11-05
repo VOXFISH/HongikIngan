@@ -23,6 +23,9 @@ namespace HongikIngan
         public TMP_Text rosterPageLabel;
         public int RosterPage { get; private set; }
         [Min(.1f)] public float transformationDuration = 1.2f;
+        [Tooltip("Fraction of the transformation held fully white, with the outfit swapped halfway through.")]
+        [Range(.05f, .8f)] public float transformationWhiteHold = .25f;
+        [Min(0)] public float transformedOutfitHoldDuration = .25f;
         public PrototypeRun CurrentRun => observedRun;
         int selected = -1;
         bool transitionWasBusy;
@@ -86,11 +89,11 @@ namespace HongikIngan
             float duration = Mathf.Max(.1f, transformationDuration);
             for (float time = 0; time < duration; time += Time.unscaledDeltaTime)
             {
-                foreach (var slot in slots) if (slot != null) slot.SetTransformation(time / duration);
+                foreach (var slot in slots) if (slot != null) slot.SetTransformation(time / duration, transformationWhiteHold);
                 yield return null;
             }
-            foreach (var slot in slots) if (slot != null) slot.SetTransformation(1);
-            yield return new WaitForSecondsRealtime(.25f);
+            foreach (var slot in slots) if (slot != null) slot.SetTransformation(1, transformationWhiteHold);
+            yield return new WaitForSecondsRealtime(transformedOutfitHoldDuration);
         }
         void OnDestroy()
         {

@@ -94,6 +94,10 @@ namespace HongikIngan.Editor
         static Sprite ImportPortrait(string path)
         {
             path = path.Replace('\\', '/');
+            // Preserve the artist's slicing; catalogs must reference the actual sprite subasset.
+            var sprite = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Sprite>()
+                .OrderByDescending(s => s.rect.width * s.rect.height).FirstOrDefault();
+            if (sprite != null) return sprite;
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
             if (importer.textureType != TextureImporterType.Sprite || importer.spriteImportMode != SpriteImportMode.Single || !importer.alphaIsTransparency)
             {
@@ -103,6 +107,24 @@ namespace HongikIngan.Editor
                 importer.SaveAndReimport();
             }
             return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+        }
+        public static void BuildTransitionValidation()
+        {
+            Apply();
+            var catalog = AssetDatabase.LoadAssetAtPath<StudentPortraitCatalog>(CatalogPath);
+            if (catalog.entries.Length != 36 || catalog.entries.Any(e => e.sprite == null || e.magicalSprite == null))
+                throw new InvalidOperationException("All 36 students require both school and magical portraits.");
+            var material = AssetDatabase.LoadAssetAtPath<Material>("Assets/UI/StudentTransformation.mat");
+            if (material == null || material.shader == null || material.shader.name != "HongikIngan/UI/StudentTransformation")
+                throw new InvalidOperationException("Transformation material/shader reference is broken.");
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
+                scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/School.unity", "Assets/Scenes/Battle.unity" },
+                locationPathName = "Builds/SchoolTransition/HongikIngan.exe", target = BuildTarget.StandaloneWindows64,
+                options = BuildOptions.None
+            });
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
+                throw new InvalidOperationException("School transition validation build failed.");
+            Debug.Log("SCHOOL_TRANSITION_BUILD_PASSED: 36 paired portraits and valid transformation material.");
         }
     }
 }

@@ -18,6 +18,8 @@ namespace HongikIngan
         public Material transformationMaterial;
         Material portraitMaterial;
         string studentId;
+        float transformationProgress = -1;
+        float whiteHoldFraction = .25f;
         public GameObject[] books;
         public TMP_Text[] bookLabels;
         public int Index { get; private set; }
@@ -31,6 +33,8 @@ namespace HongikIngan
         public void Bind(SchoolScreen screen, int index, StudentDefinition student, bool available, bool selected)
         {
             owner = screen; Index = index; occupied = student != null; availableDesk = available;
+            if (studentId != student?.Id || SceneTransitionOverlay.Current == null || !SceneTransitionOverlay.Current.IsBusy)
+                transformationProgress = -1;
             studentId = student?.Id;
             studentVisual.gameObject.SetActive(occupied);
             emptyLabel.gameObject.SetActive(!occupied);
@@ -48,6 +52,8 @@ namespace HongikIngan
                 studentPortrait.enabled = sprite != null;
                 studentPortrait.preserveAspect = true;
                 if (portraitMaterial != null) portraitMaterial.SetFloat("_Flash", 0);
+                // The input-lock refresh must not reset a transformation already in progress.
+                if (transformationProgress >= 0) SetTransformation(transformationProgress, whiteHoldFraction);
             }
             if (occupied)
             {
@@ -60,9 +66,11 @@ namespace HongikIngan
                 if (occupied) bookLabels[i].text = i == 0 ? student.Club : i == 1 ? student.Personality : student.SpecialSynergy;
             }
         }
-        public void SetTransformation(float progress)
+        public void SetTransformation(float progress, float whiteHold = .25f)
         {
             if (!occupied || studentPortrait == null || portraitCatalog == null) return;
+            transformationProgress = progress = Mathf.Clamp01(progress);
+            whiteHoldFraction = Mathf.Clamp(whiteHold, .05f, .8f);
             if (portraitMaterial == null && transformationMaterial != null)
             {
                 portraitMaterial = new Material(transformationMaterial);
@@ -72,7 +80,15 @@ namespace HongikIngan
             studentPortrait.sprite = sprite != null ? sprite : portraitCatalog.Find(studentId);
             studentPortrait.enabled = studentPortrait.sprite != null;
             if (portraitMaterial != null)
-                portraitMaterial.SetFloat("_Flash", Mathf.SmoothStep(0, 1, 1 - Mathf.Abs(progress * 2 - 1)));
+            {
+                float fadeFraction = (1 - whiteHoldFraction) * .5f;
+                float flash = progress < .5f
+                    ? Mathf.SmoothStep(0, 1, Mathf.Clamp01(progress / fadeFraction))
+                    : Mathf.SmoothStep(0, 1, Mathf.Clamp01((1 - progress) / fadeFraction));
+                portraitMaterial.SetFloat("_Flash", flash);
+                // uGUI may render a stencil copy when the desk is inside a Mask.
+                studentPortrait.materialForRendering.SetFloat("_Flash", flash);
+            }
         }
         void OnDestroy() { if (portraitMaterial != null) Destroy(portraitMaterial); }
         public void OnPointerClick(PointerEventData e)

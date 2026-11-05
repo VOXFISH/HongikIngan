@@ -35,8 +35,8 @@ namespace HongikIngan
             {
                 if (beforeFade != null)
                 {
-                    // Keep the students visible while the battle-start overlay begins.
-                    curtain.alpha = .12f;
+                    // Do not tint the white silhouettes or hide the outfit reveal.
+                    curtain.alpha = 0;
                     yield return beforeFade;
                 }
                 yield return Fade(curtain.alpha, 1);
