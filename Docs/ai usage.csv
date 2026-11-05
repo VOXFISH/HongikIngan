@@ -138,3 +138,5 @@ Pretty please."
 또, Docs 아래에 각 마법소녀의 설명을 적을 수 있는 유사 json 형식의 Girl%d 서식을 만들어 줘. 서식을 복사해서 마법소녀들을 구성한 다음, 해당 설명을 일제히 실제 구현으로 AI를 통해 바꿀 거야."
 "2026-11-05 20:55:13+09:00","VOXFISH","PR #2를 main에 병합 승인"
 "2026-11-05 20:58:11+09:00","VOXFISH","PR #3를 gamesystem에 병합 승인"
+"2026-11-05 21:10:03+09:00","VOXFISH","Add a debug button inside the ""Battle"" scene in the branch test. It should be on top of the attack button.
+The button should give 99999 miracle energy. Make it quick, no tests. Do not commit"

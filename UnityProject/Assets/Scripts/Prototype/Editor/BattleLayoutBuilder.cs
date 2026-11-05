@@ -15,6 +15,27 @@ namespace HongikIngan.Editor
         static readonly Color Purple = new Color(.37f, .30f, .78f);
         static Font font;
 
+        [MenuItem("HongikIngan/Add Battle debug energy button")]
+        public static void AddDebugEnergyButton()
+        {
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            var scene = EditorSceneManager.OpenScene("Assets/Scenes/Battle.unity");
+            var screen = UnityEngine.Object.FindFirstObjectByType<BattleScreen>();
+            var attack = screen.hud.actionButton;
+            if (attack.transform.parent.Find("DebugEnergyButton") != null) return;
+            var debug = UnityEngine.Object.Instantiate(attack, attack.transform.parent);
+            debug.name = "DebugEnergyButton";
+            var rect = (RectTransform)debug.transform;
+            rect.anchoredPosition += Vector2.up * (rect.rect.height + 10);
+            debug.transform.SetSiblingIndex(attack.transform.GetSiblingIndex() + 1);
+            debug.GetComponentInChildren<Text>().text = "미라클 에너지 +99,999";
+            debug.onClick = new Button.ButtonClickedEvent();
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(debug.onClick, screen.GrantDebugEnergy);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log("BATTLE_DEBUG_ENERGY_BUTTON_SAVED");
+        }
+
         [MenuItem("HongikIngan/Apply editable Battle layout")]
         public static void Apply()
         {

@@ -21,3 +21,5 @@ test 브랜치의 `PrototypeSession.ResetRun`이 `PracticeBattles`를 켠다. `B
 테스트 규칙을 일반 배포 브랜치로 병합하지 않는다. [전투 UI 편집](Battle%20UI%20Editing.md), [마법소녀 서식](Girls/README.md)을 함께 참고한다.
 
 2026-11-05 검증 결과: Unity 6000.3.7f1 컴파일·씬 참조·Windows 빌드 성공. 일반 규칙 2,219개, 테스트 규칙 22개, 실제 플레이어 테스트 모드 23개, 일반 모드 UI 회귀 26개 검사 통과. 로그는 로컬 `UnityProject/Logs/PracticeBuildFinal.log`, `PracticePlayer.log`, `PracticeRegressionPlayer.log`이며 결과 파일은 `UnityProject/Builds/PracticeSmoke/practice-result.txt`와 `UnityProject/Builds/PracticeRegressionSmoke/battle-ui-result.txt`에 있다. 숨김 실행의 테스트 모드 캡처는 검게 출력되어 시각 검증에 사용하지 않았으며, 수동 플레이와 FMOD 실제 재생은 수행하지 않았다.
+
+공격 버튼 바로 위의 `미라클 에너지 +99,999` 디버그 버튼은 누를 때마다 재화를 99,999 추가하고 화면 표시를 갱신한다(정수 저장 한도에서는 상한까지만 지급). 이 추가 변경은 사용자 요청에 따라 테스트하지 않았다.

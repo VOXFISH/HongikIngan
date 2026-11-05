@@ -76,6 +76,12 @@ namespace HongikIngan
             else if (run.Battle.Won) PrototypeSession.Instance.BackToSchool();
             else if (!run.Battle.IsResolving && (!run.Battle.IsPracticeBattle || run.Battle.Turn < 3)) StartCoroutine(Attack());
         }
+        public void GrantDebugEnergy()
+        {
+            if (!initialized || !isActiveAndEnabled || audioPanel.IsOpen) return;
+            run.AddMoney(System.Math.Min(99999, int.MaxValue - run.Money));
+            Refresh();
+        }
         public void ReturnFromPractice()
         {
             if (!initialized || !isActiveAndEnabled || audioPanel.IsOpen || !run.CanReturnFromPractice) return;
