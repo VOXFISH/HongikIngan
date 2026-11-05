@@ -141,3 +141,6 @@ Pretty please."
 "2026-11-05 21:10:03+09:00","VOXFISH","Add a debug button inside the ""Battle"" scene in the branch test. It should be on top of the attack button.
 The button should give 99999 miracle energy. Make it quick, no tests. Do not commit"
 "2026-11-05 21:12:47+09:00","VOXFISH","jsonc가 아닌 json인 척 하는 md 파일이고, 아래에 설정이나 스킬 동작 같은 잡다한 내용도 들어갈 예정이야."
+"2026-11-05 21:22:40+09:00","VOXFISH","Girl%d.md 서식의 필드명과 설명을 한글로 바꿔 줘. 사람이 편하게 작성하고 AI가 읽어서 구현할 문서야.
+전체 시너지 효과 목록이 적힌 synergy.md와 키워드 효과를 적은 keywords.md를 추가해 줘. 항목은 비워 둬.
+커밋/푸쉬해 줘."
