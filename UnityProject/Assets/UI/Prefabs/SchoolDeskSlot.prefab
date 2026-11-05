@@ -316,6 +316,7 @@ MonoBehaviour:
   selectionFrame: {fileID: 2663561634460992992}
   studentPortrait: {fileID: 5273006404454804014}
   portraitCatalog: {fileID: 11400000, guid: 5a051960ad6a3a5438a2212c8382bb66, type: 2}
+  transformationMaterial: {fileID: 2100000, guid: eac6a6b551fce054eb469b845c9d1203, type: 2}
   books:
   - {fileID: 5867961670718076017}
   - {fileID: 8572028677256221894}

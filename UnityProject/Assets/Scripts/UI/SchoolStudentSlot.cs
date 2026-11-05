@@ -15,6 +15,9 @@ namespace HongikIngan
         public Image selectionFrame;
         public Image studentPortrait;
         public StudentPortraitCatalog portraitCatalog;
+        public Material transformationMaterial;
+        Material portraitMaterial;
+        string studentId;
         public GameObject[] books;
         public TMP_Text[] bookLabels;
         public int Index { get; private set; }
@@ -28,6 +31,7 @@ namespace HongikIngan
         public void Bind(SchoolScreen screen, int index, StudentDefinition student, bool available, bool selected)
         {
             owner = screen; Index = index; occupied = student != null; availableDesk = available;
+            studentId = student?.Id;
             studentVisual.gameObject.SetActive(occupied);
             emptyLabel.gameObject.SetActive(!occupied);
             emptyLabel.text = available ? "빈 책상" : "확장 가능한 책상";
@@ -43,6 +47,7 @@ namespace HongikIngan
                 studentPortrait.color = Color.white;
                 studentPortrait.enabled = sprite != null;
                 studentPortrait.preserveAspect = true;
+                if (portraitMaterial != null) portraitMaterial.SetFloat("_Flash", 0);
             }
             if (occupied)
             {
@@ -55,6 +60,21 @@ namespace HongikIngan
                 if (occupied) bookLabels[i].text = i == 0 ? student.Club : i == 1 ? student.Personality : student.SpecialSynergy;
             }
         }
+        public void SetTransformation(float progress)
+        {
+            if (!occupied || studentPortrait == null || portraitCatalog == null) return;
+            if (portraitMaterial == null && transformationMaterial != null)
+            {
+                portraitMaterial = new Material(transformationMaterial);
+                studentPortrait.material = portraitMaterial;
+            }
+            var sprite = progress >= .5f ? portraitCatalog.Find(studentId, true) : null;
+            studentPortrait.sprite = sprite != null ? sprite : portraitCatalog.Find(studentId);
+            studentPortrait.enabled = studentPortrait.sprite != null;
+            if (portraitMaterial != null)
+                portraitMaterial.SetFloat("_Flash", Mathf.SmoothStep(0, 1, 1 - Mathf.Abs(progress * 2 - 1)));
+        }
+        void OnDestroy() { if (portraitMaterial != null) Destroy(portraitMaterial); }
         public void OnPointerClick(PointerEventData e)
         {
             if (e.button == PointerEventData.InputButton.Left && !e.dragging && occupied && owner.CanInteract)

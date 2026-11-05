@@ -101,3 +101,9 @@ Girl35 확장 통합에서는 main의 이 프리팹 구조를 보존했다. 학�
 SchoolStudentSlot.Bind가 현재 학생의 Id로 Assets/UI/StudentPortraitCatalog.asset을 조회하고 StudentPlaceholder의 Image.sprite를 갱신한다. StudentPlaceholder의 Fill 자식은 제거했으며 흰색 tint와 Preserve Aspect를 적용한다. 빈 슬롯이나 이미지 누락 시 기존 초상화를 지우고 Image를 숨긴다. 분홍색 사각형인 Selected Image도 비활성화하며 학생 선택 동작과 드래그 영역은 유지한다. 학생 이동·교환·영입은 기존 Refresh/Bind 흐름을 사용한다.
 
 Assets/sprite/characters/Girl00.png는 Girl0, Girl01.png는 Girl1로 연결한다. Girl05.png와 Girl11.png를 포함해 현재 Girl0~Girl35 전체 36장이 연결되어 있다. 이미지를 추가한 뒤 HongikIngan > Connect School student portraits를 실행하면 카탈로그와 공통 책상 프리팹 연결을 갱신한다. 각 PNG는 전체 그림 한 장이므로 Sprite Mode Single로 가져오며 원본 PNG는 수정하지 않는다. 카탈로그를 프리팹이 직접 참조하므로 플레이어 빌드에도 포함된다. 학생 이미지 적용은 실행 중이며 편집 상태에는 특정 학생을 고정하지 않는다.
+
+### School 전투 시작 변신
+
+SchoolScreen의 transformationDuration(기본 1.2초) 동안 흰색 실루엣과 약한 외곽 발광을 적용하고, 중간 시점에서 같은 Girl ID의 magical_char PNG로 바꾼다. 변신 완료 후 0.25초 동안 보여 준 다음 기존 씬 전환을 계속한다. SceneTransitionOverlay.Go의 선택적 beforeFade 코루틴을 사용하며 연출 중 입력은 기존 IsBusy로 잠근다. 다른 씬 전환은 기존 호출 방식대로 동작한다.
+
+StudentPortraitCatalog.Entry.magicalSprite가 변신 이미지를 보관한다. Connect School student portraits 메뉴가 Girl00_Magical_Char와 Girl5_Magical 같은 파일명도 숫자 ID로 연결하며, 변신 이미지가 없으면 원래 이미지를 유지한다. StudentTransformation 셰이더와 머티리얼은 Assets/UI에 있으며 기존 StudentPlaceholder Image 하나에 적용한다. 원본 PNG 변경이나 추가 사각형 생성 없이 투명도 외곽에만 은은한 발광을 표시한다.

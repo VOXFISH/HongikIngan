@@ -336,3 +336,12 @@ I need :
 
 Newly added girls on the list.
 The pink box gone, only a single studentplaceholder getting replaced by an image"
+"2026-11-06 07:15:37+09:00","qwerty","Make the ""전투 시작"" transition in the scene ""School"".
+
+Requirements.
+
+When the battle start image starts :
+The students will turn into 'white' color.
+There will be a faint glow and the student images will swithc over to the coresponding variants in 'magical_char'.
+
+You're almost out of tokens, work fast."

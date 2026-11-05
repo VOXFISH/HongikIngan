@@ -1,4 +1,5 @@
 using TMPro;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +22,7 @@ namespace HongikIngan
         public Button previousRosterPage, nextRosterPage;
         public TMP_Text rosterPageLabel;
         public int RosterPage { get; private set; }
+        [Min(.1f)] public float transformationDuration = 1.2f;
         public PrototypeRun CurrentRun => observedRun;
         int selected = -1;
         bool transitionWasBusy;
@@ -67,7 +69,7 @@ namespace HongikIngan
             }
             expandButton.onClick.AddListener(() => observedRun.ExpandSlots());
             rerollButton.onClick.AddListener(() => observedRun.Reroll());
-            battleButton.onClick.AddListener(() => { if (CanInteract && observedRun.CanStartBattle) SceneTransitionOverlay.Current.Go("출동!", () => PrototypeSession.Instance.EnterBattle()); });
+            battleButton.onClick.AddListener(() => { if (CanInteract && observedRun.CanStartBattle) SceneTransitionOverlay.Current.Go("전투 시작", () => PrototypeSession.Instance.EnterBattle(), TransformStudents()); });
             learnButton.onClick.AddListener(() => observedRun.Upgrade(selected));
             sellButton.onClick.AddListener(() => { int index = selected; selected = -1; observedRun.Sell(index); });
             restartButton.onClick.AddListener(dialogs.ShowRestart);
@@ -77,6 +79,18 @@ namespace HongikIngan
             var sound = HongikIngan.Audio.SoundManager.EnsureExists();
             if (sound.BackendAvailable) sound.PlayBgm("event:/BGM/School");
             Refresh();
+        }
+        IEnumerator TransformStudents()
+        {
+            foreach (var slot in slots) if (slot != null) slot.CancelDrag();
+            float duration = Mathf.Max(.1f, transformationDuration);
+            for (float time = 0; time < duration; time += Time.unscaledDeltaTime)
+            {
+                foreach (var slot in slots) if (slot != null) slot.SetTransformation(time / duration);
+                yield return null;
+            }
+            foreach (var slot in slots) if (slot != null) slot.SetTransformation(1);
+            yield return new WaitForSecondsRealtime(.25f);
         }
         void OnDestroy()
         {
