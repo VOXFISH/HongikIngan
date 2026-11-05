@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 88fef1b9dac186c40a5dc74932586016
+guid: 4a39dc5daa159464c82229fc7585e91f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7223458030871528478
-    second: Girl25_Magical_0
+      213: -1656166294940094332
+    second: city_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +96,56 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Girl25_Magical_0
+      name: city_0
       rect:
         serializedVersion: 2
-        x: 54
+        x: 0
         y: 0
-        width: 949
-        height: 1440
+        width: 1920
+        height: 1080
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ebb5f3413f11cb90800000000000000
-      internalID: -7223458030871528478
+      spriteID: 480fe1d878d1409e0800000000000000
+      internalID: -1656166294940094332
       vertices: []
       indices: 
       edges: []
@@ -135,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Girl25_Magical_0: -7223458030871528478
+      city_0: -1656166294940094332
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

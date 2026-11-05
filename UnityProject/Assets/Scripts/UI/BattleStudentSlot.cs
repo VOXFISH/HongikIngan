@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,6 +14,14 @@ namespace HongikIngan
         public TMP_Text nameLabel, roleLabel, synergyLabel, skillLabel, emptyLabel;
         public Image portrait;
         public TMP_Text orderLabel, buffsLabel, calculationLabel;
+        public CanvasGroup calculationGroup;
+        [Header("Effect hop (portrait only)")]
+        public bool animateEffects = true;
+        [Min(0)] public float hopHeight = 14f;
+        [Min(.01f)] public float hopDuration = .5f;
+        public AnimationCurve hopCurve = new AnimationCurve(new Keyframe(0,0,0,0), new Keyframe(.5f,1,0,0), new Keyframe(1,0,0,0));
+        Coroutine hop;
+        Vector2 portraitRest;
         public StudentState Student { get; private set; }
         public BattleFormationView Owner { get; private set; }
         public int Index { get; private set; }
@@ -25,6 +34,7 @@ namespace HongikIngan
         public void Bind(BattleFormationView owner, int index) { Owner = owner; Index = index; }
         public void Render(StudentState student, Sprite artwork = null)
         {
+            if (Student != student) CancelHop();
             HasStudent = student != null;
             Student = student;
             studentVisual.gameObject.SetActive(HasStudent);
@@ -47,6 +57,39 @@ namespace HongikIngan
             if (calculationLabel == null) return;
             calculationLabel.text = value;
             calculationLabel.gameObject.SetActive(!string.IsNullOrEmpty(value));
+            if (calculationGroup != null) calculationGroup.gameObject.SetActive(!string.IsNullOrEmpty(value));
+        }
+        public void SetCalculationAlpha(float value)
+        {
+            if (calculationGroup != null) calculationGroup.alpha = value;
+            else if (calculationLabel != null) calculationLabel.alpha = value;
+        }
+        public void PlayEffectHop()
+        {
+            CancelHop();
+            if (!animateEffects || !HasStudent || !isActiveAndEnabled || IsDragging || portrait == null) return;
+            portraitRest = portrait.rectTransform.anchoredPosition;
+            hop = StartCoroutine(Hop());
+        }
+        IEnumerator Hop()
+        {
+            float elapsed = 0;
+            while (elapsed < Mathf.Max(.01f, hopDuration) && animateEffects)
+            {
+                float t = Mathf.Clamp01(elapsed / Mathf.Max(.01f, hopDuration));
+                float amount = hopCurve == null ? Mathf.Sin(t * Mathf.PI) : hopCurve.Evaluate(t);
+                portrait.rectTransform.anchoredPosition = portraitRest + Vector2.up * (Mathf.Max(0,hopHeight) * amount);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+            portrait.rectTransform.anchoredPosition = portraitRest;
+            hop = null;
+        }
+        public void CancelHop()
+        {
+            if (hop == null) return;
+            StopCoroutine(hop); hop = null;
+            if (portrait != null) portrait.rectTransform.anchoredPosition = portraitRest;
         }
         public void OnPointerEnter(PointerEventData e) { Owner?.ShowTooltip(this); }
         public void OnPointerExit(PointerEventData e) { Owner?.HideTooltip(); }
@@ -79,7 +122,7 @@ namespace HongikIngan
             Owner.Drop(source, this);
         }
         public void OnEndDrag(PointerEventData e) => CancelDrag();
-        void OnDisable() { CancelDrag(); Owner?.HideTooltip(); }
+        void OnDisable() { CancelHop(); CancelDrag(); Owner?.HideTooltip(); }
         public void CancelDrag()
         {
             if (!IsDragging) return;

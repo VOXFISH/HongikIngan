@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using HongikIngan.Audio;
 using UnityEngine;
@@ -9,8 +11,17 @@ namespace HongikIngan
     {
         public GameObject beam;
         public TMP_Text orbDamage, damagePop, chant, actorLabel;
+        public CanvasGroup combatLogGroup;
         [Min(.01f)] public float stepDuration = 1f;
         [Min(.01f)] public float beamDuration = 1f;
+        [Header("Combat text fades")]
+        public bool fadeCombatText = true;
+        [Min(0)] public float fadeInDuration = .12f;
+        [Min(0)] public float fadeOutDuration = .2f;
+        [Header("Student animation")]
+        [Tooltip("Hop height, duration and curve are editable on each BattleStudentSlot or its shared prefab.")]
+        public bool animateStudents = true;
+        readonly Dictionary<StudentState,string> keywordSnapshots = new Dictionary<StudentState,string>();
         public float DisplayedDamage { get; private set; }
         public float DisplayedHp { get; private set; }
         public bool IsBeaming { get; private set; }
@@ -26,6 +37,7 @@ namespace HongikIngan
             DisplayedHp = run.Battle?.BossHp ?? 0;
             maxHp = run.Battle?.MaxBossHp ?? 1;
             Clear(); RenderTotals();
+            SnapshotKeywords(run);
             var sound = SoundManager.EnsureExists();
             if (sound.BackendAvailable) sound.PlayBgm("event:/BGM/Battle");
         }
@@ -41,8 +53,17 @@ namespace HongikIngan
             if (firing) { IsBeaming = true; beam.SetActive(true); spent = true; }
             if (chant != null) { chant.gameObject.SetActive(step.Kind == "chant"); chant.text = step.Message; }
             if (step.Actor != null)
-                formation.ShowCalculation(step.Actor, BattleHud.DisplayText(step.Message) + (step.Damage != fromDamage ?
-                    "\n" + PrototypeCatalog.FormatDamage(fromDamage) + " => " + PrototypeCatalog.FormatDamage(step.Damage) : ""));
+                formation.ShowCalculation(step.Actor, (step.Damage != fromDamage ?
+                    "<size=115%>" + PrototypeCatalog.FormatDamage(fromDamage) + " => " + PrototypeCatalog.FormatDamage(step.Damage) + "</size>\n" : "") + BattleHud.DisplayText(step.Message));
+            var participants = new HashSet<StudentState>();
+            if (step.Actor != null) participants.Add(step.Actor);
+            if (step.Target != null) participants.Add(step.Target);
+            foreach (var student in run.Students)
+                if (!keywordSnapshots.TryGetValue(student, out var previous) || previous != KeywordSignature(student)) participants.Add(student);
+            SnapshotKeywords(run);
+            if (animateStudents)
+                foreach (var slot in formation.slots)
+                    if (slot.HasStudent && participants.Contains(slot.Student)) slot.PlayEffectHop();
             var sound = SoundManager.EnsureExists();
             if (sound.BackendAvailable)
             {
@@ -57,11 +78,42 @@ namespace HongikIngan
                 DisplayedDamage = Interpolate(fromDamage, targetDamage, t);
                 DisplayedHp = Interpolate(fromHp, targetHp, t);
                 RenderTotals();
+                SetTextAlpha(TextAlpha(elapsed, duration));
+                if (!animateStudents) foreach (var slot in formation.slots) slot.CancelHop();
                 if (firing) PlaceBeam();
                 elapsed += Time.deltaTime;
                 yield return null;
             }
             DisplayedDamage = targetDamage; DisplayedHp = targetHp; RenderTotals();
+            SetTextAlpha(fadeCombatText ? 0 : 1);
+        }
+        static string KeywordSignature(StudentState student) => string.Join("|", student.Keywords.Select(k => k.Definition.Id + ":" + k.StackCount + ":" + string.Join(",", k.Values)));
+        void SnapshotKeywords(PrototypeRun run)
+        {
+            keywordSnapshots.Clear();
+            foreach (var student in run.Students) keywordSnapshots[student] = KeywordSignature(student);
+        }
+        float TextAlpha(float elapsed, float duration)
+        {
+            if (!fadeCombatText) return 1;
+            // Preserve a readable hold even when an editor duration exceeds the step.
+            float fadeIn = Mathf.Min(Mathf.Max(0,fadeInDuration),duration*.4f);
+            float fadeOut = Mathf.Min(Mathf.Max(0,fadeOutDuration),duration*.4f);
+            float enter = fadeIn <= 0 ? 1 : Mathf.SmoothStep(0,1,Mathf.Clamp01(elapsed/fadeIn));
+            float leave = fadeOut <= 0 ? 1 : Mathf.SmoothStep(0,1,Mathf.Clamp01((duration-elapsed)/fadeOut));
+            return Mathf.Min(enter,leave);
+        }
+        void SetTextAlpha(float alpha)
+        {
+            if (hud != null) hud.logLabel.alpha = combatLogGroup != null ? 1 : alpha;
+            if (combatLogGroup != null) combatLogGroup.alpha = hud == null || string.IsNullOrEmpty(hud.logLabel.text) ? 0 : alpha;
+            if (chant != null) chant.alpha = alpha;
+            if (formation != null) foreach (var slot in formation.slots) slot.SetCalculationAlpha(alpha);
+        }
+        void LateUpdate()
+        {
+            // HUD binding can clear the log after BeginBattle; keep an empty backing invisible too.
+            if (combatLogGroup != null && hud != null && string.IsNullOrWhiteSpace(hud.logLabel.text)) combatLogGroup.alpha = 0;
         }
         static float Interpolate(float from, float to, float t)
         {
@@ -84,6 +136,8 @@ namespace HongikIngan
         }
         public void Clear()
         {
+            if (formation != null) foreach (var slot in formation.slots) slot.CancelHop();
+            SetTextAlpha(1);
             IsBeaming = false;
             if (beam != null) beam.SetActive(false);
             if (damagePop != null) damagePop.gameObject.SetActive(false);
