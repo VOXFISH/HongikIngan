@@ -15,6 +15,9 @@
 - [교실 시스템 기획서](Classroom%20System%20Design.md): 원본 도표, 학생 관리·리롤·모집·유물·펫·전투 진입.
 - [교실 기능별 결정 사항](Decisions/Classroom/README.md): 7개 기능의 결정·미정·검증 기준.
 
+- [프로토타입 실행 안내](Prototype%20Guide.md): 학교·전투 씬, 조작, 임시 콘텐츠, 검증 방법.
+- [FMOD 설정 안내](Audio%20Setup.md): 지속 SoundManager와 채널별 볼륨·음소거.
+
 ## 팀 공통 문서 관리 규칙
 
 - 루트의 `AGENTS.md`와 이를 참조하는 `CLAUDE.md`는 도구가 공통 규칙을 찾기 위한 진입 파일이므로 루트에 유지합니다.
