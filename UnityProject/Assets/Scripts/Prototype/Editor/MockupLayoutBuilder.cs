@@ -124,7 +124,7 @@ namespace HongikIngan.Editor
             var card=s.detailTitle.transform.parent; card.name="StudentIdCard"; Put(card,27,96,323,510);
             foreach(Transform child in card) if(child.name=="LeftPage"||child.name=="RightPage"||child.name=="Binding"||child.name=="PortraitPlaceholder") child.gameObject.SetActive(false);
             var fill=Box(card,"CardPaper",4,4,315,502,Paper); fill.transform.SetAsFirstSibling();
-            Label(card,"SchoolName",20,20,260,38,"홍익인간 · 학생증",23);
+            Label(card,"SchoolName",20,20,260,38,"홍익인간 - 학생증",23);
             Label(card,"CardCaption",20,63,270,22,"STUDENT ID CARD",14);
             Put(s.detailTitle.transform,20,108,283,58); s.detailTitle.fontSize=22;
             Put(s.detailBody.transform,20,184,283,220); s.detailBody.fontSize=18;
@@ -155,7 +155,7 @@ namespace HongikIngan.Editor
             var d=s.gameObject.AddComponent<SchoolDialogs>(); s.dialogs=d;
             d.closeStudent=Button(card,"Close",275,15,30,30,"×",Paper);
             d.caller=Button(ui,"PetCaller",89,620,143,150,"펫 부르기\n\n학생 영입",Paper); FitLabel(d.caller,23);
-            d.offers=Modal(ui,"PetOfferPopup","새로운 인연 · 펫 부르기");
+            d.offers=Modal(ui,"PetOfferPopup","새로운 인연 - 펫 부르기");
             for(int i=0;i<3;i++)
             {
                 s.petButtons[i].transform.SetParent(d.offers.transform,false); Put(s.petButtons[i].transform,315+i*280,220,250,330);
@@ -168,14 +168,14 @@ namespace HongikIngan.Editor
             d.candidateButtons=new Button[5]; d.candidateLabels=new TMP_Text[5];
             for(int i=0;i<5;i++) { d.candidateButtons[i]=Button(d.candidates.transform,"Candidate"+i,60+i*267,175,252,400,"",Paper); d.candidateLabels[i]=d.candidateButtons[i].GetComponentInChildren<TMP_Text>(); d.candidateLabels[i].fontSize=18; }
             d.candidateStatus=Label(d.candidates.transform,"Status",80,595,1280,45,"",18,Paper);
-            d.replace=Button(d.candidates.transform,"Replace",100,665,330,54,"교체 · 기존 학생 판매",Gold);
+            d.replace=Button(d.candidates.transform,"Replace",100,665,330,54,"교체 - 기존 학생 판매",Gold);
             d.skip=Button(d.candidates.transform,"Skip",975,665,365,54,"영입하지 않음 (환불 없음)",Paper);
             d.replacement=Modal(d.candidates.transform,"ReplacementPanel","계약을 해제할 학생을 선택하세요");
             d.replacementButtons=new Button[7]; d.replacementLabels=new TMP_Text[7];
             for(int i=0;i<7;i++) { d.replacementButtons[i]=Button(d.replacement.transform,"Student"+i,65+i*188,300,175,165,"",Paper); d.replacementLabels[i]=d.replacementButtons[i].GetComponentInChildren<TMP_Text>(); }
             d.closeReplacement=Button(d.replacement.transform,"Close",600,620,240,52,"후보로 돌아가기",Paper);
             d.restart=Modal(ui,"RestartConfirmPopup","새 게임을 시작할까요?");
-            Label(d.restart.transform,"Warning",300,270,840,100,"현재 학생·재화·유물·사진과 진행이 초기화됩니다.",25,Paper);
+            Label(d.restart.transform,"Warning",300,270,840,100,"현재 학생-재화-유물-사진과 진행이 초기화됩니다.",25,Paper);
             d.cancelRestart=Button(d.restart.transform,"Cancel",420,500,260,60,"취소",Paper);
             d.acceptRestart=Button(d.restart.transform,"Accept",750,500,310,60,"새 게임 시작",Gold);
             d.audioPanel=Audio(s,ui);

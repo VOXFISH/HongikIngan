@@ -24,6 +24,24 @@ namespace HongikIngan
         PrototypeRun observedRun;
         public bool CanInteract => observedRun != null && !observedRun.PendingPet && !dialogs.IsOpen && !(SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy);
 
+        void Awake() => EnsureDragLayer();
+
+        // This scene-level container must stay outside the desk prefab hierarchy.
+        public void EnsureDragLayer()
+        {
+            if (dragLayer != null || schoolCanvas == null) return;
+            var layout = schoolCanvas.transform.Find("Layout") ?? schoolCanvas.transform;
+            dragLayer = layout.Find("DragLayer") as RectTransform;
+            if (dragLayer != null) return;
+            dragLayer = new GameObject("DragLayer", typeof(RectTransform)).GetComponent<RectTransform>();
+            dragLayer.gameObject.layer = layout.gameObject.layer;
+            dragLayer.SetParent(layout, false);
+            dragLayer.anchorMin = Vector2.zero;
+            dragLayer.anchorMax = Vector2.one;
+            dragLayer.offsetMin = dragLayer.offsetMax = Vector2.zero;
+            dragLayer.SetAsLastSibling();
+        }
+
         void Start()
         {
             observedRun = PrototypeSession.Ensure().Run;
@@ -83,7 +101,7 @@ namespace HongikIngan
             if (!free) foreach (var slot in slots) slot.CancelDrag();
             energyLabel.text = $"미라클 에너지\n{observedRun.Money}";
             rosterLabel.text = $"전대 인원\n{observedRun.Students.Count} / {observedRun.Capacity}";
-            stageLabel.text = $"STAGE {observedRun.Stage:00}  ·  방과 전";
+            stageLabel.text = $"STAGE {observedRun.Stage:00}  -  방과 전";
             photosLabel.text = $"폴라로이드 {observedRun.PhotoCount}\n분위기 {observedRun.Atmosphere}";
             ownedRelicsLabel.text = observedRun.Relics.Count == 0 ? "아직 획득한 유물이 없어요" : string.Join("   /   ", observedRun.Relics.Select(r => r.Name));
             int visible = Mathf.Max(6, observedRun.Capacity);
@@ -99,7 +117,7 @@ namespace HongikIngan
             for (int i = 0; i < relicButtons.Length; i++)
             {
                 var relic = i < observedRun.RelicOffers.Count ? observedRun.RelicOffers[i] : null;
-                relicLabels[i].text = relic == null ? (observedRun.RelicPurchasedThisBattle ? "구매 완료 · 다음 전투 후 구매 가능" : "남은 유물 없음") :
+                relicLabels[i].text = relic == null ? (observedRun.RelicPurchasedThisBattle ? "구매 완료 - 다음 전투 후 구매 가능" : "남은 유물 없음") :
                     $"{relic.Name}\n{relic.Description}\n{observedRun.Settings.relicPrice} 에너지";
                 relicButtons[i].interactable = relic != null && !observedRun.RelicPurchasedThisBattle;
             }
@@ -125,20 +143,20 @@ namespace HongikIngan
             if (owned)
             {
                 var s = observedRun.Students[selected];
-                detailTitle.text = $"{s.Definition.Name}   /   {s.Definition.Grade}학년 · {s.Definition.RoleLabel}";
+                detailTitle.text = $"{s.Definition.Name}   /   {s.Definition.Grade}학년 - {s.Definition.RoleLabel}";
                 string values = s.Definition.Action == ActionKind.AddThenPercentDamage ?
                     $"+{s.SkillValue:0.##} 후 +{s.Definition.PercentAtUpgrade(s.UpgradeCount):0.##}%" : $"{s.SkillValue:0.##}";
                 switch (s.Definition.Action)
                 {
                     case ActionKind.Paparazzi: values = s.UpgradeCount > 0 ? "+500 후 +10%p" : "공격마다 +500"; break;
-                    case ActionKind.Spotlight: values = $"+{s.SkillValue:0.##}% · 양옆 조명"; break;
+                    case ActionKind.Spotlight: values = $"+{s.SkillValue:0.##}% - 양옆 조명"; break;
                     case ActionKind.LightingDamage: values = $"+500 후 조명마다 +{s.SkillValue:0.##}"; break;
-                    case ActionKind.GrantLove: values = $"사랑 {(int)s.SkillValue}스택 · 스택당 ×1.1"; break;
-                    case ActionKind.CloneNext: values = (s.UpgradeCount > 0 ? "전투 종료까지 분신" : "턴 종료까지 분신") + $" · 다음 정밀화 +{3000f * (s.PrecisionCopies + 1):0}"; break;
+                    case ActionKind.GrantLove: values = $"사랑 {(int)s.SkillValue}스택 - 스택당 ×1.1"; break;
+                    case ActionKind.CloneNext: values = (s.UpgradeCount > 0 ? "전투 종료까지 분신" : "턴 종료까지 분신") + $" - 다음 정밀화 +{3000f * (s.PrecisionCopies + 1):0}"; break;
                     case ActionKind.BestSubject: values = s.UpgradeCount > 0 ? "세 조건 인원수의 곱" : "세 조건 인원수의 합"; break;
                 }
-                string traits = s.Definition.Club + " · " + s.Definition.Personality + (string.IsNullOrEmpty(s.Definition.SpecialSynergy) ? "" : " · " + s.Definition.SpecialSynergy);
-                detailBody.text = $"{traits}\n{s.Definition.SkillDescription}\n현재 효과 {values}  ·  강화 {s.UpgradeCount}회";
+                string traits = s.Definition.Club + " - " + s.Definition.Personality + (string.IsNullOrEmpty(s.Definition.SpecialSynergy) ? "" : " - " + s.Definition.SpecialSynergy);
+                detailBody.text = $"{traits}\n{s.Definition.SkillDescription}\n현재 효과 {values}  -  강화 {s.UpgradeCount}회";
                 SetButtonText(learnButton, $"보충 학습\n{observedRun.Settings.UpgradePrice(s.Definition.Grade)} 에너지");
                 SetButtonText(sellButton, $"계약 해제\n+{BattleSynergies.Income(observedRun, observedRun.Settings.SalePrice(s.Definition.Grade))}");
             }

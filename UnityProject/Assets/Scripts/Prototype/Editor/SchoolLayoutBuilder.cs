@@ -67,7 +67,7 @@ namespace HongikIngan.Editor
             screen.rosterLabel = Text(roster, "Value", 8, 4, 144, 56, "전대 인원\n1 / 3", 18, Navy, TextAlignmentOptions.Center);
             var photos = Frame(ui, "Photos", 436, 18, 194, 64, Pink, Cream, 3);
             screen.photosLabel = Text(photos, "Value", 8, 4, 178, 56, "폴라로이드 0", 18, Ink, TextAlignmentOptions.Center);
-            screen.stageLabel = Text(ui, "Stage", 648, 25, 300, 45, "STAGE 01 · 방과 전", 24, Ink, TextAlignmentOptions.Left);
+            screen.stageLabel = Text(ui, "Stage", 648, 25, 300, 45, "STAGE 01 - 방과 전", 24, Ink, TextAlignmentOptions.Left);
             screen.restartButton = Button(ui, "NewGame", 1128, 24, 126, 40, "새 게임", Hex("FFF6ED"), Ink);
             screen.audioButton = Button(ui, "Sound", 1266, 24, 146, 40, "사운드 설정", Hex("FFF6ED"), Ink);
 
@@ -84,7 +84,7 @@ namespace HongikIngan.Editor
             screen.ownedRelicsLabel = Text(board, "OwnedRelics", 25, 149, 650, 31, "아직 획득한 유물이 없어요", 15, Cream, TextAlignmentOptions.Center);
 
             var pets = Frame(ui, "Pets", 958, 100, 454, 194, Pink, Hex("FFF5F8"), 3);
-            Text(pets, "Caption", 8, 5, 438, 28, "새로운 인연 · 펫 부르기", 20, Pink, TextAlignmentOptions.Center);
+            Text(pets, "Caption", 8, 5, 438, 28, "새로운 인연 - 펫 부르기", 20, Pink, TextAlignmentOptions.Center);
             screen.petButtons = new Button[3]; screen.petLabels = new TMP_Text[3];
             for (int i = 0; i < 3; i++)
             {
@@ -112,7 +112,7 @@ namespace HongikIngan.Editor
                 slot.selectionFrame = Image(slot.studentVisual, "Selected", 12, 31, 176, 176, Pink);
                 slot.nameLabel = Text(slot.studentVisual, "Name", 5, 0, 190, 29, "학생 이름", 20, Ink, TextAlignmentOptions.Center);
                 Blank(slot.studentVisual, "StudentPlaceholder", 16, 35, 168);
-                slot.roleLabel = Text(slot.studentVisual, "Role", 16, 171, 168, 30, "1학년 · Dealer", 16, Ink, TextAlignmentOptions.Center);
+                slot.roleLabel = Text(slot.studentVisual, "Role", 16, 171, 168, 30, "1학년 - Dealer", 16, Ink, TextAlignmentOptions.Center);
                 slot.books = new GameObject[3]; slot.bookLabels = new TMP_Text[3];
                 for (int b = 0; b < 3; b++)
                 {

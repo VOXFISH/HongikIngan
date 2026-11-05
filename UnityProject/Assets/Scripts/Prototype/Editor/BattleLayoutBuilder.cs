@@ -42,10 +42,10 @@ namespace HongikIngan.Editor
             screen.hud = hud;
             Image(ui, "Background", 0, 0, 1440, 900, new Color(.95f, .95f, .99f));
             var header = Image(ui, "Header", 0, 0, 1440, 100, new Color(.89f, .88f, .98f)).transform;
-            Text(header, "Title", 30, 14, 1000, 45, "방과 후 · 합동 필살기", 30);
-            hud.summaryLabel = Text(header, "Summary", 32, 63, 1150, 30, "STAGE 1 · 미라클 에너지 · 폴라로이드", 18);
+            Text(header, "Title", 30, 14, 1000, 45, "방과 후 - 합동 필살기", 30);
+            hud.summaryLabel = Text(header, "Summary", 32, 63, 1150, 30, "STAGE 1 - 미라클 에너지 - 폴라로이드", 18);
             var audioButton = Button(header, "SoundButton", 1255, 25, 155, 46, "사운드 설정");
-            hud.turnLabel = Text(ui, "Turn", 35, 120, 950, 50, "TURN 0/3 · 조합을 바꿔 보스를 물리치세요", 24);
+            hud.turnLabel = Text(ui, "Turn", 35, 120, 950, 50, "TURN 0/3 - 조합을 바꿔 보스를 물리치세요", 24);
             hud.damageLabel = Text(ui, "Damage", 35, 180, 975, 75, "합동 데미지  0", 32);
             var boss = Image(ui, "BossPanel", 1040, 170, 350, 230, new Color(.27f, .24f, .42f)).transform;
             Text(boss, "BossName", 20, 25, 310, 70, "괴수", 32, Color.white, TextAlignmentOptions.Center);
@@ -69,8 +69,8 @@ namespace HongikIngan.Editor
                 slot.portrait = Image(slot.studentVisual, "Portrait", 12, 12, 35, 35, new Color(.9f, .8f, .95f));
                 Text(slot.portrait.transform, "Symbol", 0, 0, 35, 35, "✦", 20, Ink, TextAlignmentOptions.Center);
                 slot.nameLabel = Text(slot.studentVisual, "Name", 55, 12, 83, 35, "학생", 17);
-                slot.roleLabel = Text(slot.studentVisual, "GradeAndRole", 12, 55, 119, 36, "1학년 · Dealer", 15);
-                slot.synergyLabel = Text(slot.studentVisual, "Synergies", 12, 94, 119, 48, "부활동 · 성격", 15);
+                slot.roleLabel = Text(slot.studentVisual, "GradeAndRole", 12, 55, 119, 36, "1학년 - Dealer", 15);
+                slot.synergyLabel = Text(slot.studentVisual, "Synergies", 12, 94, 119, 48, "부활동 - 성격", 15);
                 slot.skillLabel = Text(slot.studentVisual, "Skill", 12, 146, 119, 42, "스킬 100", 16);
                 formation.slots[i] = slot;
             }

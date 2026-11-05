@@ -53,3 +53,19 @@ Rect Tool 또는 Inspector의 `RectTransform`에서 위치·크기·앵커를 �
 기본 폰트는 기존 `Assets/Resources/GmarketSansTTFMedium SDF.asset`이며 TMP Settings에도 지정했다. Main·School·씬 전환에서 실행 시 OS 폰트로 덮어쓰던 처리를 제거했으므로 Inspector에서 지정한 TMP 폰트가 유지된다. 레이아웃 생성 메뉴도 TMP 텍스트를 생성한다. `Tools/Bulk Replace TMP Fonts`는 열린 씬의 TMP Font Asset을 교체하며, 변경 후 씬을 저장해야 한다.
 
 파일 비교로 텍스트와 참조 식별자, 텍스트 이외 씬 블록의 보존을 확인했다. 사용자 요청에 따라 Unity 컴파일·플레이·시각 검사는 실행하지 않았다. 인수 확인 시 세 씬의 한글, 긴 문구 잘림, 버튼 라벨, 팝업, 턴·씬 전환 표시를 확인한다.
+
+## School 배경 이미지 (2026-11-06)
+
+School 씬의 교실 배경, 책상, 의자, 문, 사물함과 별 장식은 `Assets/sprite/background`에 있는 기존 스프라이트를 직접 참조한다. 배경 그림에 포함된 창문·시계·달력·책장 및 기존 벽·바닥 도형은 중복되지 않도록 비활성화했다. 책상 이미지는 학생 앞, 시너지 책 뒤에 표시되며 드래그용 슬롯과 학생 참조는 유지한다. 학생·펫·기능 버튼은 대응 이미지가 없어 기존 표시를 유지한다. 이미지 생성이나 실행 검증은 수행하지 않았다.
+
+후속 정리: 배경 교체로 비활성화한 중복 장식과 이전 UI 잔여물을 씬에서 제거했다. 개별 경로와 이유는 [School 씬 삭제 목록](School%20Scene%20Cleanup.md)에 기록했다. 드래그 레이어, 배치 적용 표식, 팝업과 추가 학생 슬롯은 유지한다.
+
+## School 공통 책상 프리팹 (2026-11-06)
+
+`Assets/UI/Prefabs/SchoolDeskSlot.prefab`은 School의 DeskSlot0 구성을 기준으로 만든 공통 프리팹이다. `SchoolCanvas/Layout/StudentDesks`의 DeskSlot0~8은 모두 이 프리팹의 인스턴스다. 공통 학생 표시·의자·책상·시너지 책의 내부 위치와 크기는 Prefab Mode에서 편집한다. 각 인스턴스의 이름, 배치 위치·회전·크기 배율, 활성 상태, 공격 순서 문구는 씬별 설정으로 유지한다. SchoolScreen.slots 및 기존 외부 참조는 새 인스턴스로 연결했다.
+
+최초 변환 메뉴는 `HongikIngan > Use DeskSlot0 prefab in School`이다. 이미 전체 슬롯이 이 프리팹을 사용하면 재생성하지 않는다. 기존 프리팹이 있는 부분 변환 상태에서는 사용자 편집을 보호하기 위해 중단한다. 생성 도구는 `SchoolDeskPrefabBuilder.cs`이며 Unity가 프리팹·폴더·스크립트의 .meta를 생성했다. Unity Editor에서 9개 인스턴스와 씬 저장을 완료했으며 플레이·드래그 테스트는 사용자가 수행한다.
+
+School의 `DragLayer`는 책상 프리팹 밖의 `SchoolCanvas/Layout` 아래에 유지해야 한다. `SchoolScreen.Awake`는 참조가 비어 있으면 기존 레이어를 연결하고, 레이어도 없으면 전체 Layout 크기의 RectTransform을 생성한다. 편집 상태에서 복구·저장하려면 `HongikIngan > Restore School drag layer` 메뉴를 사용한다. 이번 수정에서 씬의 누락된 레이어와 참조를 저장했으며 플레이 테스트는 수행하지 않았다.
+
+텍스트 구분자: 폰트에 없는 U+00B7 대신 모든 씬, 공통 책상 프리팹, 런타임/Editor 문구 생성 코드에서 ASCII 하이픈(-)을 사용한다. 2026-11-06에 로컬 스크립트 UnityProject/Logs/ReplaceMiddleDot.ps1로 124곳을 치환했으며 원본은 UnityProject/Logs/MiddleDotBackup-20261106-043514-997/에 보관했다. Logs의 스크립트와 백업은 버전 관리 대상이 아니다. 씬 5개 중 SampleScene과 URP2DSceneTemplate에는 해당 문자가 없어 변경하지 않았다.

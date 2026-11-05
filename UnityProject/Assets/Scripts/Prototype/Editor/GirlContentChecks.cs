@@ -143,9 +143,9 @@ namespace HongikIngan
             var rebels = Run(Dummy("r1", 100, personality: "반항아"), Dummy("r2", 100, personality: "반항아")); Resolve(rebels);
             Near(rebels.Battle.Damage, 280, "rebel double actions and final point-seven multiplier");
             var mood = Run(Dummy("first", 10), Dummy("last", 10)); Mood(mood, 300); Resolve(mood);
-            Check(mood.Battle.Log.Count(s => s.StartsWith("last ·")) == 2, "mood extra action limited once for target each turn");
+            Check(mood.Battle.Log.Count(s => s.StartsWith("last -")) == 2, "mood extra action limited once for target each turn");
             float saved = mood.Atmosphere; Resolve(mood);
-            Check(mood.Atmosphere == saved && mood.Battle.Log.Count(s => s.StartsWith("last ·")) == 4, "mood persists and next turn renews replay");
+            Check(mood.Atmosphere == saved && mood.Battle.Log.Count(s => s.StartsWith("last -")) == 4, "mood persists and next turn renews replay");
             var movingLast = Run(Dummy("first"), Dummy("last")); Mood(movingLast, 300);
             Check(BattleSynergies.TakeMoodReplay(movingLast, movingLast.Students[1]), "first last-slot replay allowed");
             movingLast.Students.Reverse();

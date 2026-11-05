@@ -45,8 +45,8 @@ namespace HongikIngan.Editor
             Panel(layout, "Card", 370, 120, 700, 660, Color.white);
             Panel(layout, "Accent", 370, 120, 700, 12, new Color(.75f, .38f, .62f));
             Label(layout, "Title", 420, 195, 600, 80, "홍익인간", 54, new Color(.22f, .19f, .35f));
-            Label(layout, "Subtitle", 420, 285, 600, 55, "마법소녀전대 · 새로운 하루", 24, new Color(.5f, .38f, .62f));
-            Label(layout, "StartingRoster", 420, 365, 600, 65, "100 에너지와 1·2학년 소녀 3명으로\n학교에서 준비를 시작합니다", 21, new Color(.28f, .29f, .39f));
+            Label(layout, "Subtitle", 420, 285, 600, 55, "마법소녀전대 - 새로운 하루", 24, new Color(.5f, .38f, .62f));
+            Label(layout, "StartingRoster", 420, 365, 600, 65, "100 에너지와 1-2학년 소녀 3명으로\n학교에서 준비를 시작합니다", 21, new Color(.28f, .29f, .39f));
             screen.startButton = Button(layout, "StartBattleButton", 500, 475, "전투 시작", new Color(.39f, .30f, .63f), Color.white);
             screen.exitButton = Button(layout, "EndBattleButton", 500, 575, "전투 종료", new Color(.93f, .90f, .95f), new Color(.25f, .22f, .34f));
             Label(layout, "Flow", 420, 690, 600, 40, "학교에서 전대를 준비한 뒤 전투로 출발하세요", 18, new Color(.45f, .43f, .51f));

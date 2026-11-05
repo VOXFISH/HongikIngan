@@ -268,3 +268,22 @@ battlesystem은 gamesystem을 뜻함"
 
 
 Find the problem and fix it. Do not evaulate if you fixed it, I will do."
+"2026-11-06 04:06:59+09:00","qwerty","In the scene ""School"" replace assets using the images in Assets/sprite/background
+
+Do not use image generating features
+Do quickly replace everything"
+"2026-11-06 04:14:03+09:00","qwerty","Remove objects that doesn't have any purpose or functions. In the scene ""School""
+
+Create a list of removed objects and the reason. (i.e. no component or child object attached)"
+"2026-11-06 04:28:15+09:00","qwerty","In the scene ""School"", replace all StudentDesk/DeskslotN with Deskslot0, but by using a prefab layout.
+
+I'll do the testing again."
+"2026-11-06 04:32:03+09:00","qwerty","UnassignedReferenceException: The variable dragLayer of SchoolScreen has not been assigned."
+"2026-11-06 04:35:58+09:00","qwerty","The character with Unicode Value \u00B7 was not found in the font asset.
+
+Requirements : 
+
+Replace every \u00B7 character with another character. DO NOT attempt to make it different everytime. Run a script, make sure the files doesn't get corrupt and good luck. This operation should be carried out on every single scene."
+
+"2026-11-06 04:45:10+09:00","VOXFISH","현재 진행중인 내용을 test 브랜치에 머지 커밋해 줘."
+"2026-11-06 04:45:10+09:00","VOXFISH","main 버그 수정과 로컬 기획 문서 모두 반영"

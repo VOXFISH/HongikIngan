@@ -124,7 +124,7 @@ namespace HongikIngan
                 BattleSynergies.BeginTurn(run);
                 battle.Damage = 0f;
                 run.NotifyDamage();
-                yield return Step(battle, "turn", "턴 " + battle.Turn + " · 합동 데미지 0으로 초기화");
+                yield return Step(battle, "turn", "턴 " + battle.Turn + " - 합동 데미지 0으로 초기화");
 
                 // Relics are processed in acquisition order before character slot order.
                 foreach (var relic in run.Relics)
@@ -163,7 +163,7 @@ namespace HongikIngan
                         {
                             float multiplier = KeywordRules.Apply(battle.BossKeywords, keyword);
                             battle.Damage *= multiplier; run.NotifyDamage();
-                            yield return Step(battle, "damage", "검은 클로버 1스택 소모 · 데미지 ×" + multiplier);
+                            yield return Step(battle, "damage", "검은 클로버 1스택 소모 - 데미지 ×" + multiplier);
                         }
                         continue;
                     }
@@ -181,7 +181,7 @@ namespace HongikIngan
                 foreach (var student in run.Students) KeywordRules.EndTurn(student.Keywords);
                 KeywordRules.EndTurn(battle.BossKeywords);
                 run.RemoveExpiredClones(battle.Won || battle.Lost);
-                yield return Step(battle, "result", battle.Won ? "보스 처치! 교실로 돌아가세요." : battle.Lost ? "3턴 종료 · 게임 오버" : "보스 생존 · 배치를 바꾸고 다음 턴에 도전하세요.");
+                yield return Step(battle, "result", battle.Won ? "보스 처치! 교실로 돌아가세요." : battle.Lost ? "3턴 종료 - 게임 오버" : "보스 생존 - 배치를 바꾸고 다음 턴에 도전하세요.");
             }
             finally { battle.IsResolving = false; }
         }

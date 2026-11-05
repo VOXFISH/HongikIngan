@@ -56,7 +56,7 @@ namespace HongikIngan
                 candidateButtons[i].gameObject.SetActive(present);
                 if (!present) continue;
                 var d = run.PendingCandidates[i];
-                candidateLabels[i].text = $"{d.Name}\n{d.Grade}학년 · {d.RoleLabel}\n\n{d.Club} · {d.Personality}\n\n{d.SkillName}\n{d.SkillDescription}\n\n영입하기";
+                candidateLabels[i].text = $"{d.Name}\n{d.Grade}학년 - {d.RoleLabel}\n\n{d.Club} - {d.Personality}\n\n{d.SkillName}\n{d.SkillDescription}\n\n영입하기";
                 candidateButtons[i].interactable = run.PendingPet && run.Students.Count < run.Capacity;
             }
             for (int i = 0; i < replacementButtons.Length; i++)
