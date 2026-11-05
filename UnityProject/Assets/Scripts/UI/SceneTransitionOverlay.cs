@@ -23,17 +23,23 @@ namespace HongikIngan
             Current = this; DontDestroyOnLoad(gameObject);
             curtain.alpha = 0; curtain.blocksRaycasts = false;
         }
-        public void Go(string message, Action changeScene)
+        public void Go(string message, Action changeScene, IEnumerator beforeFade = null)
         {
             if (IsBusy) return;
-            StartCoroutine(Transition(message, changeScene));
+            StartCoroutine(Transition(message, changeScene, beforeFade));
         }
-        IEnumerator Transition(string message, Action changeScene)
+        IEnumerator Transition(string message, Action changeScene, IEnumerator beforeFade)
         {
             IsBusy = true; curtain.blocksRaycasts = true; title.text = message;
             try
             {
-                yield return Fade(0, 1);
+                if (beforeFade != null)
+                {
+                    // Keep the students visible while the battle-start overlay begins.
+                    curtain.alpha = .12f;
+                    yield return beforeFade;
+                }
+                yield return Fade(curtain.alpha, 1);
                 changeScene();
                 yield return null;
                 yield return new WaitForSecondsRealtime(holdDuration);
