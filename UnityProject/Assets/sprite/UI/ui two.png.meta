@@ -1,0 +1,829 @@
+fileFormatVersion: 2
+guid: b077d576228de9c4e9db37222070acfa
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5709705978627081958
+    second: ui two_0
+  - first:
+      213: -4118066351737785549
+    second: ui two_1
+  - first:
+      213: 3943640485663660531
+    second: ui two_2
+  - first:
+      213: 388010382773574062
+    second: ui two_3
+  - first:
+      213: -4013529705607642270
+    second: ui two_4
+  - first:
+      213: -9138287860650900298
+    second: ui two_5
+  - first:
+      213: -3590197769285763804
+    second: ui two_6
+  - first:
+      213: -9154180786264685162
+    second: ui two_7
+  - first:
+      213: 1356734164721296536
+    second: ui two_8
+  - first:
+      213: -2276695433387877603
+    second: ui two_9
+  - first:
+      213: 5403088415200401909
+    second: ui two_10
+  - first:
+      213: -7685122077239553171
+    second: ui two_11
+  - first:
+      213: -4797780726461462384
+    second: ui two_12
+  - first:
+      213: -1786008958358730860
+    second: ui two_13
+  - first:
+      213: -6462682934630752402
+    second: ui two_14
+  - first:
+      213: -5402890336461104114
+    second: ui two_15
+  - first:
+      213: -8105318897329131853
+    second: ui two_16
+  - first:
+      213: -7935519424706370593
+    second: ui two_17
+  - first:
+      213: 2940928004784804041
+    second: ui two_18
+  - first:
+      213: 7225244976947391119
+    second: ui two_19
+  - first:
+      213: 2362347190830069863
+    second: ui two_20
+  - first:
+      213: -4427317081658902097
+    second: ui two_21
+  - first:
+      213: 389988073032517992
+    second: ui two_22
+  - first:
+      213: 5724972390948289331
+    second: ui two_23
+  - first:
+      213: -4376083052130194003
+    second: ui two_24
+  - first:
+      213: 998186511345736135
+    second: ui two_25
+  - first:
+      213: -4494665706220014376
+    second: ui two_26
+  - first:
+      213: 4239564318577818311
+    second: ui two_27
+  - first:
+      213: 4106185932533013617
+    second: ui two_28
+  - first:
+      213: -5433472374273148136
+    second: ui two_29
+  - first:
+      213: 4825587505474488732
+    second: ui two_30
+  - first:
+      213: -1791298907512166083
+    second: ui two_31
+  - first:
+      213: -5103876893191984350
+    second: ui two_32
+  - first:
+      213: 5486517210306732088
+    second: ui two_33
+  - first:
+      213: -5796964335407929512
+    second: ui two_34
+  - first:
+      213: 3683322772675239650
+    second: ui two_35
+  - first:
+      213: 3775935750037807092
+    second: ui two_36
+  - first:
+      213: 8858394742225845091
+    second: ui two_37
+  - first:
+      213: 3308378147694023102
+    second: ui two_38
+  - first:
+      213: 5386242390483625156
+    second: ui two_39
+  - first:
+      213: 7395105797957728413
+    second: ui two_40
+  - first:
+      213: 8098349815994514365
+    second: ui two_41
+  - first:
+      213: -4548917521210385953
+    second: ui two_42
+  - first:
+      213: 5684649934273374288
+    second: ui two_43
+  - first:
+      213: 5490259460412896080
+    second: ui two_44
+  - first:
+      213: 3826003626160194084
+    second: ui two_45
+  - first:
+      213: 2266310124268176932
+    second: ui two_46
+  - first:
+      213: -3801990249194935894
+    second: ui two_47
+  - first:
+      213: 8152833225284251353
+    second: ui two_48
+  - first:
+      213: 4417157043670917873
+    second: ui two_49
+  - first:
+      213: 2188862631883790922
+    second: ui two_50
+  - first:
+      213: -4191169981237442394
+    second: ui two_51
+  - first:
+      213: 1337328405930565044
+    second: ui two_52
+  - first:
+      213: 2404204461077929141
+    second: ui two_53
+  - first:
+      213: -3651181894431098354
+    second: ui two_54
+  - first:
+      213: -2533650173576155976
+    second: ui two_55
+  - first:
+      213: 9110596658594695268
+    second: ui two_56
+  - first:
+      213: 1678817420557990015
+    second: ui two_57
+  - first:
+      213: -2977173854194253309
+    second: ui two_58
+  - first:
+      213: -8594195207231255246
+    second: ui two_59
+  - first:
+      213: -6949083546120269788
+    second: ui two_60
+  - first:
+      213: -2655973168641749684
+    second: ui two_61
+  - first:
+      213: -7597071260853085478
+    second: ui two_62
+  - first:
+      213: -1070930238389749853
+    second: ui two_63
+  - first:
+      213: -3926882027137794450
+    second: ui two_64
+  - first:
+      213: -5668129807786373614
+    second: ui two_65
+  - first:
+      213: 2955420347480185696
+    second: ui two_66
+  - first:
+      213: 7274941188632317497
+    second: ui two_67
+  - first:
+      213: -3963879804181547214
+    second: ui two_68
+  - first:
+      213: -4908155259266691514
+    second: ui two_69
+  - first:
+      213: 4121377061825716683
+    second: ui two_70
+  - first:
+      213: 8398703185703701545
+    second: ui two_71
+  - first:
+      213: 6245908882451277650
+    second: ui two_72
+  - first:
+      213: -28215302859773236
+    second: ui two_73
+  - first:
+      213: 932617023792465854
+    second: ui two_74
+  - first:
+      213: 3860992451968126869
+    second: ui two_75
+  - first:
+      213: -3351344979797409991
+    second: ui two_76
+  - first:
+      213: -1687128825664159990
+    second: ui two_77
+  - first:
+      213: 3714462993149174045
+    second: ui two_78
+  - first:
+      213: -6653098444749699710
+    second: ui two_79
+  - first:
+      213: -5839780818087146477
+    second: ui two_80
+  - first:
+      213: -2088448997695771796
+    second: ui two_81
+  - first:
+      213: 3733251249200796185
+    second: ui two_82
+  - first:
+      213: -4986135717211410252
+    second: ui two_83
+  - first:
+      213: 4463005842459311688
+    second: ui two_84
+  - first:
+      213: 4045279631247962380
+    second: ui two_85
+  - first:
+      213: -1890745053003636933
+    second: ui two_86
+  - first:
+      213: 3404262106493603348
+    second: ui two_87
+  - first:
+      213: -5041035217615874482
+    second: ui two_88
+  - first:
+      213: -9067349645910452227
+    second: ui two_89
+  - first:
+      213: 2349048905239230411
+    second: ui two_90
+  - first:
+      213: 205567419034555966
+    second: ui two_91
+  - first:
+      213: 1944563323319191416
+    second: ui two_92
+  - first:
+      213: -3205131123570278518
+    second: ui two_93
+  - first:
+      213: 6306009718898680557
+    second: ui two_94
+  - first:
+      213: 2756118494791621101
+    second: ui two_95
+  - first:
+      213: -7310302430520478168
+    second: ui two_96
+  - first:
+      213: -4908643854402549087
+    second: ui two_97
+  - first:
+      213: -1181381773716512548
+    second: ui two_98
+  - first:
+      213: 7346931207956687031
+    second: ui two_99
+  - first:
+      213: -353615435004973755
+    second: ui two_100
+  - first:
+      213: 5754241854874119604
+    second: ui two_101
+  - first:
+      213: -1101489166526927484
+    second: ui two_102
+  - first:
+      213: -4873572014109612162
+    second: ui two_103
+  - first:
+      213: -1280885468952594241
+    second: ui two_104
+  - first:
+      213: 5016556952295522512
+    second: ui two_105
+  - first:
+      213: -6835082144059575056
+    second: ui two_106
+  - first:
+      213: -7672198985230032484
+    second: ui two_107
+  - first:
+      213: -3201415509945797391
+    second: ui two_108
+  - first:
+      213: 5218531286224842196
+    second: ui two_109
+  - first:
+      213: -2644978567901385783
+    second: ui two_110
+  - first:
+      213: 1342235398468308035
+    second: ui two_111
+  - first:
+      213: 5976991776672548203
+    second: ui two_112
+  - first:
+      213: 6289368979749912253
+    second: ui two_113
+  - first:
+      213: -7801758033731877998
+    second: ui two_114
+  - first:
+      213: -7591782920095557159
+    second: ui two_115
+  - first:
+      213: -7366913174782399401
+    second: ui two_116
+  - first:
+      213: 7750399027354896170
+    second: ui two_117
+  - first:
+      213: 5377121100953735630
+    second: ui two_118
+  - first:
+      213: 3924766936955003850
+    second: ui two_119
+  - first:
+      213: -5468422270594247694
+    second: ui two_120
+  - first:
+      213: -987671110812066856
+    second: ui two_121
+  - first:
+      213: -4384521535241071750
+    second: ui two_122
+  - first:
+      213: -8036572790314666532
+    second: ui two_123
+  - first:
+      213: -7268863548185459719
+    second: ui two_124
+  - first:
+      213: -3439525001274888572
+    second: ui two_125
+  - first:
+      213: -4718887901298279256
+    second: ui two_126
+  - first:
+      213: 758025401509463506
+    second: ui two_127
+  - first:
+      213: -8176411595336535786
+    second: ui two_128
+  - first:
+      213: 6111891275715362029
+    second: ui two_129
+  - first:
+      213: -1514700226757491322
+    second: ui two_130
+  - first:
+      213: -5118783900742629751
+    second: ui two_131
+  - first:
+      213: -1576125781402103115
+    second: ui two_132
+  - first:
+      213: -1637802043110431897
+    second: ui two_133
+  - first:
+      213: 8846605835642452888
+    second: ui two_134
+  - first:
+      213: -4904998869444299496
+    second: ui two_135
+  - first:
+      213: 7949906958282376231
+    second: ui two_136
+  - first:
+      213: -3249365547401553213
+    second: ui two_137
+  - first:
+      213: 6103815766416691330
+    second: ui two_138
+  - first:
+      213: 7167731700728860136
+    second: ui two_139
+  - first:
+      213: 5949783109686876206
+    second: ui two_140
+  - first:
+      213: -8700236135168786979
+    second: ui two_141
+  - first:
+      213: -4109329913596759787
+    second: ui two_142
+  - first:
+      213: -5808034837517204251
+    second: ui two_143
+  - first:
+      213: -1550407534437554207
+    second: ui two_144
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: replay
+      rect:
+        serializedVersion: 2
+        x: 1465
+        y: 1167
+        width: 192
+        height: 196
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc7fdc4988f799020800000000000000
+      internalID: 2349048905239230411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sound
+      rect:
+        serializedVersion: 2
+        x: 1722
+        y: 1185
+        width: 223
+        height: 166
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e36d2fc7a725ad200800000000000000
+      internalID: 205567419034555966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: table_add
+      rect:
+        serializedVersion: 2
+        x: 1991
+        y: 1160
+        width: 212
+        height: 203
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87781b13a0a7cfa10800000000000000
+      internalID: 1944563323319191416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui two_122
+      rect:
+        serializedVersion: 2
+        x: 1439
+        y: 831
+        width: 158
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a73d7e5d4ec0723c0800000000000000
+      internalID: -4384521535241071750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui two_123
+      rect:
+        serializedVersion: 2
+        x: 1656
+        y: 831
+        width: 153
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd579b570ab587090800000000000000
+      internalID: -8036572790314666532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: battle_start
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 115
+        width: 949
+        height: 490
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e7a2c4df88db7ae0800000000000000
+      internalID: -1550407534437554207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 8d83582e860a3c641b29e0ca77d77ea8
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      battle_start: -1550407534437554207
+      replay: 2349048905239230411
+      sound: 205567419034555966
+      table_add: 1944563323319191416
+      ui two_0: 5709705978627081958
+      ui two_1: -4118066351737785549
+      ui two_10: 5403088415200401909
+      ui two_100: -353615435004973755
+      ui two_101: 5754241854874119604
+      ui two_102: -1101489166526927484
+      ui two_103: -4873572014109612162
+      ui two_104: -1280885468952594241
+      ui two_105: 5016556952295522512
+      ui two_106: -6835082144059575056
+      ui two_107: -7672198985230032484
+      ui two_108: -3201415509945797391
+      ui two_109: 5218531286224842196
+      ui two_11: -7685122077239553171
+      ui two_110: -2644978567901385783
+      ui two_111: 1342235398468308035
+      ui two_112: 5976991776672548203
+      ui two_113: 6289368979749912253
+      ui two_114: -7801758033731877998
+      ui two_115: -7591782920095557159
+      ui two_116: -7366913174782399401
+      ui two_117: 7750399027354896170
+      ui two_118: 5377121100953735630
+      ui two_119: 3924766936955003850
+      ui two_12: -4797780726461462384
+      ui two_120: -5468422270594247694
+      ui two_121: -987671110812066856
+      ui two_122: -4384521535241071750
+      ui two_123: -8036572790314666532
+      ui two_124: -7268863548185459719
+      ui two_125: -3439525001274888572
+      ui two_126: -4718887901298279256
+      ui two_127: 758025401509463506
+      ui two_128: -8176411595336535786
+      ui two_129: 6111891275715362029
+      ui two_13: -1786008958358730860
+      ui two_130: -1514700226757491322
+      ui two_131: -5118783900742629751
+      ui two_132: -1576125781402103115
+      ui two_133: -1637802043110431897
+      ui two_134: 8846605835642452888
+      ui two_135: -4904998869444299496
+      ui two_136: 7949906958282376231
+      ui two_137: -3249365547401553213
+      ui two_138: 6103815766416691330
+      ui two_139: 7167731700728860136
+      ui two_14: -6462682934630752402
+      ui two_140: 5949783109686876206
+      ui two_141: -8700236135168786979
+      ui two_142: -4109329913596759787
+      ui two_143: -5808034837517204251
+      ui two_15: -5402890336461104114
+      ui two_16: -8105318897329131853
+      ui two_17: -7935519424706370593
+      ui two_18: 2940928004784804041
+      ui two_19: 7225244976947391119
+      ui two_2: 3943640485663660531
+      ui two_20: 2362347190830069863
+      ui two_21: -4427317081658902097
+      ui two_22: 389988073032517992
+      ui two_23: 5724972390948289331
+      ui two_24: -4376083052130194003
+      ui two_25: 998186511345736135
+      ui two_26: -4494665706220014376
+      ui two_27: 4239564318577818311
+      ui two_28: 4106185932533013617
+      ui two_29: -5433472374273148136
+      ui two_3: 388010382773574062
+      ui two_30: 4825587505474488732
+      ui two_31: -1791298907512166083
+      ui two_32: -5103876893191984350
+      ui two_33: 5486517210306732088
+      ui two_34: -5796964335407929512
+      ui two_35: 3683322772675239650
+      ui two_36: 3775935750037807092
+      ui two_37: 8858394742225845091
+      ui two_38: 3308378147694023102
+      ui two_39: 5386242390483625156
+      ui two_4: -4013529705607642270
+      ui two_40: 7395105797957728413
+      ui two_41: 8098349815994514365
+      ui two_42: -4548917521210385953
+      ui two_43: 5684649934273374288
+      ui two_44: 5490259460412896080
+      ui two_45: 3826003626160194084
+      ui two_46: 2266310124268176932
+      ui two_47: -3801990249194935894
+      ui two_48: 8152833225284251353
+      ui two_49: 4417157043670917873
+      ui two_5: -9138287860650900298
+      ui two_50: 2188862631883790922
+      ui two_51: -4191169981237442394
+      ui two_52: 1337328405930565044
+      ui two_53: 2404204461077929141
+      ui two_54: -3651181894431098354
+      ui two_55: -2533650173576155976
+      ui two_56: 9110596658594695268
+      ui two_57: 1678817420557990015
+      ui two_58: -2977173854194253309
+      ui two_59: -8594195207231255246
+      ui two_6: -3590197769285763804
+      ui two_60: -6949083546120269788
+      ui two_61: -2655973168641749684
+      ui two_62: -7597071260853085478
+      ui two_63: -1070930238389749853
+      ui two_64: -3926882027137794450
+      ui two_65: -5668129807786373614
+      ui two_66: 2955420347480185696
+      ui two_67: 7274941188632317497
+      ui two_68: -3963879804181547214
+      ui two_69: -4908155259266691514
+      ui two_7: -9154180786264685162
+      ui two_70: 4121377061825716683
+      ui two_71: 8398703185703701545
+      ui two_72: 6245908882451277650
+      ui two_73: -28215302859773236
+      ui two_74: 932617023792465854
+      ui two_75: 3860992451968126869
+      ui two_76: -3351344979797409991
+      ui two_77: -1687128825664159990
+      ui two_78: 3714462993149174045
+      ui two_79: -6653098444749699710
+      ui two_8: 1356734164721296536
+      ui two_80: -5839780818087146477
+      ui two_81: -2088448997695771796
+      ui two_82: 3733251249200796185
+      ui two_83: -4986135717211410252
+      ui two_84: 4463005842459311688
+      ui two_85: 4045279631247962380
+      ui two_86: -1890745053003636933
+      ui two_87: 3404262106493603348
+      ui two_88: -5041035217615874482
+      ui two_89: -9067349645910452227
+      ui two_9: -2276695433387877603
+      ui two_93: -3205131123570278518
+      ui two_94: 6306009718898680557
+      ui two_95: 2756118494791621101
+      ui two_96: -7310302430520478168
+      ui two_97: -4908643854402549087
+      ui two_98: -1181381773716512548
+      ui two_99: 7346931207956687031
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
