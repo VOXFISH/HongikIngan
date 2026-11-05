@@ -10,6 +10,9 @@ namespace HongikIngan
         private readonly Random random;
         public readonly EconomySettings Settings;
         public readonly List<StudentState> Students = new List<StudentState>();
+        // School desk positions are independent of the compact list used by combat.
+        // Keeping empty desks out of Students avoids null participants in combat/transactions.
+        private readonly Dictionary<StudentState, int> schoolDesks = new Dictionary<StudentState, int>();
         public readonly List<StudentDefinition> RecruitOffers = new List<StudentDefinition>();
         public readonly List<RelicDefinition> RelicOffers = new List<RelicDefinition>();
         public readonly List<PetKind?> PetOffers = new List<PetKind?>();
@@ -158,6 +161,39 @@ namespace HongikIngan
             return Done(student.Definition.Name + " 보충 학습 완료!");
         }
 
+        private void EnsureSchoolDesks()
+        {
+            foreach (var student in schoolDesks.Keys.Where(s => !Students.Contains(s)).ToList())
+                schoolDesks.Remove(student);
+            foreach (var student in Students)
+            {
+                if (schoolDesks.ContainsKey(student)) continue;
+                int desk = 0;
+                while (schoolDesks.ContainsValue(desk)) desk++;
+                schoolDesks.Add(student, desk);
+            }
+        }
+
+        public StudentState StudentAtSchoolDesk(int desk)
+        {
+            EnsureSchoolDesks();
+            return Students.FirstOrDefault(s => schoolDesks[s] == desk);
+        }
+
+        public bool MoveSchoolStudent(int fromDesk, int toDesk)
+        {
+            if (!SchoolUnlocked) return Fail("지금은 교실 배치를 바꿀 수 없습니다.");
+            if (fromDesk < 0 || toDesk < 0 || fromDesk >= Capacity || toDesk >= Capacity)
+                return Fail("확장된 책상 안에서 이동해 주세요.");
+            var moving = StudentAtSchoolDesk(fromDesk);
+            if (moving == null) return Fail("옮길 학생이 없습니다.");
+            if (fromDesk == toDesk) return true;
+            var target = StudentAtSchoolDesk(toDesk);
+            schoolDesks[moving] = toDesk;
+            if (target != null) schoolDesks[target] = fromDesk;
+            return Done(target == null ? "빈 책상으로 이동했습니다." : "배치 순서를 교체했습니다.");
+        }
+
         public bool Swap(int first, int second)
         {
             if (PendingPet || GameOver || (Battle != null && Battle.IsResolving)) return Fail("지금은 배치를 바꿀 수 없습니다.");
@@ -260,6 +296,8 @@ namespace HongikIngan
         {
             if (!SchoolUnlocked) return Fail("펫 선택을 먼저 마쳐 주세요.");
             if (Students.Count == 0) return Fail("마법소녀를 한 명 이상 영입해 주세요.");
+            EnsureSchoolDesks();
+            Students.Sort((first, second) => schoolDesks[first].CompareTo(schoolDesks[second]));
             RerollCost = Math.Max(0, Settings.rerollInitial);
             float hp = Settings.bossBaseHp * (float)Math.Pow(Settings.bossGrowth, Stage - 1);
             if (float.IsInfinity(hp) || hp <= 0) hp = float.MaxValue;
