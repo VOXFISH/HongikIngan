@@ -70,6 +70,8 @@ namespace HongikIngan
                 {
                     var d = run.Students[i].Definition; var slot = screen.formation.slots[i];
                     Check(slot.HasStudent && slot.nameLabel.text == d.Name, "girl name rendered " + d.Id);
+                    slot.nameLabel.ForceMeshUpdate();
+                    Check(!slot.nameLabel.isTextTruncated, "full girl name fits authored card " + d.Id);
                     Check(slot.roleLabel.text == d.Grade + "학년 - " + d.RoleLabel, "grade and role rendered " + d.Id);
                     Check(slot.synergyLabel.text.Contains(d.Club) && slot.synergyLabel.text.Contains(d.Personality), "synergies rendered " + d.Id);
                     Check(slot.skillLabel.text == d.SkillName, "skill name rendered " + d.Id);

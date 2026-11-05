@@ -87,3 +87,5 @@ School의 `DragLayer`는 책상 프리팹 밖의 `SchoolCanvas/Layout` 아래에
 
 Assets/UI/Prefabs/SchoolSynergyBook.prefab이 책 한 권의 공통 배치다. SchoolDeskSlot 안의 SynergyBook0~2는 이 프리팹의 중첩 인스턴스이며, 모든 학교 책상에 적용된다. 책의 공통 구조는 책 프리팹에서 편집하고, 쌓인 위치와 가운데 책의 색상은 책상 프리팹의 인스턴스 설정으로 유지한다. SchoolStudentSlot.books와 bookLabels는 각 책 및 시너지 텍스트를 참조하며 실제 문구와 표시 여부는 기존 Bind가 담당한다. 최초 변환 메뉴는 HongikIngan > Use synergy book prefab in School desks이며 이미 연결된 경우 재생성하지 않는다.
 
+
+전투 카드의 Name 텍스트는 긴 이름(드미트리우스 등)을 위해 TMP Auto Size를 사용한다. Inspector에서 최소 10, 최대 17로 설정되어 있으며, RectTransform 위치와 크기는 그대로 편집할 수 있다. 런타임 코드는 이름만 갱신한다.

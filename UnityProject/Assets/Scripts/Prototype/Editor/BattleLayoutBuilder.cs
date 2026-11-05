@@ -104,6 +104,9 @@ namespace HongikIngan.Editor
                 slot.portrait = Image(slot.studentVisual, "Portrait", 12, 12, 35, 35, new Color(.9f, .8f, .95f));
                 Text(slot.portrait.transform, "Symbol", 0, 0, 35, 35, "✦", 20, Ink, TextAlignmentOptions.Center);
                 slot.nameLabel = Text(slot.studentVisual, "Name", 55, 12, 83, 35, "학생", 17);
+                slot.nameLabel.enableAutoSizing = true;
+                slot.nameLabel.fontSizeMin = 10;
+                slot.nameLabel.fontSizeMax = 17;
                 slot.roleLabel = Text(slot.studentVisual, "GradeAndRole", 12, 55, 119, 36, "1학년 - Dealer", 15);
                 slot.synergyLabel = Text(slot.studentVisual, "Synergies", 12, 94, 119, 48, "부활동 - 성격", 15);
                 slot.skillLabel = Text(slot.studentVisual, "Skill", 12, 146, 119, 42, "스킬 100", 16);

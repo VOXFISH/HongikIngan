@@ -59,7 +59,7 @@ Girl0–Girl35의 이름·학년·시너지·스킬·역할군을 구현한다. 
 
 ## 추가 구현된 마법소녀
 
-Girl18–Girl35도 자연어와 사용자 확인 답변을 기준으로 구현했다. JSON 요약은 확정된 자연어와 일치하도록 갱신했다. Girl23은 민영, Girl35는 뭉치(스파르타!!)다.
+Girl18–Girl35도 자연어와 사용자 확인 답변을 기준으로 구현했다. JSON 요약은 확정된 자연어와 일치하도록 갱신했다. Girl23은 민영, Girl35는 드미트리우스(스파르타!!)다.
 - [Girl18_미술부1_독설가_다나](Girl18_%EB%AF%B8%EC%88%A0%EB%B6%801_%EB%8F%85%EC%84%A4%EA%B0%80_%EB%8B%A4%EB%82%98.md)
 - [Girl19_미술부1_반항아_예리](Girl19_%EB%AF%B8%EC%88%A0%EB%B6%801_%EB%B0%98%ED%95%AD%EC%95%84_%EC%98%88%EB%A6%AC.md)
 - [Girl20_미술부2_귀염둥이_루나](Girl20_%EB%AF%B8%EC%88%A0%EB%B6%802_%EA%B7%80%EC%97%BC%EB%91%A5%EC%9D%B4_%EB%A3%A8%EB%82%98.md)
@@ -77,4 +77,4 @@ Girl18–Girl35도 자연어와 사용자 확인 답변을 기준으로 구현�
 - [Girl32_연극부2_반항아_민희](Girl32_%EC%97%B0%EA%B7%B9%EB%B6%802_%EB%B0%98%ED%95%AD%EC%95%84_%EB%AF%BC%ED%9D%AC.md)
 - [Girl33_연극부2_분위기메이커_세아](Girl33_%EC%97%B0%EA%B7%B9%EB%B6%802_%EB%B6%84%EC%9C%84%EA%B8%B0%EB%A9%94%EC%9D%B4%EC%BB%A4_%EC%84%B8%EC%95%84.md)
 - [Girl34_연극부3_사랑꾼_마리](Girl34_%EC%97%B0%EA%B7%B9%EB%B6%803_%EC%82%AC%EB%9E%91%EA%BE%BC_%EB%A7%88%EB%A6%AC.md)
-- [Girl35_연극부2_독설가_뭉치](Girl35_%EC%97%B0%EA%B7%B9%EB%B6%802_%EB%8F%85%EC%84%A4%EA%B0%80_%EB%AD%89%EC%B9%98.md)
+- [Girl35_연극부2_독설가_드미트리우스](Girl35_%EC%97%B0%EA%B7%B9%EB%B6%802_%EB%8F%85%EC%84%A4%EA%B0%80_%EB%93%9C%EB%AF%B8%ED%8A%B8%EB%A6%AC%EC%9A%B0%EC%8A%A4.md)

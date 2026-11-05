@@ -154,7 +154,7 @@ namespace HongikIngan
                     "세아isHere", "데미지 +10. 보충 학습 횟수마다 스킬 데미지 x2, 무한 강화 가능", ActionKind.GrowingStrike, 10, 0),
                 Girl(34, "마리", 3, "연극부", "사랑꾼", StudentRole.Buff,
                     "돌돌마리", "모든 아군에게 사랑 3스택. 연극부가 정확히 3명 (강화 2명 또는 3명)이면 자신 복제", ActionKind.LoveAndClone, 3, -1),
-                Girl(35, "뭉치", 2, "연극부", "독설가", StudentRole.Dealer,
+                Girl(35, "드미트리우스", 2, "연극부", "독설가", StudentRole.Dealer,
                     "스파르타!!", "팀 전체의 서로 다른 버프 종류 수 /2만큼 데미지 배율 (강화: 종류 수 그대로)", ActionKind.KeywordKindsDamage, .5f, .5f)
             };
         }

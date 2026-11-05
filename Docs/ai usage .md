@@ -309,3 +309,8 @@
 - 사용자: qwerty
 - 요약: SchoolSynergyBook.prefab을 생성하고 SchoolDeskSlot의 책 3개를 중첩 프리팹 인스턴스로 교체하여 Unity Editor에서 저장했다. 위치·배율·활성 상태·색상을 유지하고 SchoolStudentSlot의 books/bookLabels를 새 인스턴스에 연결했다. 기존 브랜치에서 작업했으며 플레이 테스트·커밋·main 동기화는 하지 않았다.
 
+
+## 2026-11-06 — Girl35 이름 변경과 최종 화면 검증
+
+- 사용자: VOXFISH
+- 요약: Girl35의 이름을 최신 기획의 드미트리우스로 통일하고 확정된 스파르타!! 효과를 유지했으며, 문서 중복과 긴 카드 이름의 잘림을 해결했다. 규칙 4,000개·초기 지급 2,000시드·플레이어 UI/전투 312개와 Windows 빌드를 검증했다.

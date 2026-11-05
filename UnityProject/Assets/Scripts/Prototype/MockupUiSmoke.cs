@@ -42,12 +42,16 @@ namespace HongikIngan
             Check(run.Money==100 && run.Students.Count==3,"100 energy and three starters");
             Check(school.CanInteract && school.dialogs!=null,"school ready with scene dialogs");
             Check(run.RelicOffers.Count==1,"one relic proposal");
+            // Keep the UI capacity fixture independent of a random HyeLim starter.
+            run.Students.Clear();
+            run.Students.AddRange(PrototypeCatalog.Students.Take(3).Select(d => new StudentState(d)));
+            school.Refresh();
             var starters = run.Students.ToArray();
             run.Students.Clear(); run.Students.AddRange(PrototypeCatalog.Students.Select(d => new StudentState(d))); school.Refresh();
             Check(!run.CanStartBattle && !school.battleButton.interactable,"all-roster overflow blocks departure");
             for(int i=0;i<3;i++) school.nextRosterPage.onClick.Invoke();
-            Check(school.RosterPage==3 && school.slots[8].nameLabel.text=="뭉치","four pages expose every owned girl");
-            school.SelectStudent(35); Check(school.detailTitle.text.Contains("뭉치") && school.sellButton.gameObject.activeSelf,"overflow student remains manageable in school");
+            Check(school.RosterPage==3 && school.slots[8].nameLabel.text=="드미트리우스","four pages expose every owned girl");
+            school.SelectStudent(35); Check(school.detailTitle.text.Contains("드미트리우스") && school.sellButton.gameObject.activeSelf,"overflow student remains manageable in school");
             school.DeselectStudent();
             run.Students.Clear(); run.Students.AddRange(starters); school.Refresh();
             Check(school.RosterPage==0,"roster page clamps after roster shrinks");
