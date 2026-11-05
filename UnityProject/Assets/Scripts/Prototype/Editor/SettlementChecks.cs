@@ -16,6 +16,21 @@ namespace HongikIngan
             var settings = ScriptableObject.CreateInstance<EconomySettings>();
             try
             {
+                Check(settings.bossBaseHp == 2000 && settings.bossGrowth == 2, "new settings use doubling bosses");
+                var authored = Resources.Load<EconomySettings>("PrototypeEconomy");
+                Check(authored != null && authored.bossBaseHp == 2000 && authored.bossGrowth == 2, "shipped balance matches defaults");
+                var progression = new PrototypeRun(settings);
+                progression.Students.Clear();
+                progression.Students.Add(new StudentState(new StudentDefinition {
+                    Id = "boss-progression", Name = "boss-progression", Club = "none", Personality = "none",
+                    Grade = 1, Action = ActionKind.AddDamage, InitialValue = 1000000
+                }));
+                foreach (float expectedHp in new[] { 2000f, 4000f, 8000f, 16000f })
+                {
+                    Check(progression.StartBattle() && progression.Battle.BossHp == expectedHp, "next boss HP " + expectedHp);
+                    progression.ResolveNextTurn();
+                    Check(progression.Battle.Won && progression.ReturnToSchool(), "win and claim advances stage");
+                }
                 settings.startingMoney = 105; settings.bossBaseHp = 1;
                 for (int winningTurn = 1; winningTurn <= 3; winningTurn++)
                 {

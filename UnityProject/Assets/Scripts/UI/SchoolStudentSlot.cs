@@ -13,6 +13,8 @@ namespace HongikIngan
         public CanvasGroup visualGroup;
         public TMP_Text nameLabel, roleLabel, emptyLabel;
         public Image selectionFrame;
+        public Image studentPortrait;
+        public StudentPortraitCatalog portraitCatalog;
         public GameObject[] books;
         public TMP_Text[] bookLabels;
         public int Index { get; private set; }
@@ -29,7 +31,19 @@ namespace HongikIngan
             studentVisual.gameObject.SetActive(occupied);
             emptyLabel.gameObject.SetActive(!occupied);
             emptyLabel.text = available ? "빈 책상" : "확장 가능한 책상";
-            selectionFrame.enabled = selected && occupied;
+            // The old solid selection panel obscures the transparent character art.
+            if (selectionFrame != null) selectionFrame.enabled = false;
+            // Older scene instances may not yet have the Image reference serialized.
+            if (studentPortrait == null)
+                studentPortrait = studentVisual.Find("StudentPlaceholder")?.GetComponent<Image>();
+            if (studentPortrait != null)
+            {
+                var sprite = student == null || portraitCatalog == null ? null : portraitCatalog.Find(student.Id);
+                studentPortrait.sprite = sprite;
+                studentPortrait.color = Color.white;
+                studentPortrait.enabled = sprite != null;
+                studentPortrait.preserveAspect = true;
+            }
             if (occupied)
             {
                 nameLabel.text = student.Name;
