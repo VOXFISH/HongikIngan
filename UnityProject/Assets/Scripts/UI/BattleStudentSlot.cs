@@ -27,9 +27,9 @@ namespace HongikIngan
             emptyLabel.gameObject.SetActive(!HasStudent);
             if (!HasStudent) return;
             var d = student.Definition;
-            nameLabel.text = d.Name;
+            nameLabel.text = student.IsClone ? d.Name + " (분신)" : d.Name;
             roleLabel.text = $"{d.Grade}학년 · {d.RoleLabel}";
-            synergyLabel.text = $"{d.Club} · {d.Personality}";
+            synergyLabel.text = $"{d.Club} · {d.Personality}" + (string.IsNullOrEmpty(d.SpecialSynergy) ? "" : " · " + d.SpecialSynergy);
             skillLabel.text = string.IsNullOrEmpty(d.SkillName) ? $"스킬 {student.SkillValue:0.##}" : d.SkillName;
             int hash = 0;
             foreach (char c in d.Id) hash = (hash * 31 + c) & 0x7fffffff;

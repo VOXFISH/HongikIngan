@@ -14,7 +14,7 @@ namespace HongikIngan
             assertions = 0;
             try
             {
-                Roster(); Skills(); Movement(); Synergies(); Economy();
+                Roster(); Skills(); Movement(); Synergies(); PhotographySynergy(); Economy();
                 Debug.Log("GIRL_CONTENT_CHECKS_PASS assertions=" + assertions);
             }
             finally { foreach (var s in settings) UnityEngine.Object.DestroyImmediate(s); settings.Clear(); }
@@ -59,7 +59,7 @@ namespace HongikIngan
         {
             string[] names = { "아이린", "효빈", "리오네", "찬비", "가키", "클로에", "민지", "루크레아", "가람", "한별", "나연", "다혜" };
             int[] grades = { 1, 1, 3, 2, 1, 1, 2, 3, 3, 2, 1, 1 };
-            Check(PrototypeCatalog.Students.Count == 12, "exactly twelve authored girls replace placeholders");
+            Check(PrototypeCatalog.Students.Count >= 12, "original twelve authored girls remain in the expanded roster");
             for (int i = 0; i < 12; i++)
             {
                 var d = PrototypeCatalog.Students[i];
@@ -167,6 +167,22 @@ namespace HongikIngan
             KeywordRules.Add(cuteSeven.Students[0].Keywords, consumable, 5);
             Resolve(cuteSeven);
             Check(cuteSeven.Students[0].Keywords.Single().Stacks == 1, "cute seven preserves consumable stack");
+        }
+        static void PhotographySynergy()
+        {
+            foreach (int count in new[] { 1, 2, 3, 4, 5, 6 })
+            {
+                var run = Run(Enumerable.Range(0, count).Select(i => Dummy("photo" + i, i == 0 ? 100 : 0, club: "사진부")).ToArray());
+                run.Settings.polaroidDamage = 0;
+                run.Photos["photo-source"] = 2;
+                Resolve(run);
+                float factor = count >= 6 ? 1.2f : count >= 4 ? 1.3f : count >= 2 ? 1.05f : 1f;
+                Near(run.Battle.Damage, 100 * factor * factor, "photography highest tier applies once per photo " + count);
+                foreach (var actor in run.Students) actor.SkillValue = 0;
+                run.Photos["photo-source"] = int.MaxValue;
+                Resolve(run);
+                Near(run.Battle.Damage, 0, "zero damage never becomes NaN for many photos " + count);
+            }
         }
         static void Economy()
         {

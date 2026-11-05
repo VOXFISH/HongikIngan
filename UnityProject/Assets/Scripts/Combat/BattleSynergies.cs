@@ -5,7 +5,7 @@ using static HongikIngan.CombatEngine;
 
 namespace HongikIngan
 {
-    /// <summary>Shared effects for the eight synergies belonging to the authored Girl0–Girl11 roster.</summary>
+    /// <summary>Shared effects for the synergies belonging to the authored roster.</summary>
     public static class BattleSynergies
     {
         public static int Count(PrototypeRun run, string name)
@@ -89,6 +89,15 @@ namespace HongikIngan
                     run.Battle.Damage *= factor; run.NotifyDamage();
                     yield return Step(run.Battle, "damage", "운동부 · 데미지 ×" + factor);
                 }
+            }
+            int photography = Count(run, "사진부");
+            if (photography >= 2 && run.PhotoCount > 0)
+            {
+                // Each photo applies to the current damage, matching the +%p rule.
+                double perPhoto = photography >= 6 ? 1.2 : photography >= 4 ? 1.3 : 1.05;
+                if (run.Battle.Damage != 0) run.Battle.Damage = (float)(run.Battle.Damage * Math.Pow(perPhoto, run.PhotoCount));
+                run.NotifyDamage();
+                yield return Step(run.Battle, "damage", "사진부 · 폴라로이드 " + run.PhotoCount + "장 · 장마다 ×" + perPhoto);
             }
             int rebels = Count(run, "반항아");
             if (rebels >= 2)

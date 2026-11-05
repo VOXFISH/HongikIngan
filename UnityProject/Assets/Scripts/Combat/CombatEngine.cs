@@ -29,6 +29,9 @@ namespace HongikIngan
         public static readonly KeywordDefinition Exposed = new KeywordDefinition("exposed", "노출", false, true, true);
         public static readonly KeywordDefinition Spite = new KeywordDefinition("spite", "표독", false, true, false);
         public static readonly KeywordDefinition BlackClover = new KeywordDefinition("black_clover", "검은 클로버", true, true, false);
+        public static readonly KeywordDefinition Mine = new KeywordDefinition("you_are_mine", "넌 내 꺼야", false, false, false);
+        public static readonly KeywordDefinition Lighting = new KeywordDefinition("lighting", "조명", false, false, true);
+        public static readonly KeywordDefinition Love = new KeywordDefinition("love", "사랑", true, true, true);
 
         public static void Add(List<KeywordState> states, KeywordDefinition definition, float value, int stacks = 1)
         {
@@ -151,6 +154,7 @@ namespace HongikIngan
                 }
                 foreach (var keyword in battle.BossKeywords.ToArray())
                 {
+                    if (keyword.Definition.Id == KeywordRules.Mine.Id) continue; // Reacts to individual attacks, not the final beam.
                     if (keyword.Definition.Id == KeywordRules.BlackClover.Id)
                     {
                         while (keyword.Stacks > 0)
@@ -174,6 +178,7 @@ namespace HongikIngan
                 if (battle.Lost) BattleSynergies.FinishBattle(run);
                 foreach (var student in run.Students) KeywordRules.EndTurn(student.Keywords);
                 KeywordRules.EndTurn(battle.BossKeywords);
+                run.RemoveExpiredClones(battle.Won || battle.Lost);
                 yield return Step(battle, "result", battle.Won ? "보스 처치! 교실로 돌아가세요." : battle.Lost ? "3턴 종료 · 게임 오버" : "보스 생존 · 배치를 바꾸고 다음 턴에 도전하세요.");
             }
             finally { battle.IsResolving = false; }

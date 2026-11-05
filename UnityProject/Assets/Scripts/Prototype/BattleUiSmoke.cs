@@ -57,6 +57,8 @@ namespace HongikIngan
             var sound = SoundManager.EnsureExists();
             originalVolume = sound.GetVolume(AudioCategory.BGM); originalMute = sound.GetMuted(AudioCategory.Voice); capturedSettings = true;
             var session = PrototypeSession.Ensure();
+            session.Run.Students.Clear();
+            session.Run.Students.Add(new StudentState(PrototypeCatalog.Students[0]));
             session.Run.Students.Add(new StudentState(PrototypeCatalog.Students[1]));
             session.Run.Settings.bossBaseHp = 1;
             session.EnterBattle();
@@ -95,8 +97,9 @@ namespace HongikIngan
             // Render representative UI with all nine slots, then restore the actual run.
             var previewSettings = ScriptableObject.CreateInstance<EconomySettings>();
             var preview = new PrototypeRun(previewSettings);
+            preview.Students.Clear();
             preview.Relics.Add(new RelicDefinition { Id = "preview_slots", Kind = RelicKind.ExtraSlots, Value = 6 });
-            for (int i = 1; i < 9; i++) preview.Students.Add(new StudentState(PrototypeCatalog.Students[i]));
+            for (int i = 0; i < 9; i++) preview.Students.Add(new StudentState(PrototypeCatalog.Students[i]) { IsClone = i >= 7 });
             screen.formation.Render(preview);
             Screen.SetResolution(1440, 900, false);
             yield return new WaitForSeconds(.3f);

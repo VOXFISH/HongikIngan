@@ -16,12 +16,12 @@
 - [교실 시스템 기획서](Classroom%20System%20Design.md): 원본 도표, 학생 관리·펫 전용 영입·유물 구매와 리롤·전투 진입.
 - [교실 기능별 결정 사항](Decisions/Classroom/README.md): 7개 기능의 결정·미정·검증 기준.
 
-- [프로토타입 실행 안내](Prototype%20Guide.md): 학교·전투 씬, 조작, 임시 콘텐츠, 검증 방법.
+- [프로토타입 실행 안내](Prototype%20Guide.md): 메인·학교·전투 씬, 초기 지급, 조작과 검증 방법.
 - [전투 UI 편집](Battle%20UI%20Editing.md): 독립 UI 오브젝트 배치, 컴포넌트 책임과 검증.
-- [Girl0–Girl11 전투 구현](Girl%20Battle%20Implementation.md): 자연어 우선 해석, 12명 스킬·강화와 공통 시너지, 검증 결과.
-- [전체 시너지 효과 목록](Girls/synergy.md): 구현된 8종의 단계·발동 시점과 미구현 부활동 4종의 기획.
-- [키워드 효과 목록](Girls/keywords.md): 표독·검은 클로버의 수치·소모·중첩·유지 규칙과 이전 호환 항목.
-- [마법소녀 작성 서식과 원본 기획](Girls/README.md): `Girl%d.md` 서식, Girl0–Girl16 문서, 자연어 우선 해석과 현재 구현 범위.
+- [Girl0–Girl17 전투 구현](Girl%20Battle%20Implementation.md): 자연어 우선 해석, 18명 스킬·강화와 공통 시너지, 검증 결과.
+- [전체 시너지 효과 목록](Girls/synergy.md): 구현된 부활동·성격 9종 및 정밀화와 미구현 부활동 3종의 기획.
+- [키워드 효과 목록](Girls/keywords.md): 표독·검은 클로버·넌 내 꺼야·조명·사랑의 수치·소모·중첩·유지 규칙과 이전 호환 항목.
+- [마법소녀 작성 서식과 원본 기획](Girls/README.md): `Girl%d.md` 서식, Girl0–Girl17 문서, 자연어 우선 해석과 현재 구현 범위.
 - [FMOD 설정 안내](Audio%20Setup.md): 지속 SoundManager와 채널별 볼륨·음소거.
 
 ## 팀 공통 문서 관리 규칙

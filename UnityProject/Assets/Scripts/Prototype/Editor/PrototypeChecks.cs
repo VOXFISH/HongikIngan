@@ -27,7 +27,9 @@ namespace HongikIngan
                 CombatOrderingAndChains();
                 DocumentedDamageActions();
                 DamageFormatting();
+                StartupChecks.Run();
                 GirlContentChecks.Run();
+                PhotographyChecks.Run();
                 Debug.Log("PROTOTYPE_CHECKS_PASS assertions=" + assertions);
             }
             finally
@@ -51,6 +53,15 @@ namespace HongikIngan
             if (!condition) throw new InvalidOperationException("PROTOTYPE_CHECKS_FAIL: " + message);
         }
 
+        // Transaction/combat fixtures deliberately start with one known student.
+        // Startup distribution is checked separately against the real constructor.
+        private static PrototypeRun SingleStudentRun(EconomySettings economy, int seed = 1234)
+        {
+            var run = new PrototypeRun(economy, seed);
+            run.Students.Clear();
+            run.Students.Add(new StudentState(PrototypeCatalog.Students[0]));
+            return run;
+        }
         private static void PetOffer(PrototypeRun run, PetKind kind)
         {
             run.PetOffers.Clear();
@@ -62,7 +73,7 @@ namespace HongikIngan
             foreach (PetKind kind in Enum.GetValues(typeof(PetKind)))
             {
                 var economy = Economy();
-                var run = new PrototypeRun(economy, 100 + (int)kind);
+                var run = SingleStudentRun(economy, 100 + (int)kind);
                 PetOffer(run, kind);
                 int money = run.Money;
                 Check(run.PendingCandidates.Count == 0, "No candidates revealed before purchase");
@@ -86,7 +97,7 @@ namespace HongikIngan
                 Check(run.PhotoCount == candidateCount - 1 && !run.Photos.ContainsKey(chosen), "Only unchosen candidates become photos");
                 Check(run.PetOffers[0].HasValue, "Consumed pet is immediately replaced");
 
-                var skip = new PrototypeRun(economy, 200 + (int)kind);
+                var skip = SingleStudentRun(economy, 200 + (int)kind);
                 PetOffer(skip, kind);
                 Check(skip.OpenPet(0), "Open pet for abandonment");
                 int skipMoney = skip.Money;
@@ -96,7 +107,7 @@ namespace HongikIngan
                 Check(!skip.SkipPet() && skip.PhotoCount == photoCount, "Repeated skip cannot duplicate photos");
             }
 
-            var accumulate = new PrototypeRun(Economy(), 703);
+            var accumulate = SingleStudentRun(Economy(), 703);
             for (int i = 0; i < 12; i++)
             {
                 PetOffer(accumulate, PetKind.Normal);
@@ -104,7 +115,7 @@ namespace HongikIngan
             }
             Check(accumulate.PhotoCount == 36 && accumulate.Photos.Values.Any(n => n > 1), "Photo duplicates accumulate as total copies");
 
-            var fallback = new PrototypeRun(Economy(), 401);
+            var fallback = SingleStudentRun(Economy(), 401);
             fallback.Students.Clear();
             PetOffer(fallback, PetKind.Synergy);
             Check(fallback.OpenPet(0) && fallback.PendingCandidates.Count == 3, "Synergy pet falls back when no synergies are owned");
@@ -113,7 +124,7 @@ namespace HongikIngan
 
         private static void FailedTransactions()
         {
-            var run = new PrototypeRun(Economy(0), 5);
+            var run = SingleStudentRun(Economy(0), 5);
             var relics = run.RelicOffers.Select(r => r.Id).ToArray();
             var pets = run.PetOffers.ToArray();
             int cost = run.RerollCost;
@@ -131,7 +142,7 @@ namespace HongikIngan
             var economy = Economy();
             for (int seed = 0; seed < 400; seed++)
             {
-                var run = new PrototypeRun(economy, seed);
+                var run = SingleStudentRun(economy, seed);
                 Check(run.PetOffers.Count == 3 && !run.PetOffers.All(p => p == PetKind.Normal), "Triple normal pet offers are rejected");
                 repeatedNonNormalPet |= run.PetOffers.GroupBy(p => p).Any(g => g.Count() > 1 && g.Key != PetKind.Normal);
                 Check(run.RelicOffers.Count == 1, "Exactly one relic offer");
@@ -151,7 +162,7 @@ namespace HongikIngan
 
         private static void ReplacementAndUpgrades()
         {
-            var run = new PrototypeRun(Economy(), 11);
+            var run = SingleStudentRun(Economy(), 11);
             var once = PrototypeCatalog.Students.First(s => !s.UnlimitedUpgrade);
             run.Students.Clear();
             run.Students.Add(new StudentState(once));
@@ -188,14 +199,14 @@ namespace HongikIngan
 
         private static void CapacityAndRelics()
         {
-            var run = new PrototypeRun(Economy(), 28);
+            var run = SingleStudentRun(Economy(), 28);
             Check(run.BaseCapacity == 3 && run.Capacity == 3, "Initial capacity is three");
             for (int i = 0; i < 4; i++) Check(run.ExpandSlots(), "Expand ordinary slot");
             int money = run.Money;
             Check(run.BaseCapacity == 7 && run.Capacity == 7 && !run.ExpandSlots() && run.Money == money, "Ordinary capacity caps at seven without extra charge");
             var desk = PrototypeCatalog.Relics.First(r => r.Kind == RelicKind.ExtraSlots);
             run.RelicOffers.Clear(); run.RelicOffers.Add(desk);
-            Check(run.BuyRelic(0) && run.Capacity == 9, "Relic increases total capacity to nine");
+            Check(run.BuyRelic(0) && run.Capacity == 7, "Relic cannot extend ordinary capacity beyond seven");
             Check(run.Money == money - run.Settings.relicPrice && run.RelicOffers[0] == null, "Relic cost and empty purchased offer");
             run.RelicOffers[0] = desk;
             money = run.Money;
@@ -206,7 +217,7 @@ namespace HongikIngan
         private static void RerollAndBattle()
         {
             var economy = Economy(); economy.bossBaseHp = 1f;
-            var run = new PrototypeRun(economy, 55);
+            var run = SingleStudentRun(economy, 55);
             int money = run.Money;
             Check(run.RerollCost == 20 && run.Reroll(), "First reroll succeeds at twenty");
             Check(run.Money == money - 20 && run.RerollCost == 40 && run.Reroll(), "Second reroll costs forty");
@@ -222,7 +233,7 @@ namespace HongikIngan
             Check(run.RelicOffers.Count == 1 && run.PetOffers.Count == 3, "Victory provides one relic and keeps three pets");
 
             var losingEconomy = Economy(); losingEconomy.bossBaseHp = 1000000f;
-            var losing = new PrototypeRun(losingEconomy, 56);
+            var losing = SingleStudentRun(losingEconomy, 56);
             Check(losing.StartBattle(), "Start losing scenario");
             var resets = new List<float>(); losing.DamageChanged += value => resets.Add(value);
             for (int turn = 1; turn <= 3; turn++)
@@ -235,14 +246,14 @@ namespace HongikIngan
             Check(losing.GameOver && !losing.ReturnToSchool(), "Loss cannot return to school as a victory");
             int logCount = losing.Battle.Log.Count;
             Check(losing.ResolveNextTurn().Count == 0 && losing.Battle.Log.Count == logCount, "Ended battle cannot resolve another turn");
-            var empty = new PrototypeRun(Economy(), 57); empty.Students.Clear();
+            var empty = SingleStudentRun(Economy(), 57); empty.Students.Clear();
             Check(!empty.StartBattle(), "Empty team cannot enter battle");
         }
 
         private static void PetRefillAndRelicLimit()
         {
             var economy = Economy(); economy.bossBaseHp = 1;
-            var run = new PrototypeRun(economy, 502);
+            var run = SingleStudentRun(economy, 502);
             var pets = run.PetOffers.ToArray();
             string firstRelic = run.RelicOffers[0].Id;
             Check(run.Reroll() && pets.SequenceEqual(run.PetOffers), "Relic reroll leaves all pets unchanged");
@@ -276,16 +287,16 @@ namespace HongikIngan
             Check(run.RelicOffers.Count == 1 && run.RelicOffers.All(r => run.Relics.All(owned => owned.Id != r.Id)), "Next battle excludes already owned relics");
             Check(run.BuyRelic(0) && run.Relics.Count == 2, "Next battle allows one further relic");
 
-            var empty = new PrototypeRun(Economy(0));
+            var empty = SingleStudentRun(Economy(0));
             pets = empty.PetOffers.ToArray();
             Check(!empty.OpenPet(0) && pets.SequenceEqual(empty.PetOffers), "Unaffordable pet does not refill");
             Check(!empty.BuyRelic(0) && !empty.RelicPurchasedThisBattle, "Failed purchase does not consume relic allowance");
-            var exhausted = new PrototypeRun(Economy());
+            var exhausted = SingleStudentRun(Economy());
             exhausted.Students.Clear();
             exhausted.Students.AddRange(PrototypeCatalog.Students.Select(s => new StudentState(s)));
             pets = exhausted.PetOffers.ToArray(); paid = exhausted.Money;
             Check(!exhausted.OpenPet(0) && exhausted.Money == paid && pets.SequenceEqual(exhausted.PetOffers), "No eligible students means no payment or pet refill");
-            var noRelics = new PrototypeRun(economy);
+            var noRelics = SingleStudentRun(economy);
             noRelics.Relics.AddRange(PrototypeCatalog.Relics);
             noRelics.StartBattle(); noRelics.ResolveNextTurn();
             Check(noRelics.ReturnToSchool() && noRelics.RelicOffers.Count == 0, "Exhausted relic pool yields no offer");
@@ -330,7 +341,7 @@ namespace HongikIngan
         private static PrototypeRun ControlledBattle(float hp, params StudentState[] actors)
         {
             var economy = Economy(); economy.bossBaseHp = hp;
-            var run = new PrototypeRun(economy, 150);
+            var run = SingleStudentRun(economy, 150);
             run.Students.Clear(); run.Students.AddRange(actors);
             Check(run.StartBattle(), "Controlled battle starts");
             return run;

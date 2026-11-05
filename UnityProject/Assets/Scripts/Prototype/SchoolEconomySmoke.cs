@@ -56,9 +56,17 @@ namespace HongikIngan
             while (!UnityEngine.Rendering.SplashScreen.isFinished) yield return null;
             Screen.SetResolution(1440, 810, FullScreenMode.Windowed);
             yield return new WaitForSeconds(.5f);
+            if (SceneManager.GetActiveScene().name == "Main")
+            {
+                var menu = FindFirstObjectByType<MainMenuScreen>();
+                Check(menu != null, "main menu is the entry scene");
+                menu.startButton.onClick.Invoke();
+                yield return new WaitForSeconds(.3f);
+            }
             var session = PrototypeSession.Ensure();
             var run = session.Run;
             run.AddMoney(3000);
+            Check(run.ExpandSlots(), "expand full starting roster for pet selection");
             run.Settings.bossBaseHp = 1;
             var screen = FindFirstObjectByType<SchoolScreen>();
             Check(screen != null && screen.CanInteract, "school scene ready");
