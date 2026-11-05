@@ -72,6 +72,7 @@ namespace HongikIngan
                 Check(run.PendingCandidates.Select(s => s.Id).Distinct().Count() == candidateCount, "Unique pet candidates");
                 Check(run.PendingCandidates.All(s => !run.Owns(s.Id)), "Pet excludes owned students");
                 int paid = run.Money;
+                Check(!run.CanStartBattle && run.StartBattleBlockReason != null, "Pending choice is reported before battle start");
                 Check(!run.Reroll() && !run.StartBattle() && !run.Upgrade(0) && !run.ExpandSlots(), "Pending choice locks unrelated operations");
                 Check(run.Money == paid && run.PendingCandidates.Count == candidateCount, "Locked operations preserve payment and candidates");
                 string chosen = run.PendingCandidates[0].Id;
@@ -204,13 +205,18 @@ namespace HongikIngan
             Check(run.RerollCost == 20 && run.Reroll(), "First reroll succeeds at twenty");
             Check(run.Money == money - 20 && run.RerollCost == 40 && run.Reroll(), "Second reroll costs forty");
             Check(run.Money == money - 60 && run.RerollCost == 60, "Next reroll costs sixty");
+            Check(run.CanStartBattle && run.StartBattleBlockReason == null, "Battle start pre-check allows a ready team");
             Check(run.StartBattle() && run.RerollCost == 20, "Battle entry resets reroll cost");
+            Check(!run.CanStartBattle, "Battle start pre-check rejects an ongoing battle");
             Check(!run.BuyRecruit(0) && !run.Sell(0) && !run.Reroll(), "Battle locks school transactions");
             var student = run.Students[0];
             run.ResolveNextTurn();
             Check(run.Battle.Won && !run.Battle.Lost, "Boss death wins before turn limit");
             money = run.Money;
+            int previewReward = run.VictoryReward;
+            Check(previewReward == run.VictoryRewardBase + run.VictoryRewardStageBonus + run.VictoryRewardRelicBonus, "Victory reward preview sums its parts");
             Check(run.ReturnToSchool() && !run.InBattle && run.Stage == 2, "Win returns to next stage school");
+            Check(run.Money == money + previewReward, "Victory reward preview equals the paid reward");
             Check(ReferenceEquals(student, run.Students[0]) && run.Money >= money, "School return preserves students and rewards");
             Check(run.RecruitOffers.Count == 3 && run.RelicOffers.Count == 3 && run.PetOffers.Count == 3, "Victory refreshes all offers");
 
@@ -229,7 +235,7 @@ namespace HongikIngan
             int logCount = losing.Battle.Log.Count;
             Check(losing.ResolveNextTurn().Count == 0 && losing.Battle.Log.Count == logCount, "Ended battle cannot resolve another turn");
             var empty = new PrototypeRun(Economy(), 57); empty.Students.Clear();
-            Check(!empty.StartBattle(), "Empty team cannot enter battle");
+            Check(!empty.CanStartBattle && empty.StartBattleBlockReason != null && !empty.StartBattle(), "Empty team cannot enter battle");
         }
 
         private static void Keywords()
@@ -296,12 +302,19 @@ namespace HongikIngan
             var partner = Actor("partner", ActionKind.AddDamage, 1f);
             var swapping = ControlledBattle(100000f, mover, partner);
             var names = new List<string>();
+            var actors = new List<StudentState>();
+            BattleStep moveStep = null;
             using (var iterator = swapping.ResolveTurn().GetEnumerator())
             {
                 for (int guard = 0; guard < 30 && names.Count < 3 && iterator.MoveNext(); guard++)
-                    if (iterator.Current.Kind == "action") names.Add(iterator.Current.Message.Split(' ')[0]);
+                {
+                    if (iterator.Current.Kind == "action") { names.Add(iterator.Current.Message.Split(' ')[0]); actors.Add(iterator.Current.Actor); }
+                    if (iterator.Current.Kind == "move" && moveStep == null) moveStep = iterator.Current;
+                }
             }
             Check(names.SequenceEqual(new[] { "move", "partner", "move" }), "Swapped pair repeats in ascending NEW slot order");
+            Check(actors.Count == 3 && ReferenceEquals(actors[0], mover) && ReferenceEquals(actors[1], partner) && ReferenceEquals(actors[2], mover), "Action steps expose the acting student");
+            Check(moveStep != null && ReferenceEquals(moveStep.Actor, mover) && ReferenceEquals(moveStep.Target, partner), "Move step exposes both swapped students");
             Check(!swapping.Battle.IsResolving, "Disposing streamed turn releases resolving state");
 
             var chains = ControlledBattle(100000f, Actor("initial", ActionKind.AddDamage, 1f), Actor("react1", ActionKind.AddDamage, 1f, true), Actor("react2", ActionKind.AddDamage, 1f, true));

@@ -84,7 +84,13 @@ namespace HongikIngan
     {
         public readonly string Kind, Message;
         public readonly float Damage;
-        public BattleStep(string kind, string message, float damage) { Kind = kind; Message = message; Damage = damage; }
+        // Presentation hints only (e.g. which slot glows, who receives a keyword). Never used for rules.
+        // Null when the step is not tied to a student (turn start, relics, synergy, polaroids, chant, beam, result).
+        public readonly StudentState Actor, Target;
+        public BattleStep(string kind, string message, float damage, StudentState actor = null, StudentState target = null)
+        {
+            Kind = kind; Message = message; Damage = damage; Actor = actor; Target = target;
+        }
     }
 
     public sealed class BattleState
@@ -144,39 +150,39 @@ namespace HongikIngan
                 {
                     var actor = queue.First.Value; queue.RemoveFirst();
                     if (!run.Students.Contains(actor)) continue;
-                    yield return Step(battle, "action", actor.Definition.Name + " · " + actor.Definition.SkillDescription);
+                    yield return Step(battle, "action", actor.Definition.Name + " · " + actor.Definition.SkillDescription, actor);
 
                     foreach (var keyword in actor.Keywords.ToArray())
                     {
                         float bonus = KeywordRules.Apply(actor.Keywords, keyword);
                         AddDamage(run, bonus);
-                        yield return Step(battle, "damage", actor.Definition.Name + "의 " + keyword.Definition.Name + " +" + PrototypeCatalog.FormatDamage(bonus));
+                        yield return Step(battle, "damage", actor.Definition.Name + "의 " + keyword.Definition.Name + " +" + PrototypeCatalog.FormatDamage(bonus), actor);
                     }
 
                     switch (actor.Definition.Action)
                     {
                         case ActionKind.AddDamage:
                             AddDamage(run, actor.SkillValue);
-                            yield return Step(battle, "damage", "데미지 +" + PrototypeCatalog.FormatDamage(actor.SkillValue));
+                            yield return Step(battle, "damage", "데미지 +" + PrototypeCatalog.FormatDamage(actor.SkillValue), actor);
                             break;
                         case ActionKind.MultiplyDamage:
                             battle.Damage *= actor.SkillValue; run.NotifyDamage();
-                            yield return Step(battle, "damage", "데미지 ×" + actor.SkillValue.ToString("0.00"));
+                            yield return Step(battle, "damage", "데미지 ×" + actor.SkillValue.ToString("0.00"), actor);
                             break;
                         case ActionKind.EmpowerNext:
                             foreach (var target in NextAlly.SelectTargets(actor, run.Students))
                             {
                                 KeywordRules.Add(target.Keywords, KeywordRules.Starlight, actor.SkillValue);
-                                yield return Step(battle, "keyword", target.Definition.Name + "에게 별빛 1스택");
+                                yield return Step(battle, "keyword", target.Definition.Name + "에게 별빛 1스택", actor, target);
                             }
                             break;
                         case ActionKind.WeakenBoss:
                             KeywordRules.Add(battle.BossKeywords, KeywordRules.Exposed, actor.SkillValue);
-                            yield return Step(battle, "keyword", "보스 받는 피해 +" + actor.SkillValue + "%p");
+                            yield return Step(battle, "keyword", "보스 받는 피해 +" + actor.SkillValue + "%p", actor);
                             break;
                         case ActionKind.EarnMoney:
                             run.AddMoney((int)Math.Min(int.MaxValue, Math.Truncate(actor.SkillValue)));
-                            yield return Step(battle, "income", "미라클 에너지 +" + PrototypeCatalog.FormatDamage(actor.SkillValue));
+                            yield return Step(battle, "income", "미라클 에너지 +" + PrototypeCatalog.FormatDamage(actor.SkillValue), actor);
                             break;
                         case ActionKind.SwapNext:
                             var other = NextAlly.SelectTargets(actor, run.Students).FirstOrDefault();
@@ -187,7 +193,7 @@ namespace HongikIngan
                                 // Swapped pair acts again in NEW ascending slot order, including prior actors.
                                 queue.AddFirst(run.Students[Math.Max(a, b)]);
                                 queue.AddFirst(run.Students[Math.Min(a, b)]);
-                                yield return Step(battle, "move", "자리 교환 후 작은 번호부터 재행동");
+                                yield return Step(battle, "move", "자리 교환 후 작은 번호부터 재행동", actor, other);
                             }
                             break;
                     }
@@ -231,10 +237,10 @@ namespace HongikIngan
         }
 
         private static void AddDamage(PrototypeRun run, float amount) { run.Battle.Damage += amount; run.NotifyDamage(); }
-        private static BattleStep Step(BattleState battle, string kind, string text)
+        private static BattleStep Step(BattleState battle, string kind, string text, StudentState actor = null, StudentState target = null)
         {
             battle.Log.Add(text);
-            return new BattleStep(kind, text, battle.Damage);
+            return new BattleStep(kind, text, battle.Damage, actor, target);
         }
 
         public static string BuildChant(IEnumerable<StudentState> students)
