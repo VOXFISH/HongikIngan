@@ -19,6 +19,7 @@ namespace HongikIngan.Editor
             if(economy==null) AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<EconomySettings>(),"Assets/Resources/PrototypeEconomy.asset");
             CreateScene<SchoolScreen>("School");
             CreateScene<BattleScreen>("Battle");
+            BattleLayoutBuilder.Apply();
             var paths=new[]{"Assets/Scenes/School.unity","Assets/Scenes/Battle.unity"};
             EditorBuildSettings.scenes=paths.Select(p=>new EditorBuildSettingsScene(p,true))
                 .Concat(EditorBuildSettings.scenes.Where(s=>!paths.Contains(s.path))).ToArray();
