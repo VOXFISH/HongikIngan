@@ -26,7 +26,14 @@ namespace HongikIngan.Editor
             // Never overwrite subsequent hand edits to a scene already using this layout.
             if (screen.schoolCanvas != null)
             {
+                if (MigratePetOnlyLayout(screen))
+                {
+                    EditorUtility.SetDirty(screen);
+                    EditorSceneManager.MarkSceneDirty(scene);
+                    EditorSceneManager.SaveScene(scene);
+                }
                 ValidateBindings(screen);
+                PrototypeChecks.Run();
                 Debug.Log("School layout already exists; edit its Canvas in the scene.");
                 return;
             }
@@ -56,26 +63,16 @@ namespace HongikIngan.Editor
 
             var board = Frame(ui, "Chalkboard", 240, 100, 700, 194, Gold, Hex("335653"), 9);
             Text(board, "Caption", 20, 7, 660, 29, "우리들의 보물 칠판", 20, Cream, TextAnchor.MiddleCenter);
-            screen.relicButtons = new Button[3]; screen.relicLabels = new Text[3];
-            for (int i = 0; i < 3; i++)
+            screen.relicButtons = new Button[1]; screen.relicLabels = new Text[1];
+            for (int i = 0; i < 1; i++)
             {
-                var b = Button(board, "RelicOffer" + i, 28 + i * 220, 43, 204, 98, "", Hex("F6EEE2"), Ink);
+                var b = Button(board, "RelicOffer" + i, 28, 43, 644, 98, "", Hex("F6EEE2"), Ink);
                 Blank(b.transform, "RelicPlaceholder", 10, 10, 54);
                 screen.relicButtons[i] = b;
-                screen.relicLabels[i] = Text(b.transform, "Offer", 73, 10, 121, 78, "유물\n30 에너지", 17, Ink, TextAnchor.MiddleCenter);
+                screen.relicLabels[i] = Text(b.transform, "Offer", 73, 10, 555, 78, "유물\n30 에너지", 17, Ink, TextAnchor.MiddleCenter);
             }
             screen.ownedRelicsLabel = Text(board, "OwnedRelics", 25, 149, 650, 31, "아직 획득한 유물이 없어요", 15, Cream, TextAnchor.MiddleCenter);
 
-            var recruits = Frame(ui, "Recruitment", 24, 100, 200, 194, Pink, Hex("FFF5F8"), 3);
-            Text(recruits, "Caption", 8, 5, 184, 26, "전학생 모집", 19, Ink, TextAnchor.MiddleCenter);
-            screen.recruitButtons = new Button[3]; screen.recruitNames = new Text[3];
-            for (int i = 0; i < 3; i++)
-            {
-                var b = Button(recruits, "Recruit" + i, 9, 37 + i * 49, 182, 44, "", Hex("F4DFEB"), Ink);
-                Blank(b.transform, "PortraitPlaceholder", 5, 4, 36);
-                screen.recruitButtons[i] = b;
-                screen.recruitNames[i] = Text(b.transform, "Name", 49, 2, 128, 40, "학생 이름", 15, Ink, TextAnchor.MiddleLeft);
-            }
             var pets = Frame(ui, "Pets", 958, 100, 454, 194, Pink, Hex("FFF5F8"), 3);
             Text(pets, "Caption", 8, 5, 438, 28, "새로운 인연 · 펫 부르기", 20, Pink, TextAnchor.MiddleCenter);
             screen.petButtons = new Button[3]; screen.petLabels = new Text[3];
@@ -127,7 +124,7 @@ namespace HongikIngan.Editor
             screen.expandButton = Button(ui, "ExpandDesks", 1122, 560, 290, 42, "책상 확장", Hex("FBF0DF"), Ink);
             screen.statusLabel = Text(ui, "Status", 32, 607, 1370, 26, "교실에 오신 것을 환영합니다.", 16, Ink, TextAnchor.MiddleLeft);
 
-            screen.rerollButton = Button(ui, "Reroll", 24, 661, 194, 120, "새로운 만남\n리롤 20", Pink, Color.white);
+            screen.rerollButton = Button(ui, "Reroll", 24, 661, 194, 120, "유물 리롤\n20 에너지", Pink, Color.white);
             var detail = Frame(ui, "StudentDetailBook", 238, 649, 864, 138, Gold, Cream, 4);
             Image(detail, "LeftPage", 9, 8, 155, 122, Paper);
             Image(detail, "RightPage", 172, 8, 682, 122, Paper);
@@ -137,9 +134,6 @@ namespace HongikIngan.Editor
             screen.detailBody = Text(detail, "Description", 189, 45, 470, 84, "학생을 선택하세요", 17, Ink, TextAnchor.UpperLeft);
             screen.learnButton = Button(detail, "Upgrade", 678, 12, 166, 49, "보충 학습", Navy, Color.white);
             screen.sellButton = Button(detail, "Release", 678, 75, 166, 49, "계약 해제", Pink, Color.white);
-            screen.recruitButton = Button(detail, "Recruit", 678, 40, 166, 64, "영입하기", Navy, Color.white);
-            screen.replaceButton = Button(detail, "Replace", 678, 40, 166, 64, "교체 · 기존 학생 판매", Navy, Color.white);
-            screen.recruitButton.gameObject.SetActive(false); screen.replaceButton.gameObject.SetActive(false);
             screen.battleButton = Button(ui, "EnterBattle", 1122, 661, 290, 120, "방과 후!\n전투 시작", Pink, Color.white);
             screen.dragLayer = Rect(ui, "DragLayer", 0, 0, 1440, 810);
 
@@ -156,6 +150,32 @@ namespace HongikIngan.Editor
             PrototypeChecks.Run();
             Debug.Log("SCHOOL_REFERENCE_LAYOUT_SAVED");
         }
+        static bool MigratePetOnlyLayout(SchoolScreen screen)
+        {
+            bool changed = false;
+            var root = screen.schoolCanvas.transform;
+            foreach (var path in new[] { "Recruitment", "StudentDetailBook/Recruit", "StudentDetailBook/Replace" })
+            {
+                var obsolete = root.Find(path);
+                if (obsolete == null) continue;
+                UnityEngine.Object.DestroyImmediate(obsolete.gameObject);
+                changed = true;
+            }
+            if (screen.relicButtons.Length > 1)
+            {
+                for (int i = 1; i < screen.relicButtons.Length; i++)
+                    UnityEngine.Object.DestroyImmediate(screen.relicButtons[i].gameObject);
+                screen.relicButtons = new[] { screen.relicButtons[0] };
+                screen.relicLabels = new[] { screen.relicLabels[0] };
+                var rect = (RectTransform)screen.relicButtons[0].transform;
+                rect.sizeDelta = new Vector2(644, rect.sizeDelta.y);
+                screen.relicLabels[0].rectTransform.sizeDelta = new Vector2(555, 78);
+                screen.rerollButton.GetComponentInChildren<Text>().text = "유물 리롤\n20 에너지";
+                changed = true;
+            }
+            return changed;
+        }
+
         static void ValidateBindings(SchoolScreen screen)
         {
             var serialized = new SerializedObject(screen);
@@ -163,7 +183,8 @@ namespace HongikIngan.Editor
             while (property.NextVisible(true))
                 if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue == null)
                     throw new InvalidOperationException("Missing School reference: " + property.propertyPath);
-            if (screen.slots.Length != 9 || screen.recruitButtons.Length != 3 || screen.petButtons.Length != 3 || screen.relicButtons.Length != 3)
+            if (screen.slots.Length != 9 || screen.petButtons.Length != 3 || screen.petLabels.Length != 3 ||
+                screen.relicButtons.Length != 1 || screen.relicLabels.Length != 1)
                 throw new InvalidOperationException("Incorrect School slot/offer bindings.");
             foreach (var slot in screen.slots)
             {
@@ -175,7 +196,7 @@ namespace HongikIngan.Editor
             }
             foreach (var image in screen.schoolCanvas.GetComponentsInChildren<Image>(true))
                 if (image.sprite != null) throw new InvalidOperationException("School placeholders should not contain artwork.");
-            Debug.Log("SCHOOL_LAYOUT_BINDINGS_PASS: nine desks, three offers per category, blank images, book geometry.");
+            Debug.Log("SCHOOL_LAYOUT_BINDINGS_PASS: nine desks, one relic, three pets, blank images, book geometry.");
         }
         [MenuItem("HongikIngan/Verify School cursor drag (Play Mode)")]
         public static void VerifyDrag()

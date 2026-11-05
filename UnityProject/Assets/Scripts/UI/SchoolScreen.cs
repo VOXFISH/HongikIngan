@@ -9,17 +9,17 @@ namespace HongikIngan
         public CanvasGroup schoolCanvas;
         public RectTransform dragLayer;
         public SchoolStudentSlot[] slots;
-        public Button[] recruitButtons, relicButtons, petButtons;
-        public Text[] recruitNames, relicLabels, petLabels;
+        public Button[] relicButtons, petButtons;
+        public Text[] relicLabels, petLabels;
         public Text energyLabel, rosterLabel, stageLabel, photosLabel, synergyLabel, ownedRelicsLabel;
         public Text detailTitle, detailBody, statusLabel;
         public Button expandButton, rerollButton, battleButton, learnButton, sellButton;
-        public Button recruitButton, replaceButton, restartButton, audioButton;
-        int selected = 0, offer = -1;
-        bool replacement, recruitReplacement, confirmRestart;
+        public Button restartButton, audioButton;
+        int selected = 0;
+        bool replacement, confirmRestart;
         PrototypeRun observedRun;
         Font schoolFont;
-        public bool CanInteract => observedRun != null && !observedRun.PendingPet && !audioOpen && !recruitReplacement && !confirmRestart;
+        public bool CanInteract => observedRun != null && !observedRun.PendingPet && !audioOpen && !confirmRestart;
 
         void Start()
         {
@@ -34,20 +34,21 @@ namespace HongikIngan
             schoolFont = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 20);
             foreach (var text in schoolCanvas.GetComponentsInChildren<Text>(true)) text.font = schoolFont;
             observedRun.Changed += Refresh;
-            for (int i = 0; i < recruitButtons.Length; i++)
+            for (int i = 0; i < relicButtons.Length; i++)
             {
                 int index = i;
-                recruitButtons[i].onClick.AddListener(() => { offer = index; selected = -1; Refresh(); });
                 relicButtons[i].onClick.AddListener(() => observedRun.BuyRelic(index));
+            }
+            for (int i = 0; i < petButtons.Length; i++)
+            {
+                int index = i;
                 petButtons[i].onClick.AddListener(() => { observedRun.OpenPet(index); replacement = false; Refresh(); });
             }
             expandButton.onClick.AddListener(() => observedRun.ExpandSlots());
-            rerollButton.onClick.AddListener(() => { offer = -1; observedRun.Reroll(); });
+            rerollButton.onClick.AddListener(() => observedRun.Reroll());
             battleButton.onClick.AddListener(() => PrototypeSession.Instance.EnterBattle());
             learnButton.onClick.AddListener(() => observedRun.Upgrade(selected));
             sellButton.onClick.AddListener(() => { int index = selected; selected = -1; observedRun.Sell(index); });
-            recruitButton.onClick.AddListener(() => { if (observedRun.BuyRecruit(offer)) { offer = -1; selected = observedRun.Students.Count - 1; } Refresh(); });
-            replaceButton.onClick.AddListener(() => { recruitReplacement = true; Refresh(); });
             restartButton.onClick.AddListener(() => { confirmRestart = true; Refresh(); });
             audioButton.onClick.AddListener(() => { audioOpen = true; Refresh(); });
             var sound = HongikIngan.Audio.SoundManager.EnsureExists();
@@ -62,7 +63,6 @@ namespace HongikIngan
         public void SelectStudent(int desk)
         {
             selected = observedRun.Students.IndexOf(observedRun.StudentAtSchoolDesk(desk));
-            offer = -1;
             Refresh();
         }
         public void MoveStudent(int from, int to)
@@ -72,7 +72,6 @@ namespace HongikIngan
             if (observedRun.MoveSchoolStudent(from, to))
             {
                 selected = observedRun.Students.IndexOf(moving);
-                offer = -1;
             }
             Refresh();
         }
@@ -101,31 +100,30 @@ namespace HongikIngan
                 slot.Bind(this, i, seated?.Definition, i < observedRun.Capacity,
                     seated != null && observedRun.Students.IndexOf(seated) == selected);
             }
-            for (int i = 0; i < recruitButtons.Length; i++)
+            for (int i = 0; i < relicButtons.Length; i++)
             {
-                var student = i < observedRun.RecruitOffers.Count ? observedRun.RecruitOffers[i] : null;
-                recruitNames[i].text = student == null ? "영입 완료" : $"{student.Name}\n{student.Grade}학년 · {observedRun.Settings.RecruitPrice(student.Grade)}";
-                recruitButtons[i].interactable = student != null;
                 var relic = i < observedRun.RelicOffers.Count ? observedRun.RelicOffers[i] : null;
-                relicLabels[i].text = relic == null ? "구매 완료" : $"{relic.Name}\n{observedRun.Settings.relicPrice} 에너지";
-                relicButtons[i].interactable = relic != null;
+                relicLabels[i].text = relic == null ? (observedRun.RelicPurchasedThisBattle ? "구매 완료 · 다음 전투 후 구매 가능" : "남은 유물 없음") :
+                    $"{relic.Name}\n{relic.Description}\n{observedRun.Settings.relicPrice} 에너지";
+                relicButtons[i].interactable = relic != null && !observedRun.RelicPurchasedThisBattle;
+            }
+            for (int i = 0; i < petButtons.Length; i++)
+            {
                 var pet = i < observedRun.PetOffers.Count ? observedRun.PetOffers[i] : null;
-                petLabels[i].text = pet.HasValue ? PetLabel((int)pet.Value) : "이용 완료";
+                petLabels[i].text = pet.HasValue ? PetLabel((int)pet.Value) : "펫 없음";
                 petButtons[i].interactable = pet.HasValue;
             }
             var groups = observedRun.Students.SelectMany(s => new[] { s.Definition.Club, s.Definition.Personality, s.Definition.SpecialSynergy })
                 .Where(s => !string.IsNullOrEmpty(s)).GroupBy(s => s).OrderByDescending(g => g.Count()).ThenBy(g => g.Key);
             synergyLabel.text = groups.Any() ? string.Join("\n", groups.Select(g => $"{g.Key}   {g.Count()}명")) : "학생을 영입하면\n시너지가 표시됩니다";
             SetButtonText(expandButton, $"책상 확장  +  {observedRun.Settings.slotExpansionPrice}");
-            SetButtonText(rerollButton, $"새로운 만남\n리롤  {observedRun.RerollCost}");
+            SetButtonText(rerollButton, observedRun.RelicPurchasedThisBattle ? "유물 구매 완료" : $"유물 리롤\n{observedRun.RerollCost} 에너지");
+            rerollButton.interactable = observedRun.CanRerollRelic;
             battleButton.interactable = observedRun.Students.Count > 0;
             statusLabel.text = observedRun.LastMessage;
             bool owned = selected >= 0 && selected < observedRun.Students.Count;
-            bool offered = offer >= 0 && offer < observedRun.RecruitOffers.Count && observedRun.RecruitOffers[offer] != null;
             learnButton.gameObject.SetActive(owned);
             sellButton.gameObject.SetActive(owned);
-            recruitButton.gameObject.SetActive(offered && observedRun.Students.Count < observedRun.Capacity);
-            replaceButton.gameObject.SetActive(offered && observedRun.Students.Count >= observedRun.Capacity);
             if (owned)
             {
                 var s = observedRun.Students[selected];
@@ -133,12 +131,6 @@ namespace HongikIngan
                 detailBody.text = $"{s.Definition.Club} · {s.Definition.Personality}\n{s.Definition.SkillDescription}\n현재 값 {s.SkillValue:0.##}  ·  강화 {s.UpgradeCount}회";
                 SetButtonText(learnButton, $"보충 학습\n{observedRun.Settings.UpgradePrice(s.Definition.Grade)} 에너지");
                 SetButtonText(sellButton, $"계약 해제\n+{observedRun.Settings.SalePrice(s.Definition.Grade)}");
-            }
-            else if (offered)
-            {
-                var s = observedRun.RecruitOffers[offer];
-                detailTitle.text = $"{s.Name}   /   {s.Grade}학년 · {s.Role}";
-                detailBody.text = $"{s.Club} · {s.Personality}\n{s.SkillDescription}\n영입 비용 {observedRun.Settings.RecruitPrice(s.Grade)} 에너지";
             }
             else
             {
@@ -154,11 +146,10 @@ namespace HongikIngan
         void OnGUI()
         {
             if (schoolCanvas == null) return;
-            if (!Run.PendingPet && !recruitReplacement && !confirmRestart && !audioOpen) return;
+            if (!Run.PendingPet && !confirmRestart && !audioOpen) return;
             InitializeUI();
             Panel(new Rect(0, 0, 1440, 900), new Color(.1f, .08f, .2f, .65f));
             if (Run.PendingPet) PetSelection();
-            if (recruitReplacement) RecruitReplacement();
             if (confirmRestart) RestartConfirmation();
             AudioUI();
             if (schoolCanvas.interactable != CanInteract) Refresh();
@@ -203,15 +194,6 @@ namespace HongikIngan
                 Label(left+4,y+43,87,45,d.Name,small);
             }
             return false;
-        }
-        void RecruitReplacement()
-        {
-            Panel(new Rect(0,100,1440,800),new Color(.12f,.16f,.24f,.6f));
-            Panel(new Rect(220,290,1000,305),new Color(.95f,.93f,.99f));
-            Label(245,310,935,40,"교체 · 학생의 얼굴이나 이름을 누르면 즉시 계약 해제합니다",heading);
-            Label(245,355,920,35,"판매 금액을 받고 빈자리를 만든 뒤 선택한 전학생을 영입할 수 있습니다.",small);
-            if(ReplacementStudents(255,410)) recruitReplacement=false;
-            if(Button(1010,530,175,42,"닫기")) recruitReplacement=false;
         }
         void RestartConfirmation()
         {

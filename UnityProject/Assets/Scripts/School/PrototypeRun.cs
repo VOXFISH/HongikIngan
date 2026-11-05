@@ -13,7 +13,6 @@ namespace HongikIngan
         // School desk positions are independent of the compact list used by combat.
         // Keeping empty desks out of Students avoids null participants in combat/transactions.
         private readonly Dictionary<StudentState, int> schoolDesks = new Dictionary<StudentState, int>();
-        public readonly List<StudentDefinition> RecruitOffers = new List<StudentDefinition>();
         public readonly List<RelicDefinition> RelicOffers = new List<RelicDefinition>();
         public readonly List<PetKind?> PetOffers = new List<PetKind?>();
         public readonly List<StudentDefinition> PendingCandidates = new List<StudentDefinition>();
@@ -26,6 +25,8 @@ namespace HongikIngan
         public int Capacity => Math.Min(9, BaseCapacity + Relics.Where(r => r.Kind == RelicKind.ExtraSlots).Sum(r => (int)r.Value));
         public int RerollCost { get; private set; }
         public bool PendingPet { get; private set; }
+        public bool RelicPurchasedThisBattle { get; private set; }
+        public bool CanRerollRelic => SchoolUnlocked && !RelicPurchasedThisBattle && RelicOffers.Any(r => r != null);
         public bool InBattle { get; private set; }
         public bool GameOver => Battle != null && Battle.Lost;
         public string LastMessage { get; private set; } = "교실에 오신 것을 환영합니다.";
@@ -50,24 +51,10 @@ namespace HongikIngan
         private bool SchoolUnlocked => SchoolAvailable && !PendingPet;
         public bool Owns(string id) => Students.Any(s => s.Definition.Id == id);
 
-        public bool BuyRecruit(int index)
-        {
-            if (!SchoolUnlocked) return Fail("먼저 진행 중인 선택을 마쳐 주세요.");
-            if (index < 0 || index >= RecruitOffers.Count || RecruitOffers[index] == null) return Fail("이미 구매했거나 없는 후보입니다.");
-            var definition = RecruitOffers[index];
-            if (Owns(definition.Id)) return Fail("이미 영입한 학생입니다.");
-            if (Students.Count >= Capacity) return Fail("빈자리가 없습니다. 교체 버튼으로 계약을 해제해 주세요.");
-            int price = Settings.RecruitPrice(definition.Grade);
-            if (Money < price) return Fail("미라클 에너지가 부족합니다.");
-            Money -= price;
-            Students.Add(new StudentState(definition));
-            RecruitOffers[index] = null;
-            return Done(definition.Name + " 영입 완료!");
-        }
-
         public bool BuyRelic(int index)
         {
             if (!SchoolUnlocked) return Fail("먼저 진행 중인 선택을 마쳐 주세요.");
+            if (RelicPurchasedThisBattle) return Fail("이번 전투 준비에서는 이미 유물을 구매했습니다.");
             if (index < 0 || index >= RelicOffers.Count || RelicOffers[index] == null) return Fail("이미 구매했거나 없는 유물입니다.");
             var relic = RelicOffers[index];
             if (Relics.Any(r => r.Id == relic.Id)) return Fail("이미 획득한 유물입니다.");
@@ -75,6 +62,7 @@ namespace HongikIngan
             if (Money < price) return Fail("미라클 에너지가 부족합니다.");
             Money -= price;
             Relics.Add(relic);
+            RelicPurchasedThisBattle = true;
             RelicOffers[index] = null;
             return Done(relic.Name + " 획득!");
         }
@@ -92,7 +80,7 @@ namespace HongikIngan
             if (kind == PetKind.Synergy) pool = SynergyPool(pool);
             var candidates = DrawStudents(pool, kind == PetKind.Advanced || kind == PetKind.Premium ? 5 : 3);
             Money -= price;
-            PetOffers[index] = null;
+            RefillPet(index);
             PendingCandidates.Clear();
             PendingCandidates.AddRange(candidates);
             PendingPet = true;
@@ -108,8 +96,6 @@ namespace HongikIngan
             if (Students.Count >= Capacity) return Fail("교체 버튼에서 학생을 계약 해제한 후 선택하세요.");
             Students.Add(new StudentState(chosen));
             CompletePet(chosen.Id);
-            // Purchased recruit offers cannot offer a duplicate now acquired via a pet.
-            for (int i = 0; i < RecruitOffers.Count; i++) if (RecruitOffers[i]?.Id == chosen.Id) RecruitOffers[i] = null;
             return Done(chosen.Name + " 영입! 나머지 후보의 폴라로이드를 받았습니다.");
         }
 
@@ -216,34 +202,51 @@ namespace HongikIngan
         public bool Reroll()
         {
             if (!SchoolUnlocked) return Fail("펫 선택을 마친 후 리롤할 수 있습니다.");
+            if (RelicPurchasedThisBattle) return Fail("유물 구매 후에는 다음 전투까지 리롤할 수 없습니다.");
+            if (!RelicOffers.Any(r => r != null)) return Fail("새로 제시할 유물이 없습니다.");
             if (Money < RerollCost) return Fail("리롤 비용이 부족합니다.");
             long nextCost = (long)RerollCost + Math.Max(0, Settings.rerollIncrease);
             if (nextCost > int.MaxValue) return Fail("리롤 비용의 표현 범위를 초과했습니다.");
             Money -= RerollCost;
             RerollCost = (int)nextCost;
-            RefreshOffers();
-            return Done("모집·유물·펫 제안을 새로 뽑았습니다.");
+            RefreshRelicOffer();
+            return Done("유물 제안을 새로 뽑았습니다.");
         }
 
         private void RefreshOffers()
         {
-            RecruitOffers.Clear(); RecruitOffers.AddRange(DrawStudents(AvailableStudents(), 3));
-            var relicPool = PrototypeCatalog.Relics.Where(r => !Relics.Any(owned => owned.Id == r.Id)).ToList();
-            RelicOffers.Clear();
-            while (RelicOffers.Count < 3 && relicPool.Count > 0)
-            {
-                int index = random.Next(relicPool.Count);
-                RelicOffers.Add(relicPool[index]); relicPool.RemoveAt(index);
-            }
+            RefreshRelicOffer();
+            // Returning from battle does not replace unused pets.
+            if (PetOffers.Count > 0) return;
             do
             {
                 PetOffers.Clear();
-                for (int i = 0; i < 3; i++)
-                {
-                    int roll = random.Next(100);
-                    PetOffers.Add(roll < 40 ? PetKind.Normal : roll < 70 ? PetKind.Advanced : roll < 80 ? PetKind.Premium : PetKind.Synergy);
-                }
+                for (int i = 0; i < 3; i++) PetOffers.Add(DrawPet());
             } while (PetOffers.TrueForAll(p => p == PetKind.Normal));
+        }
+
+        private void RefreshRelicOffer()
+        {
+            var previous = RelicOffers.FirstOrDefault(r => r != null);
+            RelicOffers.Clear();
+            if (RelicPurchasedThisBattle) return;
+            var pool = PrototypeCatalog.Relics.Where(r => !Relics.Any(owned => owned.Id == r.Id)).ToList();
+            // With multiple eligible relics a paid reroll must offer a different one.
+            if (pool.Count > 1 && previous != null) pool.RemoveAll(r => r.Id == previous.Id);
+            if (pool.Count > 0) RelicOffers.Add(pool[random.Next(pool.Count)]);
+        }
+
+        private PetKind DrawPet()
+        {
+            int roll = random.Next(100);
+            return roll < 40 ? PetKind.Normal : roll < 70 ? PetKind.Advanced : roll < 80 ? PetKind.Premium : PetKind.Synergy;
+        }
+
+        private void RefillPet(int index)
+        {
+            // Preserve the other two slots, including when preventing three normal pets.
+            do { PetOffers[index] = DrawPet(); }
+            while (PetOffers.Count == 3 && PetOffers.TrueForAll(p => p == PetKind.Normal));
         }
 
         private List<StudentDefinition> AvailableStudents() => PrototypeCatalog.Students.Where(s => !Owns(s.Id)).ToList();
@@ -328,6 +331,7 @@ namespace HongikIngan
             InBattle = false;
             foreach (var student in Students) student.Keywords.Clear();
             Battle = null;
+            RelicPurchasedThisBattle = false;
             RefreshOffers();
             return Done("보스 처치 보상 +" + reward + ". 다음 스테이지를 준비하세요!");
         }

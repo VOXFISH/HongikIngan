@@ -13,7 +13,7 @@
 - [마법소녀 속성 정의 초안](Magical%20Girl%20Attributes.md): 오브젝트 구분, 속성별 자료형 후보, 임시 값과 수정 체크리스트.
 - [전투 설계 결정 기록](Decisions/README.md): 대화별 검토 기록, 주제별 결정 요구사항 및 권고 이력.
 
-- [교실 시스템 기획서](Classroom%20System%20Design.md): 원본 도표, 학생 관리·리롤·모집·유물·펫·전투 진입.
+- [교실 시스템 기획서](Classroom%20System%20Design.md): 원본 도표, 학생 관리·펫 전용 영입·유물 구매와 리롤·전투 진입.
 - [교실 기능별 결정 사항](Decisions/Classroom/README.md): 7개 기능의 결정·미정·검증 기준.
 
 - [프로토타입 실행 안내](Prototype%20Guide.md): 학교·전투 씬, 조작, 임시 콘텐츠, 검증 방법.

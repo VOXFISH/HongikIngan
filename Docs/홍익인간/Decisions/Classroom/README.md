@@ -3,8 +3,8 @@
 [교실 시스템 기획서](../../Classroom%20System%20Design.md)를 기능별로 나눴다. 사용자 답변 1~14를 반영했다. 확정 규칙·프로토타입 해석·밸런싱 항목을 구분한다. 문서 수정만으로 실제 구현·검증 완료를 뜻하지 않는다.
 
 - [CL01 — 학생 관리·배치·보충 학습](CL01-Student-Management.md)
-- [CL02 — 리롤](CL02-Reroll.md)
-- [CL03 — 일반 모집](CL03-Recruitment.md)
+- [CL02 — 유물 리롤](CL02-Reroll.md)
+- [CL03 — 일반 모집 제거·펫 전용 영입](CL03-Recruitment.md)
 - [CL04 — 유물 제안·획득·칠판](CL04-Relics.md)
 - [CL05 — 펫 영입·시너지 추첨·폴라로이드](CL05-Pets-and-Polaroids.md)
 - [CL06 — 경제 설정·결제](CL06-Economy.md)
