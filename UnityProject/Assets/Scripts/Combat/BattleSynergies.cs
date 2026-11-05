@@ -41,17 +41,17 @@ namespace HongikIngan
                 int count = Count(run, "분위기메이커");
                 int amount = count >= 9 ? 1000 : count >= 5 ? 100 : count >= 3 ? 50 : 30;
                 run.Atmosphere += amount;
-                yield return Step(run.Battle, "synergy", "분위기 +" + amount + " - 누적 " + run.Atmosphere);
+                yield return Step(run.Battle, "synergy", "분위기 +" + amount + " - 누적 " + run.Atmosphere, actor);
             }
             if (Count(run, "독설가") >= 3 && actor.Definition.Role == StudentRole.Debuff)
             {
                 run.Battle.Damage *= 1.2f; run.NotifyDamage();
-                yield return Step(run.Battle, "damage", "독설가 - 약화 역할군 액션 ×1.2");
+                yield return Step(run.Battle, "damage", "독설가 - 약화 역할군 액션 ×1.2", actor);
             }
             if (run.Atmosphere >= 100 && MoodTarget(run, actor))
             {
                 AddDamage(run, run.Battle.Damage * .5f);
-                yield return Step(run.Battle, "damage", "분위기 - " + actor.Definition.Name + " 액션 시 현재 데미지 +50%p");
+                yield return Step(run.Battle, "damage", "분위기 - " + actor.Definition.Name + " 액션 시 현재 데미지 +50%p", actor);
             }
         }
 
@@ -88,7 +88,7 @@ namespace HongikIngan
         {
             if (actor.Definition.Personality != "리더") yield break;
             AddDamage(run, run.Battle.Damage * .3f);
-            yield return Step(run.Battle, "damage", "리더의 버프 적용 - 현재 데미지 +30%");
+            yield return Step(run.Battle, "damage", "리더의 버프 적용 - 현재 데미지 +30%", actor);
         }
 
         public static IEnumerable<BattleStep> FinalizeDamage(PrototypeRun run)

@@ -65,8 +65,8 @@ namespace HongikIngan
             yield return new WaitForSeconds(1.5f);
             var screen = FindFirstObjectByType<BattleScreen>();
             Check(screen != null && screen.CanReorder, "battle scene initialized");
-            var slots = screen.formation.slots;
-            Check(slots.Length == 9 && slots[0].HasStudent && slots[1].HasStudent, "nine serialized slots bound");
+            var slots = screen.formation.slots.Where(s => s.HasStudent).ToArray();
+            Check(screen.formation.slots.Length == 9 && slots.Length == 2, "centered students in nine serialized slots");
             var rect = (RectTransform)slots[0].transform;
             rect.anchoredPosition += new Vector2(7, 3);
             var authored = rect.anchoredPosition;

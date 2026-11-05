@@ -173,7 +173,10 @@ namespace HongikIngan.Editor
             var property = new SerializedObject(component).GetIterator();
             while (property.NextVisible(true))
                 if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue == null)
+                {
+                    if (component is BattleFormationView && property.propertyPath.StartsWith("artwork.Array.data[") && property.propertyPath.EndsWith(".sprite")) continue;
                     throw new InvalidOperationException(component.name + ": missing " + property.propertyPath);
+                }
         }
         static RectTransform Rect(Transform parent, string name, float x, float y, float w, float h)
         {
