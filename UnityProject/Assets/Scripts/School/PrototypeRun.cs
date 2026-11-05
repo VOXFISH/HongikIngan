@@ -22,7 +22,8 @@ namespace HongikIngan
         public int Money { get; private set; }
         public int Stage { get; private set; } = 1;
         public int BaseCapacity { get; private set; } = 3;
-        public int Capacity => Math.Min(9, BaseCapacity + Relics.Where(r => r.Kind == RelicKind.ExtraSlots).Sum(r => (int)r.Value));
+        public int Capacity => Math.Min(9, BaseCapacity + Relics.Where(r => r.Kind == RelicKind.ExtraSlots).Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r)));
+        public float Atmosphere { get; internal set; }
         public int RerollCost { get; private set; }
         public bool PendingPet { get; private set; }
         public bool RelicPurchasedThisBattle { get; private set; }
@@ -124,7 +125,9 @@ namespace HongikIngan
             if (!SchoolAvailable) return Fail("교실에서만 계약을 해제할 수 있습니다.");
             if (index < 0 || index >= Students.Count) return Fail("없는 학생입니다.");
             var student = Students[index];
-            int price = Settings.SalePrice(student.Definition.Grade);
+            int price;
+            try { price = BattleSynergies.Income(this, Settings.SalePrice(student.Definition.Grade)); }
+            catch (OverflowException) { return Fail("판매 가격 설정 또는 재화 범위를 확인해 주세요."); }
             if (price == int.MaxValue || (long)Money + price > int.MaxValue) return Fail("판매 가격 설정 또는 재화 범위를 확인해 주세요.");
             Money += price;
             Students.RemoveAt(index);
@@ -136,6 +139,7 @@ namespace HongikIngan
             if (!SchoolUnlocked) return Fail("먼저 진행 중인 선택을 마쳐 주세요.");
             if (index < 0 || index >= Students.Count) return Fail("없는 학생입니다.");
             var student = Students[index];
+            if (!student.Definition.UpgradeEnabled) return Fail("강화 수치가 아직 정해지지 않은 스킬입니다.");
             if (!student.Definition.UnlimitedUpgrade && student.UpgradeCount >= 1) return Fail("1회 강화가 이미 완료되었습니다.");
             int price = Settings.UpgradePrice(student.Definition.Grade);
             if (Money < price) return Fail("미라클 에너지가 부족합니다.");
@@ -325,18 +329,21 @@ namespace HongikIngan
         public bool ReturnToSchool()
         {
             if (!InBattle || Battle == null || !Battle.Won || Battle.IsResolving) return Fail("보스 처치 후 교실로 돌아갈 수 있습니다.");
-            int reward = Settings.victoryReward + Settings.victoryRewardPerStage * (Stage - 1) + Relics.Where(r => r.Kind == RelicKind.VictoryMoney).Sum(r => (int)r.Value);
-            Money += Math.Max(0, reward);
+            int reward = Settings.victoryReward + Settings.victoryRewardPerStage * (Stage - 1) + Relics.Where(r => r.Kind == RelicKind.VictoryMoney).Sum(r => (int)r.Value * BattleSynergies.RelicApplications(this, r));
+            int earned = BattleSynergies.Income(this, reward);
+            AddMoney(reward);
+            BattleSynergies.FinishBattle(this);
             Stage++;
             InBattle = false;
             foreach (var student in Students) student.Keywords.Clear();
             Battle = null;
             RelicPurchasedThisBattle = false;
             RefreshOffers();
-            return Done("보스 처치 보상 +" + reward + ". 다음 스테이지를 준비하세요!");
+            return Done("보스 처치 보상 +" + earned + ". 다음 스테이지를 준비하세요!");
         }
 
-        internal void AddMoney(int amount) { Money = checked(Money + Math.Max(0, amount)); }
+        internal void AddMoney(int amount) { Money = checked(Money + BattleSynergies.Income(this, amount)); }
+        internal bool RollCombatChance(float probability) => random.NextDouble() < probability;
         internal void NotifyDamage() { DamageChanged?.Invoke(Battle.Damage); }
     }
 }

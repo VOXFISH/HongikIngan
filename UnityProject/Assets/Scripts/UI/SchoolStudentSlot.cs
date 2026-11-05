@@ -32,7 +32,7 @@ namespace HongikIngan
             if (occupied)
             {
                 nameLabel.text = student.Name;
-                roleLabel.text = $"{student.Grade}학년 · {student.Role}";
+                roleLabel.text = $"{student.Grade}학년 · {student.RoleLabel}";
             }
             for (int i = 0; i < books.Length; i++)
             {

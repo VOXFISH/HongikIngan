@@ -84,7 +84,7 @@ namespace HongikIngan
             energyLabel.text = $"미라클 에너지\n{observedRun.Money}";
             rosterLabel.text = $"전대 인원\n{observedRun.Students.Count} / {observedRun.Capacity}";
             stageLabel.text = $"STAGE {observedRun.Stage:00}  ·  방과 전";
-            photosLabel.text = $"폴라로이드  {observedRun.PhotoCount}";
+            photosLabel.text = $"폴라로이드 {observedRun.PhotoCount}\n분위기 {observedRun.Atmosphere}";
             ownedRelicsLabel.text = observedRun.Relics.Count == 0 ? "아직 획득한 유물이 없어요" : string.Join("   /   ", observedRun.Relics.Select(r => r.Name));
             int visible = Mathf.Max(5, observedRun.Capacity);
             float cellWidth = 1080f / visible;
@@ -115,7 +115,7 @@ namespace HongikIngan
             }
             var groups = observedRun.Students.SelectMany(s => new[] { s.Definition.Club, s.Definition.Personality, s.Definition.SpecialSynergy })
                 .Where(s => !string.IsNullOrEmpty(s)).GroupBy(s => s).OrderByDescending(g => g.Count()).ThenBy(g => g.Key);
-            synergyLabel.text = groups.Any() ? string.Join("\n", groups.Select(g => $"{g.Key}   {g.Count()}명")) : "학생을 영입하면\n시너지가 표시됩니다";
+            synergyLabel.text = groups.Any() ? string.Join("\n", groups.Select(g => $"{g.Key}   {BattleSynergies.Count(observedRun, g.Key)}명")) : "학생을 영입하면\n시너지가 표시됩니다";
             SetButtonText(expandButton, $"책상 확장  +  {observedRun.Settings.slotExpansionPrice}");
             SetButtonText(rerollButton, observedRun.RelicPurchasedThisBattle ? "유물 구매 완료" : $"유물 리롤\n{observedRun.RerollCost} 에너지");
             rerollButton.interactable = observedRun.CanRerollRelic;
@@ -127,10 +127,12 @@ namespace HongikIngan
             if (owned)
             {
                 var s = observedRun.Students[selected];
-                detailTitle.text = $"{s.Definition.Name}   /   {s.Definition.Grade}학년 · {s.Definition.Role}";
-                detailBody.text = $"{s.Definition.Club} · {s.Definition.Personality}\n{s.Definition.SkillDescription}\n현재 값 {s.SkillValue:0.##}  ·  강화 {s.UpgradeCount}회";
+                detailTitle.text = $"{s.Definition.Name}   /   {s.Definition.Grade}학년 · {s.Definition.RoleLabel}";
+                string values = s.Definition.Action == ActionKind.AddThenPercentDamage ?
+                    $"+{s.SkillValue:0.##} 후 +{s.Definition.PercentAtUpgrade(s.UpgradeCount):0.##}%" : $"{s.SkillValue:0.##}";
+                detailBody.text = $"{s.Definition.Club} · {s.Definition.Personality}\n{s.Definition.SkillDescription}\n현재 값 {values}  ·  강화 {s.UpgradeCount}회";
                 SetButtonText(learnButton, $"보충 학습\n{observedRun.Settings.UpgradePrice(s.Definition.Grade)} 에너지");
-                SetButtonText(sellButton, $"계약 해제\n+{observedRun.Settings.SalePrice(s.Definition.Grade)}");
+                SetButtonText(sellButton, $"계약 해제\n+{BattleSynergies.Income(observedRun, observedRun.Settings.SalePrice(s.Definition.Grade))}");
             }
             else
             {

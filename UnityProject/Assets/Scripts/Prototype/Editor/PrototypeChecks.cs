@@ -25,7 +25,9 @@ namespace HongikIngan
                 PetRefillAndRelicLimit();
                 Keywords();
                 CombatOrderingAndChains();
+                DocumentedDamageActions();
                 DamageFormatting();
+                GirlContentChecks.Run();
                 Debug.Log("PROTOTYPE_CHECKS_PASS assertions=" + assertions);
             }
             finally
@@ -165,7 +167,8 @@ namespace HongikIngan
             Check(run.ChoosePet(0), "Released student can be recruited again through pet");
             Check(run.Students[0].UpgradeCount == 0 && run.Students[0].SkillValue == once.InitialValue, "Recruiting again resets upgrades");
 
-            var unlimited = PrototypeCatalog.Students.First(s => s.UnlimitedUpgrade);
+            var unlimited = new StudentDefinition { Id = "unlimited_fixture", Name = "강화 검사", Grade = 1,
+                InitialValue = 100, UpgradeStep = 25, Action = ActionKind.AddDamage, UnlimitedUpgrade = true };
             run.Students.Clear(); run.Students.Add(new StudentState(unlimited));
             for (int i = 1; i <= 4; i++)
                 Check(run.Upgrade(0) && run.Students[0].UpgradeCount == i && run.Students[0].SkillValue == unlimited.ValueAtUpgrade(i), "Unlimited replacement rule at level " + i);
@@ -373,6 +376,34 @@ namespace HongikIngan
             Check(actionNames.Count == 12 && actionNames[0] == "initial", "Reaction actions emit further reactions without an arbitrary combo cap");
             Check(actionNames.Skip(1).All(n => n == "react1" || n == "react2"), "Only other reacting allies continue the reaction chain");
             for (int i = 2; i < actionNames.Count; i++) Check(actionNames[i] != actionNames[i - 1], "Reaction does not trigger itself");
+        }
+
+        private static void DocumentedDamageActions()
+        {
+            var minji = Actor("Girl6", ActionKind.TeamSizeDamage, 100);
+            var hanbyeol = Actor("Girl9", ActionKind.TeamSizeDamage, 100);
+            var team = ControlledBattle(100000, minji, hanbyeol, Actor("helper", ActionKind.AddDamage, 0));
+            team.ResolveNextTurn();
+            Check(team.Battle.Damage == 600, "Each team-size skill adds 100 per current team member, including self");
+
+            var nayeon = Actor("Girl10", ActionKind.AddThenPercentDamage, 0);
+            nayeon.Definition.InitialPercent = 10;
+            var percent = ControlledBattle(100000, Actor("seed", ActionKind.AddDamage, 250), nayeon);
+            percent.ResolveNextTurn();
+            Check(percent.Battle.Damage == 275, "Good Cop adds ten percent of accumulated damage");
+
+            var dahye = Actor("Girl11", ActionKind.AddThenPercentDamage, 50);
+            dahye.Definition.InitialPercent = 10;
+            dahye.Definition.UpgradeStep = 50;
+            dahye.Definition.PercentUpgradeStep = 5;
+            var venom = ControlledBattle(100000, Actor("seed", ActionKind.AddDamage, 150), dahye);
+            var values = new List<float>(); venom.DamageChanged += values.Add;
+            venom.ResolveNextTurn();
+            Check(values.SequenceEqual(new[] { 0f, 150f, 200f, 220f }), "Venom adds flat damage before current-damage percentage and reports both changes");
+            dahye.UpgradeCount = 1;
+            dahye.SkillValue = dahye.Definition.ValueAtUpgrade(1);
+            venom.ResolveNextTurn();
+            Check(venom.Battle.Damage == 287.5f, "Upgraded Venom applies 100 then fifteen percent");
         }
 
         private static void DamageFormatting()

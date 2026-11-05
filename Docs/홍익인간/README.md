@@ -18,6 +18,7 @@
 
 - [프로토타입 실행 안내](Prototype%20Guide.md): 학교·전투 씬, 조작, 임시 콘텐츠, 검증 방법.
 - [전투 UI 편집](Battle%20UI%20Editing.md): 독립 UI 오브젝트 배치, 컴포넌트 책임과 검증.
+- [Girl0–Girl11 전투 구현](Girl%20Battle%20Implementation.md): 자연어 우선 해석, 12명 스킬·강화와 공통 시너지, 검증 결과.
 - [마법소녀 작성 서식](Girls/README.md): `Girl%d.jsonc` 복사·작성과 AI 일괄 구현 안내.
 - [FMOD 설정 안내](Audio%20Setup.md): 지속 SoundManager와 채널별 볼륨·음소거.
 

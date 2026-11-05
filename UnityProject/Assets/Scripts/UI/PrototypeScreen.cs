@@ -63,14 +63,14 @@ namespace HongikIngan
             {
                 Face(r.x+12,r.y+12,35,d);
                 Label(r.x+55,r.y+16,r.width-60,30,d.Name,small);
-                Label(r.x+12,r.y+55,r.width-24,28,$"{d.Grade}학년 · {d.Role}",small);
+                Label(r.x+12,r.y+55,r.width-24,28,$"{d.Grade}학년 · {d.RoleLabel}",small);
                 Label(r.x+12,r.y+88,r.width-24,48,$"{d.Club} · {d.Personality}",small);
                 Label(r.x+12,r.y+140,r.width-24,48,footer,small);
                 return;
             }
             Face(r.x+12,r.y+12,48,d);
             Label(r.x+70,r.y+8,r.width-75,30,d.Name,normal);
-            Label(r.x+70,r.y+40,r.width-75,28,$"{d.Grade}학년 · {d.Role}",small);
+            Label(r.x+70,r.y+40,r.width-75,28,$"{d.Grade}학년 · {d.RoleLabel}",small);
             Label(r.x+12,r.y+76,r.width-24,48,$"{d.Club} · {d.Personality}",small);
             Label(r.x+12,r.y+125,r.width-24,48,footer,small);
         }
