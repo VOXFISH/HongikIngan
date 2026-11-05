@@ -23,6 +23,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 10fe74c9f8a75d644b09d32de8aaf631, type: 3}
   - studentId: Girl4
     sprite: {fileID: 21300000, guid: 1a97f3bccd6d64e4eaeca35b90e8e191, type: 3}
+  - studentId: Girl5
+    sprite: {fileID: 21300000, guid: d4f86720b3be29f4082a7b27ef2f0410, type: 3}
   - studentId: Girl6
     sprite: {fileID: 21300000, guid: e6ba26ed8ede4e049ad7f7be84776251, type: 3}
   - studentId: Girl7
@@ -33,6 +35,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 9c7e09d59132a51428b302f9c9d8afd1, type: 3}
   - studentId: Girl10
     sprite: {fileID: 21300000, guid: 05db6fd1ca6280541a23d5149d854efd, type: 3}
+  - studentId: Girl11
+    sprite: {fileID: 21300000, guid: 8f4979037b089684292fd84024ec4afa, type: 3}
   - studentId: Girl12
     sprite: {fileID: 21300000, guid: 75666c8201468394f89f6ddd64092ef1, type: 3}
   - studentId: Girl13

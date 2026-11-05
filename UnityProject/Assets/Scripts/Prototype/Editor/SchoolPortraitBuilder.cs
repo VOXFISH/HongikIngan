@@ -59,8 +59,13 @@ namespace HongikIngan.Editor
                 if (portrait == null) throw new InvalidOperationException("StudentPlaceholder is missing from the desk prefab.");
                 slot.studentPortrait = portrait.GetComponent<Image>();
                 if (slot.studentPortrait == null) throw new InvalidOperationException("StudentPlaceholder Image is missing.");
-                slot.portraitPlaceholderFill = portrait.Find("Fill")?.gameObject;
+                var fill = portrait.Find("Fill");
+                if (fill != null) UnityEngine.Object.DestroyImmediate(fill.gameObject);
                 slot.portraitCatalog = catalog;
+                if (slot.selectionFrame != null) slot.selectionFrame.enabled = false;
+                slot.studentPortrait.sprite = null;
+                slot.studentPortrait.color = Color.white;
+                slot.studentPortrait.enabled = false;
                 slot.studentPortrait.preserveAspect = true;
                 slot.studentPortrait.raycastTarget = false;
                 EditorUtility.SetDirty(slot);
