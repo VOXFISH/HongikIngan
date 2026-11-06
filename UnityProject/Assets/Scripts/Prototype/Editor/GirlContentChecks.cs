@@ -44,7 +44,7 @@ namespace HongikIngan
             e.startingMoney = 100000; e.bossBaseHp = 1e30f;
             var run = new PrototypeRun(e, 912);
             for (int i = 0; i < 4; i++) run.ExpandSlots();
-            run.Relics.Add(PrototypeCatalog.Relics.First(r => r.Kind == RelicKind.ExtraSlots));
+
             run.Students.Clear(); run.Students.AddRange(actors.Take(7));
             Check(run.StartBattle(), "test battle starts");
             run.Students.Clear(); run.Students.AddRange(actors); // Includes injected clone slots for synergy fixtures.
@@ -159,10 +159,10 @@ namespace HongikIngan
             harshActors[2].Definition.Role = StudentRole.Debuff;
             var harsh = Run(harshActors); Resolve(harsh); Near(harsh.Battle.Damage, 120, "harsh multiplier uses actual debuff-role actions");
             var cute = Run(Enumerable.Range(0, 9).Select(i => Dummy("c" + i, personality: "귀염둥이")).ToArray());
-            cute.Relics.Add(PrototypeCatalog.Relics.First(r => r.Kind == RelicKind.OpeningDamage));
+
             var consumable = new KeywordDefinition("test_consumable", "test", true, true, false);
             KeywordRules.Add(cute.Students[0].Keywords, consumable, 5);
-            Resolve(cute); Near(cute.Battle.Damage, 85, "cute nine doubles relic and applies keyword");
+            Resolve(cute); Near(cute.Battle.Damage, 5, "cute nine has no relic damage and applies keyword");
             Check(cute.Students[0].Keywords.Count == 0, "highest cute tier does not implicitly add lower-tier consumption immunity");
             var cuteSeven = Run(Enumerable.Range(0, 7).Select(i => Dummy("c" + i, personality: "귀염둥이")).ToArray());
             KeywordRules.Add(cuteSeven.Students[0].Keywords, consumable, 5);
@@ -201,7 +201,7 @@ namespace HongikIngan
             }
             var persist = Run(Girl(0, synergies: true));
             persist.Settings.bossBaseHp = 1; // Next battle uses this value; current battle must still be won normally.
-            persist.Relics.Add(new RelicDefinition { Kind = RelicKind.OpeningDamage, Value = 1e30f, Name = "win fixture" });
+            typeof(BattleState).GetProperty("BossHp").SetValue(persist.Battle, 1f);
             Resolve(persist);
             float atmosphere = persist.Atmosphere;
             Check(persist.ReturnToSchool() && persist.Atmosphere == atmosphere && atmosphere > 0, "atmosphere survives battle-to-school transition");

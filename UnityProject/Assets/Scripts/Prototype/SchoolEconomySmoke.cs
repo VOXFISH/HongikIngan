@@ -47,7 +47,7 @@ namespace HongikIngan
                 yield return next;
             }
             File.WriteAllText(Path.Combine(output, "school-economy-result.txt"), "PASS assertions=" + assertions +
-                ": no recruitment shop, one relic, reroll isolation, purchase lock, immediate pet refill, paid selection, victory reset and preserved pets.");
+                ": fortune animation, input lock, text-only result, immediate effects, daily reset and preserved pets.");
             Application.Quit(0);
         }
 
@@ -61,7 +61,7 @@ namespace HongikIngan
                 var menu = FindFirstObjectByType<MainMenuScreen>();
                 Check(menu != null, "main menu is the entry scene");
                 menu.startButton.onClick.Invoke();
-                yield return new WaitForSeconds(.3f);
+                yield return new WaitForSeconds(2f);
             }
             var session = PrototypeSession.Ensure();
             var run = session.Run;
@@ -74,29 +74,41 @@ namespace HongikIngan
             Check(screen.schoolCanvas.transform.Find("Recruitment") == null &&
                 screen.schoolCanvas.transform.Find("StudentDetailBook/Recruit") == null &&
                 screen.schoolCanvas.transform.Find("StudentDetailBook/Replace") == null, "recruitment UI removed from scene");
-            Check(screen.relicButtons.Length == 1 && screen.petButtons.Length == 3, "one relic and three pet buttons bound");
+            Check(screen.relicButtons.Length == 1 && screen.petButtons.Length == 3, "one fortune and three pet buttons bound");
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "school-1440x810.png"));
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(2f);
 
             var pets = run.PetOffers.ToArray();
-            var relic = run.RelicOffers[0];
             int money = run.Money, cost = run.RerollCost;
+            float started = Time.unscaledTime;
             screen.rerollButton.onClick.Invoke();
-            Check(run.Money == money - cost && run.RelicOffers.Count == 1 && run.RelicOffers[0].Id != relic.Id, "reroll button charges and replaces only relic");
-            Check(pets.SequenceEqual(run.PetOffers), "reroll keeps all pets");
-            relic = run.RelicOffers[0]; money = run.Money;
-            screen.relicButtons[0].onClick.Invoke();
-            Check(run.RelicPurchasedThisBattle && run.Relics.Contains(relic) && run.Money == money - run.Settings.relicPrice, "relic button buys once");
-            Check(!screen.relicButtons[0].interactable && !screen.rerollButton.interactable, "purchase disables relic and reroll buttons");
-            Check(screen.relicLabels[0].text.Contains("구매 완료"), "purchase status displayed");
+            Check(run.IsFortuneRolling && !screen.rerollButton.interactable && !screen.CanInteract, "roll disables button and school transactions");
+            Check(run.Money == money - cost && run.Fortune == null, "payment happens once before result");
             money = run.Money;
-            screen.rerollButton.onClick.Invoke(); screen.relicButtons[0].onClick.Invoke();
-            Check(run.Money == money && run.Relics.Count == 1, "repeated callbacks cannot bypass purchase lock");
-
+            screen.rerollButton.onClick.Invoke(); screen.battleButton.onClick.Invoke();
+            Check(run.Money == money && !run.InBattle, "duplicate callbacks cannot charge or leave scene");
+            var initialText = screen.relicLabels[0].text;
+            yield return new WaitForSecondsRealtime(.15f);
+            Check(run.IsFortuneRolling && screen.relicLabels[0].text != initialText, "fortune texts cycle rapidly");
+            ScreenCapture.CaptureScreenshot(Path.Combine(output, "fortune-spinning.png"));
+            while (run.IsFortuneRolling) yield return null;
+            Check(Time.unscaledTime - started >= .8f && Time.unscaledTime - started < 1.1f, "result stops at 0.8 seconds within frame tolerance");
+            Check(run.Fortune != null && screen.relicLabels[0].text.Contains(run.Fortune.Description), "selected result displayed as text");
+            Check(screen.rerollButton.interactable && !screen.relicButtons[0].interactable && !screen.ownedRelicsLabel.gameObject.activeSelf, "reroll reenabled, no purchase or owned stack");
+            Check(pets.SequenceEqual(run.PetOffers), "fortune keeps all pet offers");
+            screen.relicLabels[0].ForceMeshUpdate();
+            Check(!screen.relicLabels[0].isTextTruncated, "fortune fits existing UI card");
+            foreach (var fortune in PrototypeCatalog.Fortunes)
+            {
+                screen.relicLabels[0].text = fortune.Description + "\n귀염둥이: 효과 2배";
+                screen.relicLabels[0].ForceMeshUpdate();
+                Check(!screen.relicLabels[0].isTextTruncated, "all fortune descriptions fit: " + fortune.Id);
+            }
+            screen.Refresh();
             for (int slot = 0; slot < 3; slot++)
             {
                 pets = run.PetOffers.ToArray(); money = run.Money;
-                cost = run.Settings.PetPrice(pets[slot].Value);
+                cost = run.PetPrice(pets[slot].Value);
                 screen.petButtons[slot].onClick.Invoke();
                 Check(run.PendingPet && run.Money == money - cost && run.PetOffers[slot].HasValue, "paid pet immediately refills slot " + slot);
                 Check(Enumerable.Range(0, 3).Where(i => i != slot).All(i => run.PetOffers[i] == pets[i]), "other pet slots preserved " + slot);
@@ -114,25 +126,25 @@ namespace HongikIngan
             }
             Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
             yield return new WaitForSeconds(.5f);
-            ScreenCapture.CaptureScreenshot(Path.Combine(output, "school-purchased-1280x720.png"));
-            yield return new WaitForSeconds(.3f);
+            ScreenCapture.CaptureScreenshot(Path.Combine(output, "fortune-result-1280x720.png"));
+            yield return new WaitForSeconds(2f);
 
             pets = run.PetOffers.ToArray();
             screen.battleButton.onClick.Invoke();
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(2f);
             Check(SceneManager.GetActiveScene().name == "Battle", "battle button transitions scene");
             run.ResolveNextTurn();
             Check(run.Battle.Won, "victory reached through combat");
             session.BackToSchool();
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(2f);
             screen = FindFirstObjectByType<SchoolScreen>();
             Check(SceneManager.GetActiveScene().name == "School" && screen.CanInteract && run.Stage == 2, "victory returns to next school");
-            Check(!run.RelicPurchasedThisBattle && screen.relicButtons[0].interactable && screen.rerollButton.interactable, "next battle purchase and reroll unlocked");
+            Check(run.Fortune == null && run.RerollCost == 20 && screen.rerollButton.interactable, "next day resets fortune and reroll price");
             Check(pets.SequenceEqual(run.PetOffers), "unused pets persist across scene transitions");
-            screen.relicButtons[0].onClick.Invoke();
-            Check(run.Relics.Count == 2 && !screen.rerollButton.interactable, "next battle allows exactly one further purchase");
+            screen.rerollButton.onClick.Invoke();
+            yield return new WaitForSecondsRealtime(.9f);
+            Check(run.Fortune != null && screen.rerollButton.interactable, "next day permits another fortune");
         }
-
         void Check(bool condition, string message)
         {
             assertions++;

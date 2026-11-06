@@ -155,17 +155,6 @@ namespace HongikIngan
                     }
                 }
 
-                // Relics are processed in acquisition order before character slot order.
-                foreach (var relic in run.Relics)
-                {
-                    if (relic.Kind != RelicKind.OpeningDamage) continue;
-                    for (int repeat = 0; repeat < BattleSynergies.RelicApplications(run, relic); repeat++)
-                    {
-                        AddDamage(run, relic.Value);
-                        yield return Step(battle, "damage", relic.Name + " +" + PrototypeCatalog.FormatDamage(relic.Value));
-                    }
-                }
-
                 foreach (var step in BattleActionResolver.Resolve(run)) yield return step;
 
                 if (run.PhotoCount > 0)
@@ -174,14 +163,10 @@ namespace HongikIngan
                     yield return Step(battle, "damage", "폴라로이드 " + run.PhotoCount + "장 보정");
                 }
                 foreach (var step in BattleSynergies.FinalizeDamage(run)) yield return step;
-                foreach (var relic in run.Relics)
+                if (run.FortuneDamageMultiplier > 1)
                 {
-                    if (relic.Kind != RelicKind.FinalMultiplier) continue;
-                    for (int repeat = 0; repeat < BattleSynergies.RelicApplications(run, relic); repeat++)
-                    {
-                        battle.Damage *= relic.Value; run.NotifyDamage();
-                        yield return Step(battle, "damage", relic.Name + " ×" + relic.Value);
-                    }
+                    battle.Damage *= run.FortuneDamageMultiplier; run.NotifyDamage();
+                    yield return Step(battle, "damage", "오늘의 운세 - 공격 완료 후 데미지 ×" + run.FortuneDamageMultiplier);
                 }
                 foreach (var keyword in battle.BossKeywords.ToArray())
                 {

@@ -357,3 +357,39 @@ In ""school""scene, the transitioning effect on the characters does not happen. 
 "2026-11-06 08:01:22+09:00","VOXFISH","<send_user_message_question_reply>
 [{""questionItemId"":""[\""request_user_input_async\"",\""call_e20cc0e8627c4eae843c8b7b362dbb89\"",0]"",""question"":""The transformation material and shader .meta files contain committed merge conflicts with two different GUIDs. AGENTS.md requires coordination for .meta conflicts. May I resolve these using the GUIDs already referenced by the School prefab and material, preserving those existing connections?"",""answer"":""Use the currently referenced GUIDs (Recommended)""}]
 </send_user_message_question_reply>"
+"2026-11-06 09:50:12+09:00","VOXFISH","유물 시스템을 삭제하고, ""오늘의 운세"" 시스템으로 대체해 줘. 유물 UI에서 작동하는 유물과 같은 시스템이지만 사물함 위에 쌓이지 않고 설명 텍스트로만 표시돼. 오늘의 운세는 매일 초기화돼. 아래는 텍스트의 목록과 등장 가중치야.
+
+- 상점 리롤 비용 50% 감소, 2
+- 모집 비용 50% 감소, 2
+- 공격 완료 후 데미지 2배, 1
+- 엄지발가락을 찧지 않음, 3 (꽝)
+- 마운틴 듀 1+1, 3 (꽝)
+- 급식으로 파인애플 피자가 나옴, 3 (꽝)
+- 급식으로 마라탕이 나옴, 3 (꽝)
+- 머지 컨플릭트 방지, 3 (꽝)
+- 운이 없네요..., 5 (꽝)
+- 100 미라클 에너지 획득, 1
+- 모든 시너지 +1 적용, 0.5
+- 모든 모집이 시너지 모집으로 적용, 1
+- 모든 마법소녀 강화, 0.3
+- 이번 전투 보상 1.5배, 1
+- 이번 전투 보상 2배, 1
+- 이번 전투 보상 10배, 0.3
+
+오늘의 운세 리롤 버튼을 누르면, 위의 텍스트들이 아주 빠르게 전환되다가 0.8초 후에 선정된 운세로 멈춰.
+
+전환 중에는 버튼이 비활성화되도록 해.
+
+'귀염둥이'의 기존 '디버프 유물'과 '모든 유물' 효과는 다음과 같이 변경해.
+
+- 디버프 유물 -> 오늘의 운세 리롤에서 꽝이 등장하지 않음, 효과 2배
+- 모든 유물 -> 상점 100% 할인!"
+"2026-11-06 09:50:12+09:00","VOXFISH","<send_user_message_question_reply>
+[{""questionItemId"":""[\""request_user_input_async\"",\""call_e1c9a8a240b340b79345150530fd661f\"",0]"",""question"":""“매일 초기화”는 게임 안에서 전투를 마치고 다음 날(다음 스테이지) 학교로 돌아올 때 초기화하는 것으로 적용해도 될까요?"",""answer"":""게임 내 다음 날에 초기화""}]
+</send_user_message_question_reply>"
+"2026-11-06 09:50:12+09:00","VOXFISH","<send_user_message_question_reply>
+[{""questionItemId"":""[\""request_user_input_async\"",\""call_e1c9a8a240b340b79345150530fd661f\"",1]"",""question"":""오늘의 운세는 기존 유물처럼 ‘리롤로 제안 확인 후 구매’하는 방식인가요, 아니면 리롤 결과가 즉시 적용되나요?"",""answer"":""리롤 결과 즉시 적용""}]
+</send_user_message_question_reply>"
+"2026-11-06 09:50:12+09:00","VOXFISH","<send_user_message_question_reply>
+[{""questionItemId"":""[\""request_user_input_async\"",\""call_6648f13df30740bcb4b1b972b2176eae\"",0]"",""question"":""‘모든 마법소녀 강화’는 현재 보유한 소녀에게 영구 강화 1회를 지급할까요, 해당 운세가 유지되는 동안만 임시 강화할까요?"",""answer"":""보유 소녀에게 영구 강화 지급""}]
+</send_user_message_question_reply>"
