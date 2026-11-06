@@ -151,9 +151,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1978688903}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 460, y: -305}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -226, y: 145}
   m_SizeDelta: {x: 610, y: 42}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &48391206
@@ -2648,7 +2648,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.12, g: 0.1, b: 0.2, a: 0.96}
+  m_Color: {r: 0.12, g: 0.1, b: 0.2, a: 0.22745098}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3033,7 +3033,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21
+  m_fontSize: 20
   m_fontSizeBase: 21
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10403,10 +10403,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC6D0\uAE30\uC625"
+  m_text: "\uC6D0\uAE30\uC625\n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8de09a46db87bab46b4483f474e77bf0, type: 2}
-  m_sharedMaterial: {fileID: 4480149059836144528, guid: 8de09a46db87bab46b4483f474e77bf0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 986b98bdb59e84e498727944abef742b, type: 2}
+  m_sharedMaterial: {fileID: 712826361898866933, guid: 986b98bdb59e84e498727944abef742b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -11178,10 +11178,6 @@ MonoBehaviour:
   - {fileID: 192425963}
   - {fileID: 1033540628}
   - {fileID: 1107698764}
-  orbArcHeight: 180
-  orbArrivalScale: 0.2
-  orbFadeOutDuration: 0.1
-  orbReturnFadeDuration: 0.7
   impactShakeDuration: 0.3
   impactShakeAmount: 12
   orbMinRadius: 0.5
