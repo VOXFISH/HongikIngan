@@ -21,6 +21,8 @@ namespace HongikIngan
             var args=Environment.GetCommandLineArgs(); int index=Array.IndexOf(args,"--smoke-output");
             output=index>=0?args[index+1]:Path.Combine(Application.dataPath,"../ArcSmoke");
             Directory.CreateDirectory(output); Application.runInBackground=true;
+            // Keep animation sampling deterministic when hidden players have uneven frame times.
+            Time.captureDeltaTime = 1f / 60f;
             var checks=CheckScene();
             while(true)
             {

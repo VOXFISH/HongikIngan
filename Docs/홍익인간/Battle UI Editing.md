@@ -175,3 +175,11 @@ Battle 목록 배치는 사용자 확인에 따라 최신 test의 텍스트 위�
 BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 필살기 beam 단계 동안 이 이미지의 위치만 떨리며 단계 종료·중단 시 원래 위치로 복구한다. Inspector의 bossShakeAmount(기본 7), bossShakeFrequency(기본 24)로 조절한다.
 
 표시 HP가 0이 되면 기존 StudentTransformation 머티리얼의 개별 런타임 복사본을 사용해 보스 전체를 순백색으로 표시하고 bossWhiteHold(기본 0.2초) 뒤 monsterKO.png의 가장 큰 기존 스프라이트로 교체한다. KO 이미지는 비율을 유지한다. 새 전투 시작은 원래 이미지·색·머티리얼로 초기화하며 연출 중 중단하면 흰색이 남지 않게 KO로 마무리한다. 연출 코루틴을 기다린 후 보상 화면을 열며 데미지·승패 계산은 바꾸지 않는다. 메뉴 HongikIngan > Connect Battle boss reactions가 씬의 세 참조를 저장한다.
+
+### 원기옥 투척과 명중 흔들림
+
+BattlePresentation.thrownOrb는 기존 Orb이며 beam 단계의 표시를 대신한다. beamDuration 동안 사인 포물선(orbArcHeight 기본 180)을 따라 올라갔다 내려오며 원래 크기에서 orbArrivalScale(기본 0.2)로 줄어 BossVisual/BossFace에 도착한다. BossFace는 보스 내부의 RectTransform이며 에디터에서 얼굴 위치를 조절한다.
+
+명중 시 표시 HP를 갱신하고 원기옥을 orbFadeOutDuration(0.1초)에 사라지게 한다. 보이지 않는 동안 원위치·원크기로 복구한 후 orbReturnFadeDuration(0.7초) 동안 천천히 나타낸다. 기존 KO 흰색 연출도 유지한다. 원기옥 아래 있던 CombatLogPanel은 위치를 보존해 Presentation 아래로 분리하여 비행·페이드의 영향을 받지 않는다.
+
+impactShakeTargets는 Background·Foreground·BossVisual만 참조하며, 전투 중 표시되는 학생 Portrait도 개별적으로 더해 흔든다. Canvas·카메라·학생 슬롯 부모는 움직이지 않아 HP·버튼·이름·기록·팝업은 고정된다. impactShakeDuration(0.3초), impactShakeAmount(12)로 명중 흔들림을 조절한다. 종료·중단 시 모든 위치·원기옥 크기·불투명도를 복구한다. Connect Battle boss reactions 메뉴로 원기옥·CanvasGroup·BossFace·흔들림 참조를 저장한다.

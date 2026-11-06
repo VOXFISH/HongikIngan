@@ -567,6 +567,7 @@ Repository/
 - 각 응답을 마치기 전에 해당 사용자 메시지의 CSV 기록을 확인하고, 작업 완료 시 요약 기록도 확인한다. 관련 기록은 해당 작업의 커밋에 포함한다. 도구가 기록할 수 없는 환경에서는 개발자가 직접 같은 형식으로 기록하고, 에이전트는 기록하지 못한 사실을 알린다.
 
 </INSTRUCTIONS>"
+"2026-11-06 08:42:42+09:00","sid","지금 유니티 cli로 프로젝트와 연결했는데 확인할 수 있나요?"
 "2026-11-06 09:30:17+09:00","qwerty","In the scene ""School"", change the transitioning display to :
 
 Assets/sprite/UI.
@@ -595,3 +596,7 @@ When the purple tile is fullly covering the screen, add a effect that :
 
 When the 'student's start attacking (in unison) against the boss, the boss should tremble.
 When the boss dies, it should turn into monster KO after turning white and waiting 0.2 seconds"
+"2026-11-06 10:01:37+09:00","qwerty","Do the additional following :
+-L원기옥 being thrown at the monster when the combined attack commences.
+-원기옥 should decrease in size while going up and down until it reaches the monsters 'face' to simulate it being thrown to the monster. The 원기옥 should rapidly fade out when ending the animation, and be fade in slowly to where it was before.
+-When 원기옥 Hits the monster, the entire screen should shake, excluding the UI."
