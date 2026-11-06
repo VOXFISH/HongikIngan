@@ -163,10 +163,6 @@ namespace HongikIngan
             float deadline=Time.realtimeSinceStartup+120;
             float beamAt=-1,beamDamage=0,beamHp=0,lastFormulaAt=0;string lastFormula=null;
             bool formulaCaptured=false,transferChecked=false;int spacedFormulas=0;
-            var orb = screen.presentation.thrownOrb;
-            bool throwing = orb != null && screen.presentation.bossFace != null;
-            Vector3 orbRest = throwing ? orb.localPosition : Vector3.zero;
-            Vector3 orbScale = throwing ? orb.localScale : Vector3.one;
             while(screen.IsRunning && Time.realtimeSinceStartup<deadline)
             {
                 var active=formation.slots.FirstOrDefault(s=>s.calculationLabel.gameObject.activeSelf);
@@ -184,21 +180,13 @@ namespace HongikIngan
                     {
                         float spent=beamDamage-screen.presentation.DisplayedDamage;
                         float removed=beamHp-screen.presentation.DisplayedHp;
-                        if (throwing)
-                        {
-                            Check(spent>0 && Math.Abs(removed)<.1f,"thrown orb spends damage; HP waits for impact");
-                            Check(Vector3.Distance(orb.localPosition,orbRest)>1,"orb travels toward boss");
-                            Check(orb.localScale.magnitude<orbScale.magnitude && !screen.presentation.beam.activeSelf,"orb shrinks with legacy beam hidden");
-                        }
-                        else
-                        {
-                            Check(spent>0 && removed>0 && Math.Abs(spent-removed)<2,"orb and HP drain together");
-                            var beam=(RectTransform)screen.presentation.beam.transform;
-                            var from=screen.presentation.orbDamage.rectTransform;
-                            var to=screen.hud.bossHpLabel.rectTransform;
-                            Check(Vector3.Distance(beam.TransformPoint(Vector3.zero),from.TransformPoint(from.rect.center))<1,"beam starts at orb number");
-                            Check(Vector3.Distance(beam.TransformPoint(new Vector3(beam.rect.width,0,0)),to.TransformPoint(to.rect.center))<1,"beam ends at HP number");
-                        }
+                        Check(spent>0 && removed>0 && Math.Abs(spent-removed)<2,"orb and HP drain together");
+                        var beam=(RectTransform)screen.presentation.beam.transform;
+                        var from=screen.presentation.thrownOrb != null ? screen.presentation.thrownOrb : screen.presentation.orbDamage.rectTransform;
+                        var to=screen.presentation.bossFace;
+                        Vector3 endPoint=to != null ? to.position : screen.hud.bossHpLabel.rectTransform.TransformPoint(screen.hud.bossHpLabel.rectTransform.rect.center);
+                        Check(Vector3.Distance(beam.TransformPoint(Vector3.zero),from.TransformPoint(from.rect.center))<1,"beam starts at orb center");
+                        Check(Vector3.Distance(beam.TransformPoint(new Vector3(beam.rect.width,0,0)),endPoint)<1,"beam ends at boss face");
                         BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"beam.png"));transferChecked=true;
                     }
                 }
