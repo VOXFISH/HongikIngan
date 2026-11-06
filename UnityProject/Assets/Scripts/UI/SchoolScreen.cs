@@ -1,7 +1,10 @@
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace HongikIngan
@@ -31,6 +34,7 @@ namespace HongikIngan
         int selected = -1;
         bool transitionWasBusy;
         PrototypeRun observedRun;
+        readonly List<RaycastResult> pressHits = new List<RaycastResult>();
         public bool CanInteract => observedRun != null && !observedRun.PendingPet && !dialogs.IsOpen && !(SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy);
 
         void Awake() => EnsureDragLayer();
@@ -208,6 +212,20 @@ namespace HongikIngan
         {
             bool busy = SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy;
             if (busy != transitionWasBusy) { transitionWasBusy = busy; Refresh(); }
+            var pointer = Pointer.current;
+            if (pointer != null && pointer.press.wasPressedThisFrame && IsOutsideStudentCard(pointer.position.ReadValue()))
+                DeselectStudent();
+        }
+        // Presses on the card or on a student are left to their own click handlers;
+        // a student click switches the card to that student instead of closing it.
+        public bool IsOutsideStudentCard(Vector2 screenPosition)
+        {
+            if (!studentCard.activeSelf || !CanInteract || EventSystem.current == null) return false;
+            if (RectTransformUtility.RectangleContainsScreenPoint((RectTransform)studentCard.transform, screenPosition, null)) return false;
+            pressHits.Clear();
+            EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = screenPosition }, pressHits);
+            var slot = pressHits.Count == 0 ? null : pressHits[0].gameObject.GetComponentInParent<SchoolStudentSlot>();
+            return slot == null || !slot.IsOccupied;
         }
         string PetLabel(int kind)
         {
