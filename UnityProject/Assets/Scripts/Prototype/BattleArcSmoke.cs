@@ -178,6 +178,8 @@ namespace HongikIngan
                     if(beamAt<0){beamAt=Time.time;beamDamage=screen.presentation.DisplayedDamage;beamHp=screen.presentation.DisplayedHp;}
                     if(!transferChecked && Time.time-beamAt>.35f)
                     {
+                        // Beam endpoints track the shaken boss and charged orb in LateUpdate.
+                        yield return new WaitForEndOfFrame();
                         float spent=beamDamage-screen.presentation.DisplayedDamage;
                         float removed=beamHp-screen.presentation.DisplayedHp;
                         Check(spent>0 && removed>0 && Math.Abs(spent-removed)<2,"orb and HP drain together");
