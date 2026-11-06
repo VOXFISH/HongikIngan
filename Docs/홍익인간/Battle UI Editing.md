@@ -137,3 +137,15 @@ BattlePresentation의 **Animate Students**는 전체 토글이다. 각 BattleStu
 ### Battle 뒷모습 이미지 (2026-11-06)
 
 BattleFormationView.Artwork의 Girl0–Girl35 전체 36명을 Assets/sprite/magical_char_back의 같은 ID 이미지로 연결한다. 이 폴더가 전체 뒷모습 이미지 폴더이며, Assets/magical_char_back에는 별도의 3장만 있으므로 혼동하지 않는다. 기존 여러 Sprite 분할 중 면적이 가장 큰 캐릭터 본체를 참조하며 원본 PNG·GUID·가져오기 설정은 유지한다. 기존 홉·페이드·드래그와 비율 유지 설정도 그대로 사용한다. 36개 파일의 ID·GUID·Sprite 하위 식별자를 각각 확인했다.
+
+### School 전투 시작 타일 전환
+
+SchoolScreen.battleSweepPrefab은 Assets/UI/Prefabs/SchoolBattleSweep.prefab을 참조한다. 원본 Assets/sprite/UI/sides (1).png의 기존 세 스프라이트를 하단부터 Tile1(보라), Tile2(분홍), Tile3(주황) 순서로 사용하며 원본 이미지와 슬라이스 GUID를 유지한다. HongikIngan > Apply School tile sweep transition 메뉴로 프리팹 및 School 참조를 저장한다.
+
+학생 변신 후 기존 텍스트 Band 대신 타일이 왼쪽에서 들어와 화면을 덮고, Battle 로드 후 오른쪽으로 빠져나간다. SceneTransitionOverlay의 sweepInterval은 0.1초, sweepDuration은 편도 0.45초이며 Inspector에서 조절한다. 전환 도형은 프리팹에서 편집하고, 런타임에는 화면 크기에 맞춰 이동 거리와 크기를 계산한다. 지속 오버레이 아래에 프리팹을 표시하므로 Main에서 시작해도 씬 로드 중 유지되고 완료 후 정리된다. 다른 씬 이동은 기존 페이드를 사용한다.
+
+### 전투 시작 로고
+
+SchoolBattleSweep/BattleStartLogo는 ui two.png의 battle_start 스프라이트이며 화면 중앙, 기본 영역 1296×720(기존 대비 1.8배), Preserve Aspect로 배치한다. 로고는 세 타일보다 뒤의 sibling으로 렌더링하며 스윕 타일 배열에서는 제외한다. 보라 타일이 중앙에 도달해 화면을 완전히 덮으면 크기 0 → 1 → 0.8 → 1 → 0, 회전 0 → -12 → +10 → -7 → 0도의 순서로 재생한다. Unity Z축의 음수는 시계 방향이다.
+
+SceneTransitionOverlay의 battleLogoDuration(기본 0.85초), battleLogoScale, battleLogoRotation을 Inspector에서 조절한다. 로고는 두 번째·세 번째 타일 진입 중에도 재생되고, 로고 크기가 0이 된 후 타일 퇴장을 시작하므로 주황 타일이 화면에서 사라지기 전에 끝난다. 프리팹 갱신 메뉴는 기존 타일 편집 내용을 보존하며 로고를 추가한다.

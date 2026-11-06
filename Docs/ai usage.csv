@@ -390,3 +390,19 @@ In ""school""scene, the transitioning effect on the characters does not happen. 
 "2026-11-06 07:40:21+09:00","sid","지금까지 AI 사용내역도 기록해주세요"
 >>>>>>> Stashed changes
 "2026-11-06 08:42:42+09:00","sid","지금 유니티 cli로 프로젝트와 연결했는데 확인할 수 있나요?"
+"2026-11-06 09:30:17+09:00","qwerty","In the scene ""School"", change the transitioning display to :
+
+Assets/sprite/UI.
+
+Each tile of the given image should act as a sprite, and each sprite (we will call them 1 to 3 starting from the bottom) will sweep across the screen at a 0.1second interval, left to right after pressing ""방과후 전투 시작!"""
+"2026-11-06 09:37:05+09:00","qwerty","Additional task :
+When the purple tile is fullly covering the screen, add a effect that :
+-Display battle_start (Sprite)
+-Align to center of screen
+-The logo should rotate clockwise and counter clockwise
+-The logo should increase 0 to 100% in size, back to 80%, 100% and 0% in order before the orange tile is out of the screen."
+"2026-11-06 09:40:52+09:00","qwerty","what is the name of the object, tell me without touching the editor. quick"
+"2026-11-06 09:40:52+09:00","qwerty","그건 정확히 어디있는데"
+"2026-11-06 09:41:31+09:00","qwerty","what is the name of the object, tell me without touching the editor. quick"
+"2026-11-06 09:41:31+09:00","qwerty","에디터 내부에 있는 오브젝트의 이름이 뭐냐고"
+"2026-11-06 09:42:45+09:00","qwerty","방금 띄운 로고 크기 1.8배 키워"
