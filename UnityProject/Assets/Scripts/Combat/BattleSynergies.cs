@@ -8,6 +8,7 @@ namespace HongikIngan
     /// <summary>Shared effects for the synergies belonging to the authored roster.</summary>
     public static class BattleSynergies
     {
+        public const string AllCostsFreeDescription = "모든 비용 공짜!";
         public static int Count(PrototypeRun run, string name)
         {
             int count = 0;
@@ -82,7 +83,7 @@ namespace HongikIngan
         }
         public static bool KeepAllyConsumables(PrototypeRun run) => Count(run, "귀염둥이") >= 7 && Count(run, "귀염둥이") < 9;
         public static int FortuneStrength(PrototypeRun run) => Count(run, "귀염둥이") >= 5 && Count(run, "귀염둥이") < 9 ? 2 : 1;
-        public static bool FreeShop(PrototypeRun run) => Count(run, "귀염둥이") >= 9;
+        public static bool AllCostsFree(PrototypeRun run) => Count(run, "귀염둥이") >= 9;
 
         public static IEnumerable<BattleStep> LeaderBuff(PrototypeRun run, StudentState actor)
         {

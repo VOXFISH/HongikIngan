@@ -344,10 +344,10 @@ namespace HongikIngan
                     Id = "cute" + i, Club = "none", Personality = "귀염둥이", Grade = 1, Action = ActionKind.AddDamage }));
                 Check(BattleSynergies.FortuneStrength(cute) == (tier == 5 || tier == 7 ? 2 : 1), "Highest cute tier determines fortune bonus " + tier);
                 Check(BattleSynergies.KeepAllyConsumables(cute) == (tier == 7), "Seven keeps existing consumable protection");
-                Check(BattleSynergies.FreeShop(cute) == (tier == 9), "Nine gives free shop");
+                Check(BattleSynergies.AllCostsFree(cute) == (tier == 9), "Nine makes every cost free");
                 if (tier == 9)
                 {
-                    Check(cute.RerollCost == 0 && cute.PetPrice(PetKind.Premium) == 0 && cute.UpgradePrice(3) == 0 && cute.ExpansionPrice == 0, "All shop costs free");
+                    Check(cute.RerollCost == 0 && cute.PetPrice(PetKind.Premium) == 0 && cute.UpgradePrice(3) == 0 && cute.ExpansionPrice == 0, "All costs free");
                     money = cute.Money;
                     Check(cute.ExpandSlots() && cute.Upgrade(0) && cute.OpenPet(0) && cute.Money == money, "Free transactions do not charge");
                     cute.SkipPet();

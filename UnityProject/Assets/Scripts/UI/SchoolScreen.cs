@@ -180,6 +180,7 @@ namespace HongikIngan
                 .SelectMany(s => new[] { s.Club, s.Personality, s.SpecialSynergy }).Where(s => !string.IsNullOrEmpty(s))
                 .Distinct().OrderByDescending(s => BattleSynergies.Count(observedRun, s)).ThenBy(s => s);
             synergyLabel.text = names.Any() ? string.Join("\n", names.Select(s => $"{s}   {BattleSynergies.Count(observedRun, s)}명")) : "학생을 영입하면\n시너지가 표시됩니다";
+            if (BattleSynergies.AllCostsFree(observedRun)) synergyLabel.text += "\n" + BattleSynergies.AllCostsFreeDescription;
             SetButtonText(expandButton, $"책상 확장  +  {observedRun.ExpansionPrice}");
             expandButton.interactable = observedRun.OpenCapacity < 7;
             SetButtonText(rerollButton, observedRun.IsFortuneRolling ? "운세\n확인 중..." : $"<nobr>오늘의 운세</nobr>\n리롤\n{observedRun.RerollCost} 에너지");

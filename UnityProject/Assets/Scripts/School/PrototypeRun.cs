@@ -46,7 +46,7 @@ namespace HongikIngan
         public int StarPower { get; internal set; }
         public bool SunRescueUsed { get; private set; }
         private int baseRerollCost;
-        public int RerollCost => ShopPrice(baseRerollCost, FortuneKind.RerollDiscount);
+        public int RerollCost => PayableCost(baseRerollCost, FortuneKind.RerollDiscount);
         public bool PendingPet { get; private set; }
         public bool CanRerollFortune => SchoolUnlocked && Money >= RerollCost &&
             (long)baseRerollCost + Math.Max(0, Settings.rerollIncrease) <= int.MaxValue;
@@ -54,12 +54,12 @@ namespace HongikIngan
         public int FortuneSynergyBonus => (int)FortuneValue(FortuneKind.AllSynergies);
         public float FortuneDamageMultiplier => Fortune?.Kind == FortuneKind.FinalDamage ? FortuneValue(FortuneKind.FinalDamage) : 1;
         public float FortuneRewardMultiplier => Fortune?.Kind == FortuneKind.BattleReward ? FortuneValue(FortuneKind.BattleReward) : 1;
-        public int PetPrice(PetKind kind) => ShopPrice(Settings.PetPrice(kind), FortuneKind.RecruitDiscount);
-        public int UpgradePrice(int grade) => ShopPrice(Settings.UpgradePrice(grade));
-        public int ExpansionPrice => ShopPrice(Settings.slotExpansionPrice);
-        private int ShopPrice(int price, FortuneKind discount = FortuneKind.Blank)
+        public int PetPrice(PetKind kind) => PayableCost(Settings.PetPrice(kind), FortuneKind.RecruitDiscount);
+        public int UpgradePrice(int grade) => PayableCost(Settings.UpgradePrice(grade));
+        public int ExpansionPrice => PayableCost(Settings.slotExpansionPrice);
+        private int PayableCost(int price, FortuneKind discount = FortuneKind.Blank)
         {
-            if (BattleSynergies.FreeShop(this)) return 0;
+            if (BattleSynergies.AllCostsFree(this)) return 0;
             double reduction = discount == FortuneKind.Blank ? 0 : Math.Min(1, FortuneValue(discount));
             return (int)Math.Ceiling(Math.Max(0, price) * (1 - reduction));
         }
