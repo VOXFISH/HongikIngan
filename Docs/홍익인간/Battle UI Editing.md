@@ -170,3 +170,8 @@ SceneTransitionOverlay의 battleLogoDuration(기본 0.85초), battleLogoScale, b
 Battle 목록 배치는 사용자 확인에 따라 최신 test의 텍스트 위치 `(18, -32)`와 영역 `209×308`, 흰색 기본 글자를 유지했다. test의 텍스트 박스 아트·전투 헤더·사운드 아이콘도 보존한다.
 
 사용자 승인 배치의 최종 결과: `Logs/SynergyArtworkMergedBuild.log` Windows 빌드와 기존 규칙 검사를 통과했고, `Builds/SynergyApprovedFinal/result.txt` 281개 및 `Builds/SynergyApprovedRegression/arc-result.txt` 222개를 통과했다. test의 209×308 목록, 새 전투 헤더·텍스트 박스·학교 전환을 포함한 결과다.
+### Battle 보스 피격·KO
+
+BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 필살기 beam 단계 동안 이 이미지의 위치만 떨리며 단계 종료·중단 시 원래 위치로 복구한다. Inspector의 bossShakeAmount(기본 7), bossShakeFrequency(기본 24)로 조절한다.
+
+표시 HP가 0이 되면 기존 StudentTransformation 머티리얼의 개별 런타임 복사본을 사용해 보스 전체를 순백색으로 표시하고 bossWhiteHold(기본 0.2초) 뒤 monsterKO.png의 가장 큰 기존 스프라이트로 교체한다. KO 이미지는 비율을 유지한다. 새 전투 시작은 원래 이미지·색·머티리얼로 초기화하며 연출 중 중단하면 흰색이 남지 않게 KO로 마무리한다. 연출 코루틴을 기다린 후 보상 화면을 열며 데미지·승패 계산은 바꾸지 않는다. 메뉴 HongikIngan > Connect Battle boss reactions가 씬의 세 참조를 저장한다.
