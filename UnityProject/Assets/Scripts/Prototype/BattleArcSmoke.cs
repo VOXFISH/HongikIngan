@@ -45,7 +45,12 @@ namespace HongikIngan
             run.Students.Clear(); foreach(int id in new[]{0,8,9})run.Students.Add(new StudentState(PrototypeCatalog.Students[id]));
             Check(run.Settings.bossBaseHp==2000 && run.Settings.bossGrowth==2,"runtime boss balance");
             session.EnterBattle(); yield return new WaitForSeconds(1.8f);
-            var screen=FindFirstObjectByType<BattleScreen>(); var formation=screen.formation;
+            var screen=FindFirstObjectByType<BattleScreen>();
+            float readyDeadline=Time.realtimeSinceStartup+15;
+            while((screen==null || !screen.CanReorder || !screen.CanInspect) && Time.realtimeSinceStartup<readyDeadline)
+            { yield return null; screen=FindFirstObjectByType<BattleScreen>(); }
+            Check(screen!=null,"battle scene loaded");
+            var formation=screen.formation;
             Check(Screen.width==width && Screen.height==height,"requested render resolution");
             OnScreen(screen.hud.turnLabel.rectTransform);
             OnScreen(screen.hud.synergyLabel.rectTransform);
@@ -202,7 +207,9 @@ namespace HongikIngan
             Check(!screen.IsRunning && formulaCaptured && spacedFormulas>0 && transferChecked,"complete visible combat");
             Check(screen.presentation.DisplayedDamage==0 && screen.hud.damageLabel.text=="0","spent orb remains zero");
             Check(Math.Abs(screen.presentation.DisplayedHp-run.Battle.BossHp)<.1f,"display and combat HP agree");
-            yield return new WaitForSeconds(1.2f);Check(screen.CanReorder,"next turn ready");
+            readyDeadline=Time.realtimeSinceStartup+15;
+            while(!screen.CanReorder && Time.realtimeSinceStartup<readyDeadline) yield return null;
+            Check(screen.CanReorder,"next turn ready");
             formation.StudentSlot(0).OnPointerEnter(e);Check(formation.tooltip.IsOpen,"next preparation hover restored");
         }
         void Check(bool condition,string message){assertions++;if(!condition)throw new InvalidOperationException(message);}
