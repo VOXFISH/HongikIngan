@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fd771ae8159ab6849ae3f5bad05085af
+guid: a774af2df23e6c647b33cc3828925088
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - '[??]????'
+  - SeoulAlrim TTF
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
