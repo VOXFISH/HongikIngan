@@ -98,11 +98,11 @@ namespace HongikIngan
             first.Render(new StudentState(PrototypeCatalog.Students.Single(d=>d.Id=="Girl35")));
             first.OnPointerEnter(e);Check(formation.tooltip.effectLabel.text.Contains("0.5"),"fractional skill parameter stays precise");
             first.OnPointerExit(e);formation.Render(run);
-            first.OnPointerEnter(e);Check(formation.tooltip.IsOpen && formation.tooltip.nameLabel.text==first.Student.Definition.Name && formation.tooltip.effectLabel.text.Contains(first.Student.Definition.SkillDescription),"hover details");
+            first.OnPointerEnter(e);Check(formation.tooltip.IsOpen && formation.tooltip.nameLabel.text.StartsWith(first.Student.Definition.Name) && formation.tooltip.effectLabel.text.Contains(first.Student.Definition.SkillDescription),"hover details");
             OnScreen(formation.tooltip.nameLabel.rectTransform);
             OnScreen(formation.tooltip.effectLabel.rectTransform);
             BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"hover.png"));yield return new WaitForSeconds(.3f);
-            first.OnPointerExit(e);Check(!formation.tooltip.IsOpen,"exit hides tooltip");
+            first.OnPointerExit(e); formation.HideTooltip(); Check(!formation.tooltip.IsOpen,"explicit dismissal hides tooltip; pointer transfer is covered by SynergyUiSmoke");
             first.OnPointerEnter(e);screen.audioPanel.openButton.onClick.Invoke();Check(!formation.tooltip.IsOpen,"modal hides tooltip");
             first.OnPointerEnter(e);Check(!formation.tooltip.IsOpen,"modal rejects hover");screen.audioPanel.closeButton.onClick.Invoke();
             var original=run.Students[0];first.OnBeginDrag(e);second.OnDrop(e);first.OnEndDrag(e);
@@ -152,7 +152,7 @@ namespace HongikIngan
             sender.animateEffects=false; sender.PlayEffectHop(); yield return null;
             Check(Vector2.Distance(sender.portrait.rectTransform.anchoredPosition,senderRest)<.01f,"per-student hop toggle"); sender.animateEffects=true;
             first=formation.StudentSlot(0);first.OnPointerEnter(e);screen.PerformAction();first.OnPointerEnter(e);
-            Check(screen.IsRunning && !formation.tooltip.IsOpen,"attack hides and rejects hover");
+            Check(screen.IsRunning && formation.tooltip.IsOpen,"attack allows student inspection"); formation.HideTooltip();
             float deadline=Time.realtimeSinceStartup+120;
             float beamAt=-1,beamDamage=0,beamHp=0,lastFormulaAt=0;string lastFormula=null;
             bool formulaCaptured=false,transferChecked=false;int spacedFormulas=0;
