@@ -217,3 +217,7 @@ School·Battle 학생의 이름은 역할별 이름표 위에 표시된다. `Ass
 데미지 연산이 있는 단계는 학생 계산식과 중앙 로그의 텍스트가 1.65배에서 빠르게 눌렸다가 원래 크기로 자리 잡는 도장 애니메이션을 0.5초 동안 재생한다. 완료 시 무작위 방향으로 최대 4 UI 단위, 0.14초 동안 감쇠 진동한 뒤 전투 화면 전체를 원래 위치로 복구한다. Inspector의 `Stamp Damage Text`, `Damage Stamp Duration`, `Damage Stamp Scale`, `Damage Stamp Shake Duration`, `Damage Stamp Shake Amount`로 조절한다.
 
 기존 기본 1.5초의 단계 표시 시간과 마지막 페이드는 유지하며, 데미지가 없는 안내·키워드 단계와 레이저에는 도장을 추가하지 않는다. 극단적으로 짧게 설정한 단계에서는 도장과 흔들림을 그 시간 안으로 축소한다. 흔들림은 Battle Canvas의 바로 아래 오브젝트들을 같은 방향으로 옮기므로 원기옥·보스·배경·학생·HUD가 함께 움직이며, 기존 레이저 명중 효과는 별도로 유지한다. 연출 난수는 전투 난수와 분리하며 종료·중단·비활성화 때 텍스트 크기와 화면 위치를 복구한다.
+
+### 메인 배경과 Windows 배포 (2026-11-06)
+
+Main 씬의 전체 화면 배경에 사용자 첨부 교실 이미지 `Assets/UI/Sprites/MainMenuBackground.png`를 적용하고, 우측 하단에 첨부 새 캐릭터 `MainMenuMascot.png`를 비율 유지로 배치했다. 기존 시작·종료 버튼 연결을 유지한다. `HongikIngan.Editor.MainLayoutBuilder.BuildDesktopRelease`는 테스트 없이 Main/School/Battle을 Windows 64비트 1920×1080 창 모드로 빌드한다. 배포 폴더의 `Launch_1920x1080.cmd`는 기존 사용자 화면 설정과 관계없이 해당 창 모드로 실행한다.

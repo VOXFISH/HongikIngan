@@ -16,6 +16,53 @@ namespace HongikIngan.Editor
         const string Path = "Assets/Scenes/Main.unity";
         static TMP_FontAsset font;
 
+        public static void BuildDesktopRelease()
+        {
+            AssetDatabase.Refresh();
+            foreach (string asset in new[] { "Assets/UI/Sprites/MainMenuBackground.png", "Assets/UI/Sprites/MainMenuMascot.png" })
+            {
+                var importer = (TextureImporter)AssetImporter.GetAtPath(asset);
+                importer.textureType = TextureImporterType.Sprite;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.maxTextureSize = 2048;
+                importer.SaveAndReimport();
+            }
+            var scene = EditorSceneManager.OpenScene(Path);
+            var screen = UnityEngine.Object.FindFirstObjectByType<MainMenuScreen>();
+            var canvas = screen.GetComponentInParent<Canvas>();
+            var old = canvas.transform.Find("Layout/Background");
+            if (old != null) old.gameObject.SetActive(false);
+            var background = canvas.transform.Find("MainMenuBackground") as RectTransform;
+            if (background == null) background = new GameObject("MainMenuBackground", typeof(RectTransform), typeof(Image)).GetComponent<RectTransform>();
+            background.SetParent(canvas.transform, false); background.SetAsFirstSibling();
+            background.anchorMin = Vector2.zero; background.anchorMax = Vector2.one;
+            background.offsetMin = background.offsetMax = Vector2.zero;
+            var image = background.GetComponent<Image>();
+            image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/UI/Sprites/MainMenuBackground.png");
+            image.color = Color.white; image.raycastTarget = false;
+            var mascot = canvas.transform.Find("MainMenuMascot") as RectTransform;
+            if (mascot == null) mascot = new GameObject("MainMenuMascot", typeof(RectTransform), typeof(Image)).GetComponent<RectTransform>();
+            mascot.SetParent(canvas.transform, false);
+            mascot.anchorMin = mascot.anchorMax = mascot.pivot = new Vector2(1, 0);
+            mascot.anchoredPosition = new Vector2(-40, 30); mascot.sizeDelta = new Vector2(220, 250);
+            var mascotImage = mascot.GetComponent<Image>();
+            mascotImage.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/UI/Sprites/MainMenuMascot.png");
+            mascotImage.color = Color.white; mascotImage.preserveAspect = true; mascotImage.raycastTarget = false;
+            EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
+            PlayerSettings.defaultScreenWidth = 1920; PlayerSettings.defaultScreenHeight = 1080;
+            PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
+            AssetDatabase.SaveAssets();
+            Directory.CreateDirectory("Builds/DesktopRelease");
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
+                scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/School.unity", "Assets/Scenes/Battle.unity" },
+                locationPathName = "Builds/DesktopRelease/HongikIngan.exe", target = BuildTarget.StandaloneWindows64,
+                options = BuildOptions.None
+            });
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
+                throw new InvalidOperationException("Desktop release build failed: " + report.summary.result);
+            Debug.Log("DESKTOP_RELEASE_BUILD_PASS 1920x1080 Windowed");
+        }
+
         [MenuItem("HongikIngan/Create Main menu")]
         public static void Apply()
         {
