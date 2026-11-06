@@ -635,3 +635,7 @@ When the boss dies, it should turn into monster KO after turning white and waiti
 "2026-11-06 10:07:00+09:00","qwerty","-The X 좌표 of the 원기옥 should not change
 -원기옥 should have a radius of 1/3~2.5 of the current size.
 it should start at 1/3, and increase (with bubbling effect of increasing and decreasing to the set goal) to 2.5 as the number rises. The max number should be 100000, and the size should be calculated on a log scale."
+"2026-11-06 10:12:01+09:00","qwerty","Remove the 원기옥 flying mechanism.
+Restore the lazer
+원기옥 should have a radius of 1/2~2 radius."
+"2026-11-06 10:15:10+09:00","qwerty","reset the 원기옥 position to the center of the screen like before."
