@@ -32,9 +32,15 @@ namespace HongikIngan
         [Min(.01f)] public float orbReturnFadeDuration = .7f;
         [Min(0)] public float impactShakeDuration = .3f;
         [Min(0)] public float impactShakeAmount = 12f;
+        [Header("Orb charge size (radius multiplier)")]
+        [Min(.01f)] public float orbMinRadius = 1f / 3f;
+        [Min(.01f)] public float orbMaxRadius = 2.5f;
+        [Min(1)] public float orbSizeMaxDamage = 100000f;
+        [Min(.1f)] public float orbBubbleFrequency = 3.5f;
+        [Range(.05f, .95f)] public float orbBubbleDamping = .3f;
         Vector3 orbHome, orbHomeScale;
-        float orbHomeAlpha;
-        bool orbCaptured;
+        float orbHomeAlpha, orbRadius, orbRadiusVelocity, orbLaunchRadius;
+        bool orbCaptured, orbFlying;
         readonly Dictionary<RectTransform, Vector3> shakeHomes = new Dictionary<RectTransform, Vector3>();
         [Header("Boss reaction")]
         public Image bossVisual;
@@ -87,6 +93,8 @@ namespace HongikIngan
             DisplayedDamage = run.Battle?.Damage ?? 0;
             DisplayedHp = run.Battle?.BossHp ?? 0;
             maxHp = run.Battle?.MaxBossHp ?? 1;
+            orbRadius = OrbRadiusForDamage(DisplayedDamage);
+            orbRadiusVelocity = 0; orbFlying = false;
             Clear(); RenderTotals();
             SnapshotKeywords(run);
             var sound = SoundManager.EnsureExists();
@@ -102,9 +110,12 @@ namespace HongikIngan
             float targetHp = firing ? Mathf.Max(0, run.Battle.BossHp - step.Damage) : run.Battle.BossHp;
             if (step.Kind == "turn") fromDamage = 0;
             bool throwing = firing && thrownOrb != null && bossFace != null;
+            if (throwing) { orbFlying = true; orbLaunchRadius = orbRadius; }
             if (firing) { IsBeaming = true; beam.SetActive(!throwing); spent = true; }
             Vector3 throwStart = throwing ? thrownOrb.parent.InverseTransformPoint(thrownOrb.TransformPoint(thrownOrb.rect.center)) : Vector3.zero;
             Vector3 throwEnd = throwing ? thrownOrb.parent.InverseTransformPoint(bossFace.position) : Vector3.zero;
+            // Depth is represented by shrinking; horizontal movement is deliberately locked.
+            if (throwing) throwEnd.x = throwStart.x;
             if (chant != null) { chant.gameObject.SetActive(step.Kind == "chant"); chant.text = step.Message; }
             if (step.Actor != null)
                 formation.ShowCalculation(step.Actor, (step.Damage != fromDamage ?
@@ -165,7 +176,8 @@ namespace HongikIngan
                 }
                 RestoreImpactPositions();
                 if (orbGroup != null) orbGroup.alpha = 0;
-                thrownOrb.localPosition = orbHome; thrownOrb.localScale = orbHomeScale;
+                orbRadius = OrbRadiusForDamage(DisplayedDamage); orbRadiusVelocity = 0;
+                thrownOrb.localPosition = orbHome; thrownOrb.localScale = orbHomeScale * orbRadius;
             }
             if (bossVisual != null && !bossDefeated && targetHp <= 0)
             {
@@ -192,9 +204,46 @@ namespace HongikIngan
         }
         void PlaceOrb(Vector3 start, Vector3 end, float progress)
         {
-            thrownOrb.localScale = orbHomeScale * Mathf.Lerp(1, orbArrivalScale, progress);
+            float arrivalRadius = Mathf.Max(orbMinRadius, orbLaunchRadius * orbArrivalScale);
+            thrownOrb.localScale = orbHomeScale * Mathf.Lerp(orbLaunchRadius, arrivalRadius, progress);
             var center = Vector3.Lerp(start, end, progress) + Vector3.up * (Mathf.Sin(progress * Mathf.PI) * orbArcHeight);
             thrownOrb.localPosition = center - thrownOrb.localRotation * Vector3.Scale(thrownOrb.rect.center, thrownOrb.localScale);
+            var position = thrownOrb.localPosition;
+            position.x = orbHome.x;
+            thrownOrb.localPosition = position;
+        }
+        float OrbRadiusForDamage(float damage)
+        {
+            float minimum = Mathf.Max(.01f, orbMinRadius);
+            float maximum = Mathf.Max(minimum, orbMaxRadius);
+            float cap = Mathf.Max(1, orbSizeMaxDamage);
+            if (float.IsNaN(damage)) damage = 0;
+            float fraction = Mathf.Log10(1 + Mathf.Clamp(damage, 0, cap)) / Mathf.Log10(1 + cap);
+            return Mathf.Lerp(minimum, maximum, fraction);
+        }
+        void UpdateOrbCharge()
+        {
+            if (!orbCaptured || thrownOrb == null || orbFlying) return;
+            // Exact damped-spring integration gives a bubbling overshoot without frame-rate instability.
+            float goal = OrbRadiusForDamage(DisplayedDamage);
+            float omega = Mathf.Max(.1f, orbBubbleFrequency) * Mathf.PI * 2;
+            float damping = Mathf.Clamp(orbBubbleDamping, .05f, .95f);
+            float frequency = omega * Mathf.Sqrt(1 - damping * damping);
+            float dt = Time.unscaledDeltaTime;
+            float decay = Mathf.Exp(-damping * omega * dt);
+            float cosine = Mathf.Cos(frequency * dt), sine = Mathf.Sin(frequency * dt);
+            float displacement = orbRadius - goal;
+            float previousVelocity = orbRadiusVelocity;
+            orbRadius = goal + decay * (displacement * cosine +
+                (previousVelocity + damping * omega * displacement) / frequency * sine);
+            orbRadiusVelocity = decay * (previousVelocity * cosine -
+                (damping * omega * previousVelocity + omega * omega * displacement) / frequency * sine);
+            float minimum = Mathf.Max(.01f, orbMinRadius), maximum = Mathf.Max(minimum, orbMaxRadius);
+            float bounded = Mathf.Clamp(orbRadius, minimum, maximum);
+            if (bounded != orbRadius) orbRadiusVelocity = 0;
+            orbRadius = bounded;
+            thrownOrb.localScale = orbHomeScale * orbRadius;
+            thrownOrb.localPosition = orbHome;
         }
         void CaptureImpactPositions()
         {
@@ -220,7 +269,8 @@ namespace HongikIngan
         void RestoreOrb()
         {
             if (!orbCaptured || thrownOrb == null) return;
-            thrownOrb.localPosition = orbHome; thrownOrb.localScale = orbHomeScale;
+            orbFlying = false;
+            thrownOrb.localPosition = orbHome; thrownOrb.localScale = orbHomeScale * orbRadius;
             if (orbGroup != null) orbGroup.alpha = orbHomeAlpha;
         }
         void RestoreBossPosition()
@@ -268,6 +318,7 @@ namespace HongikIngan
         }
         void LateUpdate()
         {
+            UpdateOrbCharge();
             // HUD binding can clear the log after BeginBattle; keep an empty backing invisible too.
             if (combatLogGroup != null && hud != null && string.IsNullOrWhiteSpace(hud.logLabel.text)) combatLogGroup.alpha = 0;
         }

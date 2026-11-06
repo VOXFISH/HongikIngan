@@ -448,3 +448,6 @@ When the boss dies, it should turn into monster KO after turning white and waiti
 -L원기옥 being thrown at the monster when the combined attack commences.
 -원기옥 should decrease in size while going up and down until it reaches the monsters 'face' to simulate it being thrown to the monster. The 원기옥 should rapidly fade out when ending the animation, and be fade in slowly to where it was before.
 -When 원기옥 Hits the monster, the entire screen should shake, excluding the UI."
+"2026-11-06 10:07:00+09:00","qwerty","-The X 좌표 of the 원기옥 should not change
+-원기옥 should have a radius of 1/3~2.5 of the current size.
+it should start at 1/3, and increase (with bubbling effect of increasing and decreasing to the set goal) to 2.5 as the number rises. The max number should be 100000, and the size should be calculated on a log scale."
