@@ -58,7 +58,7 @@ namespace HongikIngan
                     yield return Step(battle, "keyword", "달토끼 - 검은 클로버 " + actor.LunarRoll + "스택", actor);
                     break;
                 case ActionKind.ArtEncore:
-                    BattleActionResolver.AddAttackDamage(run, battle.Damage * actor.SkillValue / 100f, factor);
+                    BattleActionResolver.AddAttackDamage(run, battle.Damage * actor.SkillValue / 100f, factor, actor.SkillValue);
                     if (repeated) foreach (var ally in Neighbors(run, actor)) KeywordRules.Add(ally.Keywords, KeywordRules.Art, 1, 2);
                     int remaining = remainingReplays < 0 ? art : remainingReplays;
                     if (remaining > 0) replay(remaining - 1);
@@ -79,8 +79,9 @@ namespace HongikIngan
                 case ActionKind.Eros:
                     if (run.RollCombatChance((actor.SkillValue + art) / 100f))
                     {
+                        float erosDamage = battle.BossHp - 1;
                         battle.BossHp = 1;
-                        yield return Step(battle, "damage", "에로스 - 보스 HP 1", actor);
+                        yield return Step(battle, "damage", "에로스 - 보스 HP 1", actor, operation: "+" + Operand(erosDamage));
                     }
                     else
                     {
@@ -98,11 +99,12 @@ namespace HongikIngan
                     break;
                 case ActionKind.SaturnCurse:
                     float percentage = Math.Min(actor.SkillValue, run.StarPower);
+                    float previousHp = battle.BossHp;
                     battle.BossHp *= 1 - percentage / 100f;
-                    yield return Step(battle, "damage", "토성의 저주 - 현재 보스 HP -" + percentage + "%", actor);
+                    yield return Step(battle, "damage", "토성의 저주 - 현재 보스 HP -" + percentage + "%", actor, operation: "+" + Operand(previousHp - battle.BossHp));
                     break;
                 case ActionKind.MarsJealousy:
-                    BattleActionResolver.ReplaceAttackDamage(run, battle.Damage * 5, factor);
+                    BattleActionResolver.ReplaceAttackDamage(run, battle.Damage * 5, factor, Multiply(5));
                     yield return Step(battle, "damage", "화성의 질투 - 데미지 x5", actor);
                     break;
                 case ActionKind.TomorrowSun:
@@ -129,7 +131,7 @@ namespace HongikIngan
                     yield return Step(battle, "damage", "세아isHere - 데미지 +" + PrototypeCatalog.FormatDamage(actor.SkillValue), actor);
                     break;
                 case ActionKind.KeywordKindsDamage:
-                    BattleActionResolver.ReplaceAttackDamage(run, buffKinds == 0 ? 0 : battle.Damage * buffKinds * actor.SkillValue, factor);
+                    BattleActionResolver.ReplaceAttackDamage(run, buffKinds == 0 ? 0 : battle.Damage * buffKinds * actor.SkillValue, factor, Multiply(buffKinds * actor.SkillValue));
                     yield return Step(battle, "damage", "스파르타!! - 서로 다른 버프 " + buffKinds + "종류", actor);
                     break;
             }

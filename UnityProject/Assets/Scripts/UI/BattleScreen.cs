@@ -118,7 +118,7 @@ namespace HongikIngan
                 while (resolution.MoveNext())
                 {
                     var step = resolution.Current;
-                    current = step.Message;
+                    current = step.Kind == "result" ? step.Message : BattleHud.StepText(step);
                     Refresh();
                     yield return presentation.Play(step, run);
                     presentation.Clear();

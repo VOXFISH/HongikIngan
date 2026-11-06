@@ -116,9 +116,13 @@ School의 SceneTransitionOverlay/Curtain은 전체 화면 stretch, 위치 (0, 0)
 
 ### 페이드
 
-BattleCanvas/Layout/Presentation의 BattlePresentation에서 **Fade Combat Text**를 켜거나 끈다. 학생 계산식 패널·원기옥 로그·필살기 문구에 적용하며 HP와 합계 숫자는 항상 표시한다. **Fade In Duration**과 **Fade Out Duration**은 기본 0.12초 / 0.2초이고 Step Duration은 기존 1초다. 각 페이드는 항목 시간의 최대 40%까지만 사용해 읽을 시간을 확보한다. 빈 로그의 배경은 숨긴다.
+BattleCanvas/Layout/Presentation의 BattlePresentation에서 **Fade Combat Text**를 켜거나 끈다. 학생 계산식 패널·원기옥 로그·필살기 문구에 적용하며 HP와 합계 숫자는 항상 표시한다. **Fade In Duration**과 **Fade Out Duration**은 기본 0.12초 / 0.2초다. Step Duration의 기존 설정값에 1.5를 곱해 재생하므로 기본 1초 설정은 실제 1.5초 동안 표시한다. 빔은 기존 Beam Duration을 사용한다. 각 페이드는 항목 시간의 최대 40%까지만 사용해 읽을 시간을 확보한다. 빈 로그의 배경은 숨긴다.
 
-계산식은 어두운 CalculationPanel에 흰색 굵은 글씨로 표시하고, 변경 전후 데미지 숫자를 효과 설명보다 먼저 보여 준다. Assets/UI/Prefabs/BattleStudentSlot.prefab의 패널 크기·색상과 텍스트 Auto Size(20–24)를 편집한다. 원기옥의 CombatLogPanel도 별도 오브젝트다.
+학생 CalculationPanel과 원기옥 CombatLogPanel은 현재 효과의 시너지·스킬·키워드 명칭만 첫 줄에, 결과 연산만 둘째 줄에 표시한다. 결과는 `+X`, `xX`, `^X`이며 %p 증가도 최종 배율로 환산한다(예: +50%p → `x1.5`). 자세한 설명·변경 전후 수치·지난 두 개 로그는 이 패널에 표시하지 않는다. 연산 값은 명칭 대비 160% 크기의 흰색 굵은 글씨다. Assets/UI/Prefabs/BattleStudentSlot.prefab의 패널 크기·색상과 기본 텍스트 Auto Size(20–24)는 편집할 수 있다.
+
+`BattleStep.SourceName`과 `Operation`은 표시용 정보이며 기존 `Message`와 내부 `BattleState.Log`는 상세 기록으로 유지한다. 연산은 실제 효과 발생 지점에서 기록하고 로그 문장을 파싱하지 않는다. 사랑·미감 보정은 최종 증가량/배율에 포함하며, 하나의 효과에 합과 곱이 함께 있으면 `+500 x1.2`처럼 적용 순서로 나열한다. 보스 HP를 직접 줄이는 효과는 실제 피해량을 `+X`로 표시한다. 데미지가 없는 스킬 단계는 명칭만 표시하고, HP·합동 데미지 합계·영창·결과 안내는 기존 역할을 유지한다.
+
+검증 진입점은 `HongikIngan.Editor.BattlePolishBuilder.BuildDamageDisplayValidation`이며 씬을 재생성하지 않고 규칙 검사와 Windows 플레이어 빌드를 실행한다. 플레이어에서 `--battle-arc-smoke --full-hd --smoke-output <폴더>`를 사용하면 실제 1.5초 간격·페이드·간결한 연산 표시와 패널 넘침을 검사한다.
 
 ### 학생 효과 동작
 
@@ -203,3 +207,7 @@ Orb와 Beam은 Image 컴포넌트로 렌더링한다. 이미지는 Source Image�
 School·Battle 학생의 이름은 역할별 이름표 위에 표시된다. `Assets/UI/StudentNameplateCatalog.asset`이 `StudentRole`별 스프라이트(`Assets/sprite/UI/`의 Dealer·Buff·Debuff)를 지정하고, `SchoolStudentSlot`·`BattleStudentSlot`이 바인딩 때 학생의 `Role`에 맞는 이미지를 적용한다. 역할은 성격이 아니라 학생 정의(`PrototypeContent`)의 `Role` 값을 따른다.
 
 이름표 위치와 크기는 `SchoolDeskSlot`·`BattleStudentSlot` 프리팹의 `Nameplate`, 글자 영역은 같은 프리팹의 `Name`에서 편집한다. `Name`은 오른쪽 아이콘을 피하도록 이름표의 왼쪽 영역에 맞췄고 Auto Size를 사용한다.
+
+### 데미지 표시 간소화 검증 (2026-11-06)
+
+최신 test의 이름표·원기옥 변경을 함께 반영한 상태에서 Unity 6000.3.7f1 컴파일·Windows 빌드, 규칙 5,200개, 초기 지급 2,000시드와 실제 1920×1080 플레이어 검사 234개를 통과했다. 표시 간격 1.5초, 합·곱·거듭제곱과 보정 수치, 상세 문구 제거, 큰 글씨의 패널 넘침, 준비 중 빈 로그 배경 숨김, 기존 페이드·홉·빔·HP 연동을 확인했다. 수동 마우스 플레이와 FMOD 청취는 미실시다.

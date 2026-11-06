@@ -15,6 +15,20 @@ namespace HongikIngan.Editor
         static readonly Color Panel = new Color(.12f,.10f,.20f,.96f);
         public static void Build() { Apply(); PrototypeBuilder.BuildExpansion(); }
 
+        public static void BuildDamageDisplayValidation()
+        {
+            PrototypeChecks.Run();
+            System.IO.Directory.CreateDirectory("Builds/DamageDisplay");
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
+                scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/School.unity", "Assets/Scenes/Battle.unity" },
+                locationPathName = "Builds/DamageDisplay/HongikIngan.exe", target = BuildTarget.StandaloneWindows64,
+                options = BuildOptions.None
+            });
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
+                throw new System.InvalidOperationException("Damage display build failed: " + report.summary.result);
+            Debug.Log("DAMAGE_DISPLAY_BUILD_PASS");
+        }
+
         [MenuItem("HongikIngan/Connect Battle boss reactions")]
         public static void ConnectBossReactions()
         {

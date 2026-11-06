@@ -28,6 +28,7 @@ namespace HongikIngan
                 CombatOrderingAndChains();
                 DocumentedDamageActions();
                 DamageFormatting();
+                CompactDamagePresentation();
                 StartupChecks.Run();
                 GirlContentChecks.Run();
                 PhotographyChecks.Run();
@@ -39,6 +40,63 @@ namespace HongikIngan
             {
                 foreach (var item in settings) UnityEngine.Object.DestroyImmediate(item);
                 settings.Clear();
+            }
+        }
+
+        private static void CompactDamagePresentation()
+        {
+            var flatActor = Actor("flat", ActionKind.AddDamage, 25);
+            flatActor.Definition.SkillName = "합 스킬";
+            var percentActor = Actor("percent", ActionKind.AddThenPercentDamage, 0);
+            percentActor.Definition.InitialPercent = 30;
+            var run = ControlledBattle(1000000, Actor("seed", ActionKind.AddDamage, 100), flatActor, percentActor);
+            KeywordRules.Add(flatActor.Keywords, KeywordRules.Love, 2);
+            KeywordRules.Add(percentActor.Keywords, KeywordRules.Love, 2);
+            var steps = run.ResolveTurn().ToArray();
+            var flat = steps.Single(s => s.Actor == flatActor && s.Kind == "damage");
+            Check(flat.Operation == "+50" && flat.Damage == 150, "flat display includes attack bonuses");
+            Check(flat.SourceName == flatActor.Definition.SkillName && !BattleHud.StepText(flat).Contains("데미지"), "compact UI uses skill name, not diagnostic message");
+            var percent = steps.Single(s => s.Actor == percentActor && s.Kind == "damage");
+            Check(percent.Operation == "x1.6" && Math.Abs(percent.Damage - 240) < .001, "percentage points render as effective multiplication");
+            var powerActor = Actor("power", ActionKind.PowerDamage, 2);
+            var boostActor = Actor("boost", ActionKind.MultiplyDamage, 2);
+            var powerRun = ControlledBattle(1000000, Actor("seed", ActionKind.AddDamage, 240), powerActor, boostActor);
+            KeywordRules.Add(boostActor.Keywords, KeywordRules.Love, 1.5f);
+            var powerSteps = powerRun.ResolveTurn().ToArray();
+            var power = powerSteps.Single(s => s.Actor == powerActor && s.Kind == "damage");
+            Check(power.Operation == "^2" && power.Damage == 57600, "power retains exponent");
+            var boosted = powerSteps.Single(s => s.Actor == boostActor && s.Kind == "damage");
+            Check(boosted.Operation == "x2.5" && boosted.Damage == 144000, "multiply shows actual boosted increase");
+            Check(powerSteps.Where(s => s.Kind == "action" || s.Kind == "chant").All(s => s.Operation == ""), "previous operation does not leak into next effect");
+            var combinedRun = ControlledBattle(1000000, Actor("seed", ActionKind.AddDamage, 100));
+            KeywordRules.Add(combinedRun.Battle.BossKeywords, KeywordRules.Mine, 20);
+            var combined = combinedRun.ResolveTurn().First(s => s.SourceName == "넌 내 꺼야");
+            Check(combined.Operation == "+500 x1.2", "combined effects preserve operation order without expanded arithmetic");
+            Check(BattleHud.StepText(combined) == "넌 내 꺼야\n<size=160%><b>+500 x1.2</b></size>", "large operation under source only");
+            var culture = System.Globalization.CultureInfo.CurrentCulture;
+            try
+            {
+                System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR");
+                var cultureRun = ControlledBattle(1000000, Actor("seed", ActionKind.AddDamage, 100), Actor("factor", ActionKind.MultiplyDamage, 1.2f));
+                Check(cultureRun.ResolveTurn().Any(s => s.Operation == "x1.2"), "operation uses stable decimal point");
+            }
+            finally { System.Globalization.CultureInfo.CurrentCulture = culture; }
+            // Exercise all real skills, including damage emitted by keyword and clone steps.
+            foreach (var definition in PrototypeCatalog.Students)
+            {
+                var sample = SingleStudentRun(Economy());
+                sample.Students.Clear(); sample.Students.Add(new StudentState(definition)); sample.StartBattle();
+                float previous = 0;
+                using (var sequence = sample.ResolveTurn().GetEnumerator())
+                {
+                    for (int guard = 0; guard < 100 && sequence.MoveNext(); guard++)
+                    {
+                        var step = sequence.Current;
+                        if (step.Damage != previous && step.Kind != "turn")
+                            Check(!string.IsNullOrEmpty(step.Operation) && !string.IsNullOrEmpty(step.SourceName), "damage has compact metadata: " + definition.Id + " / " + step.Message);
+                        previous = step.Damage;
+                    }
+                }
             }
         }
 

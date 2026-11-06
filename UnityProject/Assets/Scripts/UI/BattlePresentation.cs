@@ -96,6 +96,9 @@ namespace HongikIngan
             var sound = SoundManager.EnsureExists();
             if (sound.BackendAvailable) sound.PlayBgm("event:/BGM/Battle");
         }
+        // Scale authored timing too, so existing scenes receive the slower damage display.
+        public float DurationFor(BattleStep step) => Mathf.Max(.01f,
+            step.Kind == "beam" ? beamDuration : stepDuration * 1.5f);
         public IEnumerator Play(BattleStep step, PrototypeRun run)
         {
             Clear();
@@ -108,8 +111,7 @@ namespace HongikIngan
             if (firing) { IsBeaming = true; beam.SetActive(true); spent = true; }
             if (chant != null) { chant.gameObject.SetActive(step.Kind == "chant"); chant.text = step.Message; }
             if (step.Actor != null)
-                formation.ShowCalculation(step.Actor, (step.Damage != fromDamage ?
-                    "<size=115%>" + PrototypeCatalog.FormatDamage(fromDamage) + " => " + PrototypeCatalog.FormatDamage(step.Damage) + "</size>\n" : "") + BattleHud.DisplayText(step.Message));
+                formation.ShowCalculation(step.Actor, BattleHud.StepText(step));
             var participants = new HashSet<StudentState>();
             if (step.Actor != null) participants.Add(step.Actor);
             if (step.Target != null) participants.Add(step.Target);
@@ -125,7 +127,7 @@ namespace HongikIngan
                 if (firing) sound.PlayOneShot("event:/SFX/Beam", AudioCategory.SFX);
                 if (step.Kind == "chant") sound.PlayOneShot("event:/Voice/Chant", AudioCategory.Voice);
             }
-            float duration = Mathf.Max(.01f, firing ? beamDuration : stepDuration);
+            float duration = DurationFor(step);
             float elapsed = 0;
             while (elapsed < duration)
             {

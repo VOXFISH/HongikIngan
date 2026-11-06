@@ -14,6 +14,8 @@ namespace HongikIngan
         public Slider bossHpBar;
         public TMP_Text synergyLabel, bossDebuffsLabel;
         public static string DisplayText(string text) => (text ?? "").Replace("×", "x").Replace("→", "=>");
+        public static string StepText(BattleStep step) => string.IsNullOrEmpty(step.SourceName) ? "" :
+            DisplayText(step.SourceName) + (string.IsNullOrEmpty(step.Operation) ? "" : "\n<size=160%><b>" + step.Operation + "</b></size>");
         public static string KeywordText(IEnumerable<KeywordState> keywords) => string.Join("\n", keywords
             .Where(k => k.StackCount > 0).Select(k => k.Definition.Name + (k.Definition.Stackable ? " " + k.StackCount.ToString("0") : "")));
         public void RenderTotals(float damage, float hp, float maxHp)
@@ -34,8 +36,8 @@ namespace HongikIngan
                 synergyLabel.text = SynergyText.List(run, true);
             }
             if (bossDebuffsLabel != null) bossDebuffsLabel.text = battle == null ? "" : KeywordText(battle.BossKeywords);
-            statusLabel.text = status;
-            logLabel.text = battle == null ? "" : DisplayText(string.Join("\n", battle.Log.Skip(Mathf.Max(0, battle.Log.Count - 2))));
+            statusLabel.text = running ? "" : status;
+            logLabel.text = running && battle != null && battle.IsResolving ? status : "";
             actionLabel.text = interrupted ? "진행 중단 - 다시 시작" : battle == null ? "학교로 돌아가기" :
                 battle.CanReturnToSchool ? "보상 수령 후 학교로" : battle.Lost ? "게임 오버 - 다시 시작" : running ? "필살기 준비 중…" : "합동 공격";
             actionButton.interactable = !running && !modalOpen && (battle == null || !battle.IsResolving);

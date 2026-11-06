@@ -97,10 +97,16 @@ namespace HongikIngan
     public sealed class BattleStep
     {
         public readonly string Kind, Message;
+        public readonly string SourceName, Operation;
         public readonly float Damage;
         public readonly StudentState Actor, Target;
-        public BattleStep(string kind, string message, float damage, StudentState actor = null, StudentState target = null)
-        { Kind = kind; Message = message; Damage = damage; Actor = actor; Target = target; }
+        public BattleStep(string kind, string message, float damage, StudentState actor = null, StudentState target = null,
+            string sourceName = null, string operation = "")
+        {
+            Kind = kind; Message = message; Damage = damage; Actor = actor; Target = target;
+            SourceName = sourceName ?? actor?.Definition.SkillName ?? "";
+            Operation = operation ?? "";
+        }
     }
 
     public sealed class BattleState
@@ -122,6 +128,7 @@ namespace HongikIngan
         internal readonly HashSet<StudentState> MoodReplays = new HashSet<StudentState>();
         public float LoverBonusPercent { get; internal set; }
         internal bool SynergyRewardsApplied;
+        internal string PendingDamageOperations = "";
         internal int EndDisciplineCount = -1, EndAstronomyCount = -1;
         public BattleState(float hp) { BossHp = hp; MaxBossHp = hp; }
     }
@@ -147,7 +154,7 @@ namespace HongikIngan
                     double reduction = Math.Min(battle.BossHp, coffee.StackCount * 20);
                     battle.BossHp = (float)Math.Max(0, battle.BossHp - reduction);
                     coffee.AdditionalStacks += reduction;
-                    yield return Step(battle, "damage", "커피 - 보스 HP -" + reduction.ToString("0") + ", 커피 " + coffee.StackCount.ToString("0"));
+                    yield return Step(battle, "damage", "커피 - 보스 HP -" + reduction.ToString("0") + ", 커피 " + coffee.StackCount.ToString("0"), sourceName: "별의 커피", operation: "+" + Operand(reduction));
                     if (battle.BossHp <= 0)
                     {
                         foreach (var result in FinishTurn(run)) yield return result;
@@ -160,13 +167,13 @@ namespace HongikIngan
                 if (run.PhotoCount > 0)
                 {
                     AddDamage(run, run.PhotoCount * run.Settings.polaroidDamage);
-                    yield return Step(battle, "damage", "폴라로이드 " + run.PhotoCount + "장 보정");
+                    yield return Step(battle, "damage", "폴라로이드 " + run.PhotoCount + "장 보정", sourceName: "폴라로이드");
                 }
                 foreach (var step in BattleSynergies.FinalizeDamage(run)) yield return step;
                 if (run.FortuneDamageMultiplier > 1)
                 {
                     battle.Damage *= run.FortuneDamageMultiplier; run.NotifyDamage();
-                    yield return Step(battle, "damage", "오늘의 운세 - 공격 완료 후 데미지 ×" + run.FortuneDamageMultiplier);
+                    yield return Step(battle, "damage", "오늘의 운세 - 공격 완료 후 데미지 ×" + run.FortuneDamageMultiplier, sourceName: "오늘의 운세", operation: Multiply(run.FortuneDamageMultiplier));
                 }
                 foreach (var keyword in battle.BossKeywords.ToArray())
                 {
@@ -178,13 +185,13 @@ namespace HongikIngan
                         {
                             float multiplier = KeywordRules.Apply(battle.BossKeywords, keyword);
                             battle.Damage *= multiplier; run.NotifyDamage();
-                            yield return Step(battle, "damage", "검은 클로버 1스택 소모 - 데미지 ×" + multiplier);
+                            yield return Step(battle, "damage", "검은 클로버 1스택 소모 - 데미지 ×" + multiplier, sourceName: keyword.Definition.Name, operation: Multiply(multiplier));
                         }
                         continue;
                     }
                     float percentage = KeywordRules.Apply(battle.BossKeywords, keyword);
                     battle.Damage *= 1f + percentage / 100f; run.NotifyDamage();
-                    yield return Step(battle, "damage", "보스 " + keyword.Definition.Name + " 보정 +" + percentage + "%p");
+                    yield return Step(battle, "damage", "보스 " + keyword.Definition.Name + " 보정 +" + percentage + "%p", sourceName: keyword.Definition.Name, operation: Multiply(1f + percentage / 100f));
                 }
 
                 yield return Step(battle, "chant", BuildChant(run.Students));
@@ -216,11 +223,27 @@ namespace HongikIngan
                 battle.Lost ? battle.TurnLimit + "턴 종료 - 게임 오버" : "보스 생존 - 다음 턴에 도전하세요.");
         }
 
-        internal static void AddDamage(PrototypeRun run, float amount) { run.Battle.Damage += amount; run.NotifyDamage(); }
-        internal static BattleStep Step(BattleState battle, string kind, string text, StudentState actor = null, StudentState target = null)
+        internal static string Operand(double value) => value.ToString(
+            Math.Abs(value) >= 10000000 || value != 0 && Math.Abs(value) < .001 ? "0.###e0" : "0.###",
+            System.Globalization.CultureInfo.InvariantCulture);
+        internal static string Multiply(double value) => "x" + Operand(value);
+        internal static void RecordDamageOperation(BattleState battle, string operation)
+        {
+            if (!string.IsNullOrEmpty(battle.PendingDamageOperations)) battle.PendingDamageOperations += " ";
+            battle.PendingDamageOperations += operation;
+        }
+        internal static void AddDamage(PrototypeRun run, float amount, string operation = null)
+        {
+            RecordDamageOperation(run.Battle, operation ?? "+" + Operand(amount));
+            run.Battle.Damage += amount; run.NotifyDamage();
+        }
+        internal static BattleStep Step(BattleState battle, string kind, string text, StudentState actor = null, StudentState target = null,
+            string sourceName = null, string operation = null)
         {
             battle.Log.Add(text);
-            return new BattleStep(kind, text, battle.Damage, actor, target);
+            var step = new BattleStep(kind, text, battle.Damage, actor, target, sourceName, operation ?? battle.PendingDamageOperations);
+            battle.PendingDamageOperations = "";
+            return step;
         }
 
         public static string BuildChant(IEnumerable<StudentState> students)

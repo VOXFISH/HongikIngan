@@ -65,6 +65,7 @@ namespace HongikIngan
             var backdropCorners = new Vector3[4]; backdrop.GetWorldCorners(backdropCorners);
             Check(backdropCorners[0].x<=.5f && backdropCorners[0].y<=.5f && backdropCorners[2].x>=Screen.width-.5f && backdropCorners[2].y>=Screen.height-.5f,"background covers screen edges");
             Check(screen.presentation.stepDuration==1 && screen.presentation.beamDuration==1,"one second authored timings");
+            Check(screen.presentation.DurationFor(new BattleStep("damage", "", 0))==1.5f,"damage display is 1.5 times slower");
             var actual=run.Students.ToArray();
             int[][] expected={new[]{3,4,5},new[]{2,3,4,5},new[]{2,3,4,5,6},new[]{1,2,3,4,5,6,7},new[]{0,1,2,3,4,5,6,7,8}};
             foreach(var positions in expected)
@@ -137,7 +138,7 @@ namespace HongikIngan
                     rising=true;
                 }
                 if(!held && age>.4f && age<.6f) { Check(sender.calculationGroup.alpha>.95f,"readable fade hold"); held=true; }
-                if(!fading && age>.86f && age<.97f) { Check(sender.calculationGroup.alpha<.95f,"text fades out"); fading=true; }
+                if(!fading && age>1.36f && age<1.47f) { Check(sender.calculationGroup.alpha<.95f,"text fades out"); fading=true; }
                 yield return probe.Current;
             }
             Check(rising&&held&&fading,"motion and fade phases sampled");
@@ -168,11 +169,17 @@ namespace HongikIngan
                 var active=formation.slots.FirstOrDefault(s=>s.calculationLabel.gameObject.activeSelf);
                 if(active!=null && active.calculationLabel.text!=lastFormula)
                 {
-                    if(lastFormula!=null){Check(Time.time-lastFormulaAt>=.9f,"one second per formula");spacedFormulas++;}
+                    if(lastFormula!=null){Check(Time.time-lastFormulaAt>=1.4f,"1.5 seconds per formula");spacedFormulas++;}
+                    Check(!active.calculationLabel.text.Contains("=>"),"no before/after arithmetic in student bubble");
                     lastFormula=active.calculationLabel.text;lastFormulaAt=Time.time;
                 }
-                if(active!=null && !formulaCaptured && Time.time-lastFormulaAt>.3f)
-                {BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"calculation.png"));formulaCaptured=true;}
+                if(active!=null && !formulaCaptured && active.calculationLabel.text.Contains("<size=160%>") && Time.time-lastFormulaAt>.3f)
+                {
+                    Check(active.calculationLabel.text==screen.hud.logLabel.text,"HUD and student show the same compact effect");
+                    active.calculationLabel.ForceMeshUpdate(); screen.hud.logLabel.ForceMeshUpdate();
+                    Check(!active.calculationLabel.isTextOverflowing && !screen.hud.logLabel.isTextOverflowing,"large operation fits both panels");
+                    BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"calculation.png"));formulaCaptured=true;
+                }
                 if(screen.presentation.IsBeaming)
                 {
                     if(beamAt<0){beamAt=Time.time;beamDamage=screen.presentation.DisplayedDamage;beamHp=screen.presentation.DisplayedHp;}
