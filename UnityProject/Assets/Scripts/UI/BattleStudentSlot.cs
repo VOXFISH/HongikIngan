@@ -92,7 +92,7 @@ namespace HongikIngan
             if (portrait != null) portrait.rectTransform.anchoredPosition = portraitRest;
         }
         public void OnPointerEnter(PointerEventData e) { Owner?.ShowTooltip(this); }
-        public void OnPointerExit(PointerEventData e) { Owner?.HideTooltip(); }
+        public void OnPointerExit(PointerEventData e) { Owner?.LeaveTooltip(); }
         public void OnBeginDrag(PointerEventData e)
         {
             if (e.button != PointerEventData.InputButton.Left || Owner == null || !Owner.CanReorder || !HasStudent) return;

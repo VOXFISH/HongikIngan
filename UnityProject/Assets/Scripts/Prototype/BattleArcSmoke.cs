@@ -21,6 +21,8 @@ namespace HongikIngan
             var args=Environment.GetCommandLineArgs(); int index=Array.IndexOf(args,"--smoke-output");
             output=index>=0?args[index+1]:Path.Combine(Application.dataPath,"../ArcSmoke");
             Directory.CreateDirectory(output); Application.runInBackground=true;
+            // Keep animation sampling deterministic when hidden players have uneven frame times.
+            Time.captureDeltaTime = 1f / 60f;
             var checks=CheckScene();
             while(true)
             {
@@ -29,7 +31,7 @@ namespace HongikIngan
                 if(failure!=null){File.WriteAllText(Path.Combine(output,"arc-result.txt"),"FAIL "+failure); Application.Quit(1);yield break;}
                 if(!more)break; yield return next;
             }
-            File.WriteAllText(Path.Combine(output,"arc-result.txt"),"PASS assertions="+assertions+": centered 3/4/5/7/9, logical drag order, hover gating, authored positions, timed arithmetic, live beam endpoints and synchronized damage/HP.");
+            File.WriteAllText(Path.Combine(output,"arc-result.txt"),"PASS assertions="+assertions+": centered 3/4/5/7/9, logical drag order, hover gating, authored positions, timed arithmetic, live attack endpoints and final damage/HP.");
             Application.Quit();
         }
         IEnumerator CheckScene()
@@ -43,7 +45,12 @@ namespace HongikIngan
             run.Students.Clear(); foreach(int id in new[]{0,8,9})run.Students.Add(new StudentState(PrototypeCatalog.Students[id]));
             Check(run.Settings.bossBaseHp==2000 && run.Settings.bossGrowth==2,"runtime boss balance");
             session.EnterBattle(); yield return new WaitForSeconds(1.8f);
-            var screen=FindFirstObjectByType<BattleScreen>(); var formation=screen.formation;
+            var screen=FindFirstObjectByType<BattleScreen>();
+            float readyDeadline=Time.realtimeSinceStartup+15;
+            while((screen==null || !screen.CanReorder || !screen.CanInspect) && Time.realtimeSinceStartup<readyDeadline)
+            { yield return null; screen=FindFirstObjectByType<BattleScreen>(); }
+            Check(screen!=null,"battle scene loaded");
+            var formation=screen.formation;
             Check(Screen.width==width && Screen.height==height,"requested render resolution");
             OnScreen(screen.hud.turnLabel.rectTransform);
             OnScreen(screen.hud.synergyLabel.rectTransform);
@@ -98,11 +105,11 @@ namespace HongikIngan
             first.Render(new StudentState(PrototypeCatalog.Students.Single(d=>d.Id=="Girl35")));
             first.OnPointerEnter(e);Check(formation.tooltip.effectLabel.text.Contains("0.5"),"fractional skill parameter stays precise");
             first.OnPointerExit(e);formation.Render(run);
-            first.OnPointerEnter(e);Check(formation.tooltip.IsOpen && formation.tooltip.nameLabel.text==first.Student.Definition.Name && formation.tooltip.effectLabel.text.Contains(first.Student.Definition.SkillDescription),"hover details");
+            first.OnPointerEnter(e);Check(formation.tooltip.IsOpen && formation.tooltip.nameLabel.text.StartsWith(first.Student.Definition.Name) && formation.tooltip.effectLabel.text.Contains(first.Student.Definition.SkillDescription),"hover details");
             OnScreen(formation.tooltip.nameLabel.rectTransform);
             OnScreen(formation.tooltip.effectLabel.rectTransform);
             BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"hover.png"));yield return new WaitForSeconds(.3f);
-            first.OnPointerExit(e);Check(!formation.tooltip.IsOpen,"exit hides tooltip");
+            first.OnPointerExit(e); formation.HideTooltip(); Check(!formation.tooltip.IsOpen,"explicit dismissal hides tooltip; pointer transfer is covered by SynergyUiSmoke");
             first.OnPointerEnter(e);screen.audioPanel.openButton.onClick.Invoke();Check(!formation.tooltip.IsOpen,"modal hides tooltip");
             first.OnPointerEnter(e);Check(!formation.tooltip.IsOpen,"modal rejects hover");screen.audioPanel.closeButton.onClick.Invoke();
             var original=run.Students[0];first.OnBeginDrag(e);second.OnDrop(e);first.OnEndDrag(e);
@@ -152,7 +159,7 @@ namespace HongikIngan
             sender.animateEffects=false; sender.PlayEffectHop(); yield return null;
             Check(Vector2.Distance(sender.portrait.rectTransform.anchoredPosition,senderRest)<.01f,"per-student hop toggle"); sender.animateEffects=true;
             first=formation.StudentSlot(0);first.OnPointerEnter(e);screen.PerformAction();first.OnPointerEnter(e);
-            Check(screen.IsRunning && !formation.tooltip.IsOpen,"attack hides and rejects hover");
+            Check(screen.IsRunning && formation.tooltip.IsOpen,"attack allows student inspection"); formation.HideTooltip();
             float deadline=Time.realtimeSinceStartup+120;
             float beamAt=-1,beamDamage=0,beamHp=0,lastFormulaAt=0;string lastFormula=null;
             bool formulaCaptured=false,transferChecked=false;int spacedFormulas=0;
@@ -161,24 +168,27 @@ namespace HongikIngan
                 var active=formation.slots.FirstOrDefault(s=>s.calculationLabel.gameObject.activeSelf);
                 if(active!=null && active.calculationLabel.text!=lastFormula)
                 {
-                    if(lastFormula!=null){Check(Time.realtimeSinceStartup-lastFormulaAt>=.9f,"one second per formula");spacedFormulas++;}
-                    lastFormula=active.calculationLabel.text;lastFormulaAt=Time.realtimeSinceStartup;
+                    if(lastFormula!=null){Check(Time.time-lastFormulaAt>=.9f,"one second per formula");spacedFormulas++;}
+                    lastFormula=active.calculationLabel.text;lastFormulaAt=Time.time;
                 }
-                if(active!=null && !formulaCaptured && Time.realtimeSinceStartup-lastFormulaAt>.3f)
+                if(active!=null && !formulaCaptured && Time.time-lastFormulaAt>.3f)
                 {BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"calculation.png"));formulaCaptured=true;}
                 if(screen.presentation.IsBeaming)
                 {
-                    if(beamAt<0){beamAt=Time.realtimeSinceStartup;beamDamage=screen.presentation.DisplayedDamage;beamHp=screen.presentation.DisplayedHp;}
-                    if(!transferChecked && Time.realtimeSinceStartup-beamAt>.35f)
+                    if(beamAt<0){beamAt=Time.time;beamDamage=screen.presentation.DisplayedDamage;beamHp=screen.presentation.DisplayedHp;}
+                    if(!transferChecked && Time.time-beamAt>.35f)
                     {
+                        // Beam endpoints track the shaken boss and charged orb in LateUpdate.
+                        yield return new WaitForEndOfFrame();
                         float spent=beamDamage-screen.presentation.DisplayedDamage;
                         float removed=beamHp-screen.presentation.DisplayedHp;
                         Check(spent>0 && removed>0 && Math.Abs(spent-removed)<2,"orb and HP drain together");
                         var beam=(RectTransform)screen.presentation.beam.transform;
-                        var from=screen.presentation.orbDamage.rectTransform;
-                        var to=screen.hud.bossHpLabel.rectTransform;
-                        Check(Vector3.Distance(beam.TransformPoint(Vector3.zero),from.TransformPoint(from.rect.center))<1,"beam starts at orb number");
-                        Check(Vector3.Distance(beam.TransformPoint(new Vector3(beam.rect.width,0,0)),to.TransformPoint(to.rect.center))<1,"beam ends at HP number");
+                        var from=screen.presentation.thrownOrb != null ? screen.presentation.thrownOrb : screen.presentation.orbDamage.rectTransform;
+                        var to=screen.presentation.bossFace;
+                        Vector3 endPoint=to != null ? to.position : screen.hud.bossHpLabel.rectTransform.TransformPoint(screen.hud.bossHpLabel.rectTransform.rect.center);
+                        Check(Vector3.Distance(beam.TransformPoint(Vector3.zero),from.TransformPoint(from.rect.center))<1,"beam starts at orb center");
+                        Check(Vector3.Distance(beam.TransformPoint(new Vector3(beam.rect.width,0,0)),endPoint)<1,"beam ends at boss face");
                         BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"beam.png"));transferChecked=true;
                     }
                 }
@@ -187,7 +197,9 @@ namespace HongikIngan
             Check(!screen.IsRunning && formulaCaptured && spacedFormulas>0 && transferChecked,"complete visible combat");
             Check(screen.presentation.DisplayedDamage==0 && screen.hud.damageLabel.text=="0","spent orb remains zero");
             Check(Math.Abs(screen.presentation.DisplayedHp-run.Battle.BossHp)<.1f,"display and combat HP agree");
-            yield return new WaitForSeconds(1.2f);Check(screen.CanReorder,"next turn ready");
+            readyDeadline=Time.realtimeSinceStartup+15;
+            while(!screen.CanReorder && Time.realtimeSinceStartup<readyDeadline) yield return null;
+            Check(screen.CanReorder,"next turn ready");
             formation.StudentSlot(0).OnPointerEnter(e);Check(formation.tooltip.IsOpen,"next preparation hover restored");
         }
         void Check(bool condition,string message){assertions++;if(!condition)throw new InvalidOperationException(message);}

@@ -181,11 +181,8 @@ namespace HongikIngan
                 petLabels[i].text = pet.HasValue ? PetLabel((int)pet.Value) : "펫 없음";
                 petButtons[i].interactable = pet.HasValue;
             }
-            var names = (observedRun.FortuneSynergyBonus > 0 ? PrototypeCatalog.Students : observedRun.Students.Select(s => s.Definition))
-                .SelectMany(s => new[] { s.Club, s.Personality, s.SpecialSynergy }).Where(s => !string.IsNullOrEmpty(s))
-                .Distinct().OrderByDescending(s => BattleSynergies.Count(observedRun, s)).ThenBy(s => s);
-            synergyLabel.text = names.Any() ? string.Join("\n", names.Select(s => $"{s}   {BattleSynergies.Count(observedRun, s)}명")) : "학생을 영입하면\n시너지가 표시됩니다";
-            if (BattleSynergies.AllCostsFree(observedRun)) synergyLabel.text += "\n" + BattleSynergies.AllCostsFreeDescription;
+            synergyLabel.text = SynergyText.List(observedRun, false);
+            if (BattleSynergies.AllCostsFree(observedRun)) synergyLabel.text += "\n" + SynergyText.Color(BattleSynergies.AllCostsFreeDescription, SynergyText.Yellow);
             SetButtonText(expandButton, $"책상 확장  +  {observedRun.ExpansionPrice}");
             expandButton.interactable = observedRun.OpenCapacity < 7;
             SetButtonText(rerollButton, observedRun.IsFortuneRolling ? "운세\n확인 중..." : $"<nobr>오늘의 운세</nobr>\n리롤\n{observedRun.RerollCost} 에너지");
@@ -199,20 +196,7 @@ namespace HongikIngan
             if (owned)
             {
                 var s = observedRun.Students[selected];
-                detailTitle.text = $"{s.Definition.Name}   /   {s.Definition.Grade}학년 - {s.Definition.RoleLabel}";
-                string values = s.Definition.Action == ActionKind.AddThenPercentDamage ?
-                    $"+{s.SkillValue:0.##} 후 +{s.Definition.PercentAtUpgrade(s.UpgradeCount):0.##}%" : $"{s.SkillValue:0.##}";
-                switch (s.Definition.Action)
-                {
-                    case ActionKind.Paparazzi: values = s.UpgradeCount > 0 ? "+500 후 +10%p" : "공격마다 +500"; break;
-                    case ActionKind.Spotlight: values = $"+{s.SkillValue:0.##}% - 양옆 조명"; break;
-                    case ActionKind.LightingDamage: values = $"+500 후 조명마다 +{s.SkillValue:0.##}"; break;
-                    case ActionKind.GrantLove: values = $"사랑 {(int)s.SkillValue}스택 - 스택당 ×1.1"; break;
-                    case ActionKind.CloneNext: values = (s.UpgradeCount > 0 ? "전투 종료까지 분신" : "턴 종료까지 분신") + $" - 다음 정밀화 +{3000f * (s.PrecisionCopies + 1):0}"; break;
-                    case ActionKind.BestSubject: values = s.UpgradeCount > 0 ? "세 조건 인원수의 곱" : "세 조건 인원수의 합"; break;
-                }
-                string traits = s.Definition.Club + " - " + s.Definition.Personality + (string.IsNullOrEmpty(s.Definition.SpecialSynergy) ? "" : " - " + s.Definition.SpecialSynergy);
-                detailBody.text = $"{traits}\n{s.Definition.SkillDescription}\n현재 효과 {values}  -  강화 {s.UpgradeCount}회";
+                studentCard.GetComponent<StudentCardView>().Render(s);
                 SetButtonText(learnButton, $"보충 학습\n{observedRun.UpgradePrice(s.Definition.Grade)} 에너지");
                 SetButtonText(sellButton, $"계약 해제\n+{BattleSynergies.Income(observedRun, observedRun.Settings.SalePrice(s.Definition.Grade))}");
             }

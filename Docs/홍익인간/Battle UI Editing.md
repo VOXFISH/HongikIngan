@@ -138,6 +138,21 @@ BattlePresentation의 **Animate Students**는 전체 토글이다. 각 BattleStu
 
 BattleFormationView.Artwork의 Girl0–Girl35 전체 36명을 Assets/sprite/magical_char_back의 같은 ID 이미지로 연결한다. 이 폴더가 전체 뒷모습 이미지 폴더이며, Assets/magical_char_back에는 별도의 3장만 있으므로 혼동하지 않는다. 기존 여러 Sprite 분할 중 면적이 가장 큰 캐릭터 본체를 참조하며 원본 PNG·GUID·가져오기 설정은 유지한다. 기존 홉·페이드·드래그와 비율 유지 설정도 그대로 사용한다. 36개 파일의 ID·GUID·Sprite 하위 식별자를 각각 확인했다.
 
+## 시너지 목록·학생증 검사 UI (2026-11-06)
+
+학교는 보유 시너지를 활성·비활성으로 나누고, 전투 왼쪽에는 활성 시너지만 표시한다. 활성은 흰색, 최고 단계는 노란색, 비활성은 회색이며 `이름 (현재 인원 / 다음 단계 인원)`으로 표시한다. 최고 단계는 최종 단계 인원을 분모로 사용한다. 인원 계산에는 분위기 보너스와 분신을 포함한다. 사랑꾼은 인접 조건을 확인하며 전투 첫 공격 이후에는 확정된 인접 보너스를 기준으로 표시한다.
+
+각 목록과 학생증의 시너지 이름은 같은 `SynergyHover`·`SynergyPopup`을 사용한다. 팝업에는 [synergy 문서](Girls/synergy.md)의 이름·한 문장 설명·모든 단계 효과와 해당 누적 수치가 표시된다. 달성한 단계는 흰색, 미달성 단계와 정확한 인원 조건을 초과한 연극부 단계는 회색이다. 효과 적용 방식은 기존 최고 단계 규칙을 유지한다.
+
+`Assets/UI/Prefabs/StudentIdCard.prefab`을 학교와 전투에서 함께 사용한다. 전투에서는 학교의 학습·판매·닫기 버튼을 숨기고, 학생 호버 → 카드의 시너지 호버로 포인터를 옮겨 상세 효과를 확인한다. 포인터가 학생과 카드 모두를 떠나면 0.3초 후 닫는다. 모달·씬 전환·드래그 때는 즉시 닫는다. 학생증은 나타날 때 -10~10도 중 무작위 각도로 회전하며, 같은 학생의 내용 갱신은 각도를 유지한다. 회전한 모서리까지 화면 안에 맞춘다.
+
+목록 위치와 팝업 크기·글꼴은 각 씬의 `SynergyPopupPanel`, 학생증은 공통 프리팹에서 편집한다. 기존 학교 시너지 스크롤 영역을 유지한다. 편집기 메뉴 `HongikIngan > Apply synergy inspection UI`가 최초 연결을 저장하며 적용한 씬은 다시 덮어쓰지 않는다. 영창은 기존 대상·정렬 규칙을 유지하면서 시너지 이름 대신 문서의 `단어`를 사용한다.
+
+검증 진입점은 `HongikIngan.Editor.SynergyUiBuilder.Build`, 실제 플레이어 검사는 `--synergy-ui-smoke --smoke-output <폴더>`다. 빌드·로그·캡처는 버전 관리에서 제외한다.
+
+최종 검증: Unity 6000.3.7f1 Windows 빌드, 기존 규칙 4,010개와 시너지 표시 규칙 105개, 초기 지급 2,000개 시드를 통과했다. 실제 플레이어에서 시너지 UI 281개(36명 텍스트·학생증 전달 호버·회전·720p/1080p 경계·모달 닫기)와 기존 전투 회귀 222개를 통과했다. 목록 높이와 팝업 대비를 캡처로 확인했고 신규 에셋의 GUID 중복은 없다. 수동 마우스 인수와 FMOD 청취는 미실시다.
+
+최신 test의 `c157bfd` UI 이미지 2개를 충돌 없이 통합한 빌드는 `Logs/SynergyMergedBuild.log`, 최종 UI 결과와 캡처는 `Builds/SynergyMergedFinal/`, 전투 회귀는 `Builds/SynergyBattleRegression/`에 있다. 팝업은 Inspector의 최대 높이 안에서 내용 길이에 맞춰 줄어든다. 테스트의 가상 마우스는 숨김 플레이어의 포커스·물리 마우스 이벤트와 분리되며 일반 게임에서는 생성되지 않는다.
 ### School 전투 시작 타일 전환
 
 SchoolScreen.battleSweepPrefab은 Assets/UI/Prefabs/SchoolBattleSweep.prefab을 참조한다. 원본 Assets/sprite/UI/sides (1).png의 기존 세 스프라이트를 하단부터 Tile1(보라), Tile2(분홍), Tile3(주황) 순서로 사용하며 원본 이미지와 슬라이스 GUID를 유지한다. HongikIngan > Apply School tile sweep transition 메뉴로 프리팹 및 School 참조를 저장한다.
@@ -150,6 +165,11 @@ SchoolBattleSweep/BattleStartLogo는 ui two.png의 battle_start 스프라이트�
 
 SceneTransitionOverlay의 battleLogoDuration(기본 0.85초), battleLogoScale, battleLogoRotation을 Inspector에서 조절한다. 로고는 두 번째·세 번째 타일 진입 중에도 재생되고, 로고 크기가 0이 된 후 타일 퇴장을 시작하므로 주황 타일이 화면에서 사라지기 전에 끝난다. 프리팹 갱신 메뉴는 기존 타일 편집 내용을 보존하며 로고를 추가한다.
 
+최종 동시 작업 통합: test의 `e4f55a0` 학교 타일·로고 전환도 반영했다. 코드·씬은 자동 병합했고 문서와 AI 기록의 추가 항목은 양쪽을 모두 보존했다. 기존 CSV에 남아 있던 충돌 표식도 제거해 154행이 모두 3열로 파싱되는 것을 확인했다. `Logs/SynergyTransitionMergedBuild.log`의 빌드·규칙 검사를 통과했고, 실제 학교 전투 버튼으로 새 전환을 거친 `Builds/SynergyTransitionMerged/result.txt`의 UI 검사 281개를 통과했다.
+
+Battle 목록 배치는 사용자 확인에 따라 최신 test의 텍스트 위치 `(18, -32)`와 영역 `209×308`, 흰색 기본 글자를 유지했다. test의 텍스트 박스 아트·전투 헤더·사운드 아이콘도 보존한다.
+
+사용자 승인 배치의 최종 결과: `Logs/SynergyArtworkMergedBuild.log` Windows 빌드와 기존 규칙 검사를 통과했고, `Builds/SynergyApprovedFinal/result.txt` 281개 및 `Builds/SynergyApprovedRegression/arc-result.txt` 222개를 통과했다. test의 209×308 목록, 새 전투 헤더·텍스트 박스·학교 전환을 포함한 결과다.
 ### Battle 보스 피격·KO
 
 BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 필살기 beam 단계 동안 이 이미지의 위치만 떨리며 단계 종료·중단 시 원래 위치로 복구한다. Inspector의 bossShakeAmount(기본 7), bossShakeFrequency(기본 24)로 조절한다.
@@ -160,7 +180,7 @@ BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 
 
 합동 공격은 원기옥을 이동시키지 않고 기존 Beam 레이저로 표시한다. 레이저는 원기옥 중심에서 BossVisual/BossFace를 향하며 beamDuration 동안 표시된다. 원기옥의 로그 크기 변화 후 LateUpdate에서 끝점을 다시 계산하여 레이저 연결을 유지한다. 투척·포물선·투척 후 페이드 기능은 제거했다.
 
-Orb와 Beam은 Image 컴포넌트로 렌더링한다. 이미지는 Source Image에서 교체하며 현재 값은 `Assets/sprite/UI/EnergyOrb.png`, `EnergyBeam.png`이다. 그림 색이 그대로 나오도록 Color는 흰색으로 두고, 뒤의 UI 클릭을 막지 않도록 Raycast Target은 끈다. Orb는 Preserve Aspect를 켠다. Beam의 길이는 런타임에 계산되므로 RectTransform에서는 높이(현재 60)만 편집하며, Orb 자식이어서 굵기도 Orb 크기를 따라 변한다. 그림의 왼쪽이 Orb 쪽, 오른쪽이 보스 쪽이다. Orb 배경이 투명해졌으므로 Caption·Damage는 흰 글자와 `Assets/UI/Fonts/GmarketSansTTFMedium SDF - Orb Outline.mat` 외곽선으로 표시한다.
+Orb와 Beam은 Image 컴포넌트로 렌더링한다. 이미지는 Source Image에서 교체하며 현재 값은 `Assets/sprite/UI/EnergyOrb.png`, `EnergyBeam.png`이다. 그림 색이 그대로 나오도록 Color는 흰색으로 두고, 뒤의 UI 클릭을 막지 않도록 Raycast Target은 끈다. Orb는 Preserve Aspect를 켠다. Beam의 길이는 런타임에 계산되므로 RectTransform에서는 높이(현재 60)만 편집하며, Orb 자식이어서 굵기도 Orb 크기를 따라 변한다. 그림의 왼쪽이 Orb 쪽, 오른쪽이 보스 쪽이다. Orb 배경이 투명해졌으므로 Caption·Damage는 흰 글자로 표시하고, Damage에는 `Assets/UI/Fonts/GmarketSansTTFMedium SDF - Orb Outline.mat` 외곽선을 쓴다.
 
 레이저 종료 시 Background·Foreground·BossVisual과 학생 Portrait만 흔든다. Canvas·카메라·학생 슬롯 부모는 움직이지 않아 HP·버튼·이름·기록·팝업은 고정된다. impactShakeDuration(0.3초), impactShakeAmount(12)로 조절하며 종료·중단 시 원래 위치를 복구한다. 처치 시 흰색 0.2초 후 monsterKO로 바뀌는 연출을 유지한다.
 
@@ -170,3 +190,10 @@ Orb와 Beam은 Image 컴포넌트로 렌더링한다. 이미지는 Source Image�
 
 목표 크기까지 감쇠 스프링을 적용해 부풀었다 줄어드는 버블 효과를 내며 단계 전환 시 크기를 초기화하지 않는다. Inspector의 orbMinRadius·orbMaxRadius·orbSizeMaxDamage·orbBubbleFrequency·orbBubbleDamping으로 조절한다. Connect Battle boss reactions 메뉴는 로그 크기 범위와 원기옥·BossFace·흔들림 참조를 저장한다.
 원기옥의 기본 중심은 화면 중앙이다. 현재 1600×900 레이아웃에서 Presentation 기준 좌표는 (800, -450)이며 생성 메뉴는 루트 Canvas의 실제 중심으로 배치한다.
+
+### 시너지 UI 최종 통합 검증 (2026-11-06)
+
+- main: [PR #8](https://github.com/VOXFISH/HongikIngan/pull/8)로 단계 목록·공통 팝업·회전 학생증·영창 단어 반영.
+- test: 최신 운세·아트·레이저를 보존했고, 귀염둥이 5·7·9단계 설명과 운세의 가상 시너지 인원을 함께 검증했다. 목록 텍스트 영역은 사용자 선택대로 209×308이다.
+- Unity 6000.3.7f1 Windows 빌드, 규칙 5,276개, 초기 지급 2,000시드 통과. Direct3D 11 플레이어의 시너지 UI 281개·전투 223개·운세 54개 통과 및 실제 렌더 캡처 확인. 테스트의 시간 간격과 전환 완료 대기는 검사 실행에만 적용된다.
+- 중간 실행에서 검사 결과 저장 후 Unity 네이티브 종료 오류가 있었으나 최종 실행에서는 재발하지 않았다. 수동 마우스 조작과 FMOD 실청취는 수행하지 않았다.
