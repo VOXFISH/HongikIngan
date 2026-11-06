@@ -350,7 +350,6 @@ You're almost out of tokens, work fast."
 Make the combat text more visible, and add fade in/fade out effects that can be altered by a simple in-editor toggle
 
 Make the 'student's move while they act. Hopping up and down slightly while they're receiving or sending out effects. The animation should be smooth and also be editable"
-<<<<<<< HEAD
 "2026-11-06 07:39:08+09:00","VOXFISH","1.Change the 'student' sprite to the ones in the magical_char_back"
 "2026-11-06 07:48:57+09:00","VOXFISH","You are mistaken, rescan the folder. there should be 35 sprites"
 "2026-11-06 08:01:22+09:00","VOXFISH","in ""school"" scene, the transitioning screen is off center
@@ -358,8 +357,6 @@ In ""school""scene, the transitioning effect on the characters does not happen. 
 "2026-11-06 08:01:22+09:00","VOXFISH","<send_user_message_question_reply>
 [{""questionItemId"":""[\""request_user_input_async\"",\""call_e20cc0e8627c4eae843c8b7b362dbb89\"",0]"",""question"":""The transformation material and shader .meta files contain committed merge conflicts with two different GUIDs. AGENTS.md requires coordination for .meta conflicts. May I resolve these using the GUIDs already referenced by the School prefab and material, preserving those existing connections?"",""answer"":""Use the currently referenced GUIDs (Recommended)""}]
 </send_user_message_question_reply>"
-=======
->>>>>>> origin/test
 "2026-11-06 01:20:43+09:00","sid","마법소녀 캐릭터 시트를 좀 변형하려고해요. 로컬 폴더에 Docs의 Girls를 보면, 이름과 스킬 내용만 정리가 되어있는 소녀들의 파일이 있을 거에요. 저는이제 이 소녀의 외형과 컨셉을 한줄로 만들어서 캐릭터성을 굳혀야 해요. 이과정이 수월할 수 있도록 현재 아티펙트를 개조해주세요"
 "2026-11-06 01:25:39+09:00","sid","파일이름에 부활동 시너지와 성격, 학년까지 모두 정리 되어있어서 이것도 같이 추가해주셔야해요. 예를 들어 파일이름이 Girl6_선도부2_분위기메이커_민지 면 선도부가 부활동 2가 학년, 성격이 분위기메이커에요"
 "2026-11-06 01:30:50+09:00","sid","이미지 생성 프롬프트도 수정할게요. 이제 2등신데포르메는 버리고, 7등신의 진짜 학생의 비율로 뽑아주세요. 그 이미지를 컨셉 포토로 다시 한번 데포르메를 변형시키기 위해 ai를 돌릴거 거든요. 대신 일반 교복모습과 마법소녀 변신모습으로 복장을 두가지로 그려주세요."
@@ -389,7 +386,6 @@ In ""school""scene, the transitioning effect on the characters does not happen. 
 "2026-11-06 07:16:42+09:00","sid","이것도 기반으로 ui 제작해줘 동일한 파일에. 단 학생영입 ui의 우체부 비둘기의 경우 아트 스타일은 두번쨰로 보낸 사진 스타일로 되어있는 귀여운 비둘기여야해"
 "2026-11-06 07:29:00+09:00","sid","각 ui 가 원안에 들어간 느낌이 아니라, 그 형태 자체로 모양을 이루고 있는 형태입니다. 수정해주세요"
 "2026-11-06 07:40:21+09:00","sid","지금까지 AI 사용내역도 기록해주세요"
-<<<<<<< HEAD
 "2026-11-06 08:42:42+09:00","sid","지금 유니티 cli로 프로젝트와 연결했는데 확인할 수 있나요?"
 "2026-11-06 09:18:11+09:00","VOXFISH","학교 씬에서, 시너지 목록은 활성화된 시너지와 활성화되지 않은 시너지로 나뉘어서 다음과 같이 출력되어야 해.
 
@@ -599,5 +595,3 @@ When the purple tile is fullly covering the screen, add a effect that :
 
 When the 'student's start attacking (in unison) against the boss, the boss should tremble.
 When the boss dies, it should turn into monster KO after turning white and waiting 0.2 seconds"
-=======
->>>>>>> origin/test
