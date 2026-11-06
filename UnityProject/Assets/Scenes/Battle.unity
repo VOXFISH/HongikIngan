@@ -2605,17 +2605,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371972642}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1161286847}
-  m_Father: {fileID: 575284190}
+  m_Father: {fileID: 1978688903}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 14, y: -108}
+  m_AnchoredPosition: {x: 678.99994, y: -427.99997}
   m_SizeDelta: {x: 242, y: 108}
   m_Pivot: {x: 0, y: 1}
 --- !u!225 &371972644
@@ -3468,6 +3468,7 @@ GameObject:
   - component: {fileID: 575284190}
   - component: {fileID: 575284192}
   - component: {fileID: 575284193}
+  - component: {fileID: 575284194}
   m_Layer: 0
   m_Name: Orb
   m_TagString: Untagged
@@ -3491,7 +3492,6 @@ RectTransform:
   - {fileID: 593315333}
   - {fileID: 1887080122}
   - {fileID: 1630017021}
-  - {fileID: 371972643}
   m_Father: {fileID: 1978688903}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -3529,6 +3529,18 @@ MonoBehaviour:
       m_Calls: []
   borderColor: {r: 0.18, g: 0.24, b: 0.34, a: 1}
   borderWidth: 3
+--- !u!225 &575284194
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575284189}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &593315332
 GameObject:
   m_ObjectHideFlags: 0
@@ -4907,6 +4919,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 830617538}
   m_CullTransparentMesh: 1
+--- !u!1 &839749401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 839749402}
+  m_Layer: 0
+  m_Name: BossFace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &839749402
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839749401}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1107698764}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.3, y: 0.78}
+  m_AnchorMax: {x: 0.3, y: 0.78}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &879145300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5843,7 +5890,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 839749402}
   m_Father: {fileID: 1970038123}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -10906,6 +10954,7 @@ RectTransform:
   - {fileID: 2060252716}
   - {fileID: 740057188}
   - {fileID: 48391205}
+  - {fileID: 371972643}
   m_Father: {fileID: 263485024}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -10937,6 +10986,19 @@ MonoBehaviour:
   fadeInDuration: 0.12
   fadeOutDuration: 0.2
   animateStudents: 1
+  thrownOrb: {fileID: 575284190}
+  bossFace: {fileID: 839749402}
+  orbGroup: {fileID: 575284194}
+  impactShakeTargets:
+  - {fileID: 192425963}
+  - {fileID: 1033540628}
+  - {fileID: 1107698764}
+  orbArcHeight: 180
+  orbArrivalScale: 0.2
+  orbFadeOutDuration: 0.1
+  orbReturnFadeDuration: 0.7
+  impactShakeDuration: 0.3
+  impactShakeAmount: 12
   bossVisual: {fileID: 1107698765}
   bossKoSprite: {fileID: 2428010500311207622, guid: f0a7b6aed14a5174a83f46fc65ce9e5a, type: 3}
   bossFlashMaterial: {fileID: 2100000, guid: eac6a6b551fce054eb469b845c9d1203, type: 2}

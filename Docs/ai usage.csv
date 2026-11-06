@@ -410,3 +410,7 @@ When the purple tile is fullly covering the screen, add a effect that :
 
 When the 'student's start attacking (in unison) against the boss, the boss should tremble.
 When the boss dies, it should turn into monster KO after turning white and waiting 0.2 seconds"
+"2026-11-06 10:01:37+09:00","qwerty","Do the additional following :
+-L원기옥 being thrown at the monster when the combined attack commences.
+-원기옥 should decrease in size while going up and down until it reaches the monsters 'face' to simulate it being thrown to the monster. The 원기옥 should rapidly fade out when ending the animation, and be fade in slowly to where it was before.
+-When 원기옥 Hits the monster, the entire screen should shake, excluding the UI."
