@@ -32,6 +32,13 @@ namespace HongikIngan.Editor
             presentation.bossKoSprite = ko;
             presentation.bossFlashMaterial = flash;
             var orb = presentation.GetComponentsInChildren<BattleOrbGraphic>(true).Single().rectTransform;
+            // A centered pivot lets radius change without shifting the orb's center or X coordinate.
+            if (orb.pivot != new Vector2(.5f, .5f))
+            {
+                var center = orb.TransformPoint(orb.rect.center);
+                orb.pivot = new Vector2(.5f, .5f);
+                orb.position = center;
+            }
             presentation.thrownOrb = orb;
             var group = orb.GetComponent<CanvasGroup>();
             if (group == null) group = orb.gameObject.AddComponent<CanvasGroup>();

@@ -3498,7 +3498,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 665, y: -320}
   m_SizeDelta: {x: 270, y: 230}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &575284192
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10999,6 +10999,11 @@ MonoBehaviour:
   orbReturnFadeDuration: 0.7
   impactShakeDuration: 0.3
   impactShakeAmount: 12
+  orbMinRadius: 0.33333334
+  orbMaxRadius: 2.5
+  orbSizeMaxDamage: 100000
+  orbBubbleFrequency: 3.5
+  orbBubbleDamping: 0.3
   bossVisual: {fileID: 1107698765}
   bossKoSprite: {fileID: 2428010500311207622, guid: f0a7b6aed14a5174a83f46fc65ce9e5a, type: 3}
   bossFlashMaterial: {fileID: 2100000, guid: eac6a6b551fce054eb469b845c9d1203, type: 2}
