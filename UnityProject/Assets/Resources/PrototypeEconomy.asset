@@ -17,7 +17,6 @@ MonoBehaviour:
   upgradePrices: 14000000280000003c000000
   salePrices: 0f0000001e0000002d000000
   petPrices: 1e00000032000000640000003c000000
-  relicPrice: 30
   rerollInitial: 20
   rerollIncrease: 20
   slotExpansionPrice: 40

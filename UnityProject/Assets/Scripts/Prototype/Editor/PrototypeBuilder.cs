@@ -67,6 +67,19 @@ namespace HongikIngan.Editor
             ValidateExpansion();
             Build();
         }
+        public static void BuildFortune()
+        {
+            SchoolLayoutBuilder.ApplyFortune();
+            Directory.CreateDirectory("Builds/Fortune");
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
+                scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/School.unity", "Assets/Scenes/Battle.unity" },
+                locationPathName = "Builds/Fortune/HongikIngan.exe", target = BuildTarget.StandaloneWindows64,
+                options = BuildOptions.None
+            });
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
+                throw new Exception("Fortune build failed: " + report.summary.result);
+            Debug.Log("FORTUNE_BUILD_PASS");
+        }
     }
 }
 #endif

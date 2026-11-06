@@ -8,6 +8,7 @@ namespace HongikIngan
     /// <summary>Shared effects for the synergies belonging to the authored roster.</summary>
     public static class BattleSynergies
     {
+        public const string AllCostsFreeDescription = "모든 비용 공짜!";
         public static int Count(PrototypeRun run, string name)
         {
             int count = 0;
@@ -17,7 +18,7 @@ namespace HongikIngan
                 if (d.Club != name && d.Personality != name && d.SpecialSynergy != name) continue;
                 count += 1 + (run.Atmosphere >= 5000 || run.Atmosphere >= 500 && i == run.Students.Count - 1 ? 1 : 0);
             }
-            return count;
+            return count + run.FortuneSynergyBonus;
         }
 
         public static void BeginTurn(PrototypeRun run)
@@ -81,8 +82,8 @@ namespace HongikIngan
             return count;
         }
         public static bool KeepAllyConsumables(PrototypeRun run) => Count(run, "귀염둥이") >= 7 && Count(run, "귀염둥이") < 9;
-        public static int RelicApplications(PrototypeRun run, RelicDefinition relic) =>
-            Count(run, "귀염둥이") >= 9 || Count(run, "귀염둥이") >= 5 && relic.DebuffRelated ? 2 : 1;
+        public static int FortuneStrength(PrototypeRun run) => Count(run, "귀염둥이") >= 5 && Count(run, "귀염둥이") < 9 ? 2 : 1;
+        public static bool AllCostsFree(PrototypeRun run) => Count(run, "귀염둥이") >= 9;
 
         public static IEnumerable<BattleStep> LeaderBuff(PrototypeRun run, StudentState actor)
         {

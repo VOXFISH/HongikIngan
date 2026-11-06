@@ -16,7 +16,7 @@ namespace HongikIngan
         StickyPaint, ArtBrush, MoonRabbit, ArtEncore, WildBrush, Eros,
         StarLove, SaturnCurse, MarsJealousy, TomorrowSun, StarGift, Coffee, GrowingStrike, KeywordKindsDamage
     }
-    public enum RelicKind { OpeningDamage, FinalMultiplier, ExtraSlots, VictoryMoney }
+    public enum FortuneKind { Blank, RerollDiscount, RecruitDiscount, FinalDamage, Energy, AllSynergies, SynergyRecruitment, UpgradeAll, BattleReward }
 
     [Serializable]
     public sealed class StudentDefinition
@@ -58,26 +58,54 @@ namespace HongikIngan
     }
 
     [Serializable]
-    public sealed class RelicDefinition
+    public sealed class FortuneDefinition
     {
-        public string Id, Name, Description;
-        public RelicKind Kind;
-        public float Value;
-        public bool DebuffRelated;
+        public readonly string Id, Description;
+        public readonly FortuneKind Kind;
+        public readonly float Weight, Value;
+        public bool IsBlank => Kind == FortuneKind.Blank;
+        public FortuneDefinition(string id, string description, float weight, FortuneKind kind = FortuneKind.Blank, float value = 0)
+        { Id = id; Description = description; Weight = weight; Kind = kind; Value = value; }
     }
 
     public static class PrototypeCatalog
     {
         public static readonly List<StudentDefinition> Students = CreateStudents();
-        public static readonly List<RelicDefinition> Relics = new List<RelicDefinition>
+        public static readonly IReadOnlyList<FortuneDefinition> Fortunes = Array.AsReadOnly(new[]
         {
-            new RelicDefinition { Id="chalk", Name="빛나는 분필", Description="매 턴 시작 데미지 +40", Kind=RelicKind.OpeningDamage, Value=40 },
-            new RelicDefinition { Id="ribbon", Name="별의 리본", Description="필살기 데미지 ×1.25", Kind=RelicKind.FinalMultiplier, Value=1.25f },
-            new RelicDefinition { Id="desk", Name="접이식 책상", Description="일반 슬롯 +2 (일반 최대 7, 분신 포함 최대 9)", Kind=RelicKind.ExtraSlots, Value=2 },
-            new RelicDefinition { Id="lunch", Name="황금 도시락", Description="보스 승리 보상 +30", Kind=RelicKind.VictoryMoney, Value=30 },
-            new RelicDefinition { Id="star", Name="작은 별", Description="매 턴 시작 데미지 +70", Kind=RelicKind.OpeningDamage, Value=70 },
-            new RelicDefinition { Id="prism", Name="마법 프리즘", Description="필살기 데미지 ×1.15", Kind=RelicKind.FinalMultiplier, Value=1.15f }
-        };
+            new FortuneDefinition("reroll", "상점 리롤 비용 50% 감소", 2, FortuneKind.RerollDiscount, .5f),
+            new FortuneDefinition("recruit", "모집 비용 50% 감소", 2, FortuneKind.RecruitDiscount, .5f),
+            new FortuneDefinition("damage", "공격 완료 후 데미지 2배", 1, FortuneKind.FinalDamage, 2),
+            new FortuneDefinition("toe", "엄지발가락을 찧지 않음", 3),
+            new FortuneDefinition("dew", "마운틴 듀 1+1", 3),
+            new FortuneDefinition("pizza", "급식으로 파인애플 피자가 나옴", 3),
+            new FortuneDefinition("malatang", "급식으로 마라탕이 나옴", 3),
+            new FortuneDefinition("merge", "머지 컨플릭트 방지", 3),
+            new FortuneDefinition("unlucky", "운이 없네요...", 5),
+            new FortuneDefinition("energy", "100 미라클 에너지 획득", 1, FortuneKind.Energy, 100),
+            new FortuneDefinition("synergies", "모든 시너지 +1 적용", .5f, FortuneKind.AllSynergies, 1),
+            new FortuneDefinition("synergy_recruit", "모든 모집이 시너지 모집으로 적용", 1, FortuneKind.SynergyRecruitment),
+            new FortuneDefinition("upgrade", "모든 마법소녀 강화", .3f, FortuneKind.UpgradeAll, 1),
+            new FortuneDefinition("reward_1_5", "이번 전투 보상 1.5배", 1, FortuneKind.BattleReward, 1.5f),
+            new FortuneDefinition("reward_2", "이번 전투 보상 2배", 1, FortuneKind.BattleReward, 2),
+            new FortuneDefinition("reward_10", "이번 전투 보상 10배", .3f, FortuneKind.BattleReward, 10)
+        });
+
+        public static FortuneDefinition DrawFortune(Random random, bool excludeBlanks)
+        {
+            double total = 0;
+            foreach (var fortune in Fortunes) if (!excludeBlanks || !fortune.IsBlank) total += fortune.Weight;
+            double roll = random.NextDouble() * total;
+            FortuneDefinition last = null;
+            foreach (var fortune in Fortunes)
+            {
+                if (excludeBlanks && fortune.IsBlank) continue;
+                last = fortune;
+                roll -= fortune.Weight;
+                if (roll < 0) return fortune;
+            }
+            return last;
+        }
 
         private static List<StudentDefinition> CreateStudents()
         {

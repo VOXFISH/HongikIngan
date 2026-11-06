@@ -98,7 +98,7 @@ namespace HongikIngan
             var previewSettings = ScriptableObject.CreateInstance<EconomySettings>();
             var preview = new PrototypeRun(previewSettings);
             preview.Students.Clear();
-            preview.Relics.Add(new RelicDefinition { Id = "preview_slots", Kind = RelicKind.ExtraSlots, Value = 6 });
+            preview.AddMoney(1000); for (int i = 0; i < 4; i++) preview.ExpandSlots();
             for (int i = 0; i < 9; i++) preview.Students.Add(new StudentState(PrototypeCatalog.Students[i]) { IsClone = i >= 7 });
             screen.formation.Render(preview);
             Screen.SetResolution(1440, 900, false);

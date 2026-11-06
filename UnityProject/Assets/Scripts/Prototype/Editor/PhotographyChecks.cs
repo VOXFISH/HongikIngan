@@ -165,7 +165,7 @@ namespace HongikIngan
             var upgraded = Girl(16, true); var persistent = Battle(upgraded, Dummy("target", 1));
             Resolve(persistent);
             Check(persistent.Students.Count == 3 && persistent.Students[2].CloneLastsBattle, "upgraded clone survives turn end");
-            persistent.Relics.Add(new RelicDefinition { Kind = RelicKind.OpeningDamage, Value = 1e30f, Name = "win fixture" });
+            typeof(BattleState).GetProperty("BossHp").SetValue(persistent.Battle, 1f);
             Resolve(persistent);
             Check(persistent.Battle.Won && persistent.Students.All(s => !s.IsClone), "all clones expire when battle ends");
             int copies = upgraded.PrecisionCopies;

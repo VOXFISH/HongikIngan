@@ -11,7 +11,6 @@ namespace HongikIngan
         public int[] upgradePrices = { 20, 40, 60 };
         public int[] salePrices = { 15, 30, 45 };
         public int[] petPrices = { 30, 50, 100, 60 };
-        public int relicPrice = 30;
         public int rerollInitial = 20;
         public int rerollIncrease = 20;
         public int slotExpansionPrice = 40;
