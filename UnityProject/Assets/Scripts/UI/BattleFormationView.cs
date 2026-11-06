@@ -37,14 +37,15 @@ namespace HongikIngan
                 var art = student == null ? null : artwork.FirstOrDefault(a => a != null && a.girlId == student.Definition.Id);
                 slots[i].Render(student, art?.sprite);
             }
-            if (!CanReorder) HideTooltip();
+            if (screen == null || !screen.CanInspect) HideTooltip();
         }
         public static int FirstOccupiedSlot(int count, int slotCount = 9) => Mathf.Max(0, (slotCount - count) / 2);
         public BattleStudentSlot StudentSlot(int index) => slots.FirstOrDefault(s => s.HasStudent && s.Index == index);
         public void ShowTooltip(BattleStudentSlot slot)
         {
-            if (CanReorder && slot.HasStudent && !slot.IsDragging && tooltip != null) tooltip.Show(slot);
+            if (screen != null && screen.CanInspect && slot.HasStudent && !slot.IsDragging && tooltip != null) tooltip.Show(slot);
         }
+        public void LeaveTooltip() { if (tooltip != null) tooltip.RequestHide(); }
         public void HideTooltip() { if (tooltip != null) tooltip.Hide(); }
         public void ShowCalculation(StudentState actor, string text)
         {

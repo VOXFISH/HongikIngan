@@ -31,9 +31,7 @@ namespace HongikIngan
             turnLabel.text = battle == null ? "전투 준비" : $"TURN {displayedTurn} / {battle.TurnLimit}";
             if (synergyLabel != null)
             {
-                var names = run.Students.SelectMany(s => new[] {s.Definition.Club, s.Definition.Personality, s.Definition.SpecialSynergy})
-                    .Where(s => !string.IsNullOrEmpty(s)).Distinct().OrderByDescending(s => BattleSynergies.Count(run, s)).ThenBy(s => s);
-                synergyLabel.text = "현재 시너지\n\n" + string.Join("\n", names.Select(s => s + "  " + BattleSynergies.Count(run, s)));
+                synergyLabel.text = SynergyText.List(run, true);
             }
             if (bossDebuffsLabel != null) bossDebuffsLabel.text = battle == null ? "" : KeywordText(battle.BossKeywords);
             statusLabel.text = status;
