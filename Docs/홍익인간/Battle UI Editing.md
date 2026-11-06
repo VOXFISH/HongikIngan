@@ -180,6 +180,8 @@ BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 
 
 합동 공격은 원기옥을 이동시키지 않고 기존 Beam 레이저로 표시한다. 레이저는 원기옥 중심에서 BossVisual/BossFace를 향하며 beamDuration 동안 표시된다. 원기옥의 로그 크기 변화 후 LateUpdate에서 끝점을 다시 계산하여 레이저 연결을 유지한다. 투척·포물선·투척 후 페이드 기능은 제거했다.
 
+Orb와 Beam은 Image 컴포넌트로 렌더링한다. 이미지는 Source Image에서 교체하며 현재 값은 `Assets/sprite/UI/EnergyOrb.png`, `EnergyBeam.png`이다. 그림 색이 그대로 나오도록 Color는 흰색으로 두고, 뒤의 UI 클릭을 막지 않도록 Raycast Target은 끈다. Orb는 Preserve Aspect를 켠다. Beam의 길이는 런타임에 계산되므로 RectTransform에서는 높이(현재 60)만 편집하며, Orb 자식이어서 굵기도 Orb 크기를 따라 변한다. 그림의 왼쪽이 Orb 쪽, 오른쪽이 보스 쪽이다. Orb 배경이 투명해졌으므로 Caption·Damage는 흰 글자로 표시하고, Damage에는 `Assets/UI/Fonts/GmarketSansTTFMedium SDF - Orb Outline.mat` 외곽선을 쓴다.
+
 레이저 종료 시 Background·Foreground·BossVisual과 학생 Portrait만 흔든다. Canvas·카메라·학생 슬롯 부모는 움직이지 않아 HP·버튼·이름·기록·팝업은 고정된다. impactShakeDuration(0.3초), impactShakeAmount(12)로 조절하며 종료·중단 시 원래 위치를 복구한다. 처치 시 흰색 0.2초 후 monsterKO로 바뀌는 연출을 유지한다.
 
 ### 원기옥 로그 크기와 X 고정
