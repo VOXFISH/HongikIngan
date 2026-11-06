@@ -24,6 +24,7 @@ namespace HongikIngan
         public TMP_Text[] bookLabels;
         public int Index { get; private set; }
         public bool IsDragging { get; private set; }
+        public bool IsOccupied => occupied;
         SchoolScreen owner;
         Transform home;
         Vector3 homePosition, homeScale, pointerOffset;
