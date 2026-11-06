@@ -19,6 +19,19 @@ namespace HongikIngan
         public bool fadeCombatText = true;
         [Min(0)] public float fadeInDuration = .12f;
         [Min(0)] public float fadeOutDuration = .2f;
+        [Header("Damage stamp")]
+        public bool stampDamageText = true;
+        [Min(.01f)] public float damageStampDuration = .5f;
+        [Min(1)] public float damageStampScale = 1.65f;
+        [Min(0)] public float damageStampShakeDuration = .14f;
+        [Min(0)] public float damageStampShakeAmount = 4f;
+        readonly Dictionary<RectTransform, Vector3> stampScales = new Dictionary<RectTransform, Vector3>();
+        readonly Dictionary<RectTransform, Vector3> stampShakeHomes = new Dictionary<RectTransform, Vector3>();
+        // Presentation randomness must not consume the combat random stream.
+        readonly System.Random stampRandom = new System.Random();
+        bool stampActive, stampLanded;
+        float stampTime, stampShakeTime;
+        Vector3 stampDirection;
         [Header("Student animation")]
         [Tooltip("Hop height, duration and curve are editable on each BattleStudentSlot or its shared prefab.")]
         public bool animateStudents = true;
@@ -128,6 +141,7 @@ namespace HongikIngan
                 if (step.Kind == "chant") sound.PlayOneShot("event:/Voice/Chant", AudioCategory.Voice);
             }
             float duration = DurationFor(step);
+            if (!firing && stampDamageText && !string.IsNullOrEmpty(step.Operation)) BeginDamageStamp(duration);
             float elapsed = 0;
             while (elapsed < duration)
             {
@@ -136,6 +150,7 @@ namespace HongikIngan
                 DisplayedHp = Interpolate(fromHp, targetHp, t);
                 RenderTotals();
                 SetTextAlpha(TextAlpha(elapsed, duration));
+                UpdateDamageStamp(elapsed);
                 if (!animateStudents) foreach (var slot in formation.slots) slot.CancelHop();
                 if (firing)
                 {
@@ -151,6 +166,7 @@ namespace HongikIngan
                 yield return null;
             }
             DisplayedDamage = targetDamage; DisplayedHp = targetHp; RenderTotals();
+            RestoreDamageStamp();
             SetTextAlpha(fadeCombatText ? 0 : 1);
             RestoreBossPosition();
             if (firing)
@@ -179,6 +195,60 @@ namespace HongikIngan
                 yield return new WaitForSecondsRealtime(bossWhiteHold);
                 ApplyBossKo();
             }
+        }
+        void BeginDamageStamp(float duration)
+        {
+            stampActive = true; stampLanded = false;
+            // Preserve accelerated/short steps while keeping the authored default at 0.5 seconds.
+            stampTime = Mathf.Min(Mathf.Max(.01f, damageStampDuration), duration * .75f);
+            stampShakeTime = Mathf.Min(Mathf.Max(0, damageStampShakeDuration), duration - stampTime);
+            if (hud != null && hud.logLabel != null) CaptureStampText(hud.logLabel);
+            if (formation != null)
+                foreach (var slot in formation.slots)
+                    if (slot.calculationLabel != null && slot.calculationLabel.gameObject.activeInHierarchy)
+                        CaptureStampText(slot.calculationLabel);
+        }
+        void CaptureStampText(TMP_Text text)
+        {
+            if (!string.IsNullOrEmpty(text.text)) stampScales[text.rectTransform] = text.rectTransform.localScale;
+        }
+        void UpdateDamageStamp(float elapsed)
+        {
+            if (!stampActive) return;
+            if (!stampDamageText || !isActiveAndEnabled) { RestoreDamageStamp(); return; }
+            if (elapsed < stampTime)
+            {
+                float t = elapsed / stampTime;
+                float scale = t < .72f
+                    ? Mathf.Lerp(Mathf.Max(1, damageStampScale), .92f, 1 - Mathf.Pow(1 - t / .72f, 3))
+                    : Mathf.Lerp(.92f, 1, Mathf.SmoothStep(0, 1, (t - .72f) / .28f));
+                foreach (var item in stampScales) if (item.Key != null) item.Key.localScale = item.Value * scale;
+                return;
+            }
+            if (!stampLanded)
+            {
+                stampLanded = true;
+                foreach (var item in stampScales) if (item.Key != null) item.Key.localScale = item.Value;
+                var canvas = hud != null ? hud.GetComponentInParent<Canvas>() : null;
+                if (canvas != null)
+                    foreach (Transform child in canvas.rootCanvas.transform)
+                        if (child is RectTransform rect) stampShakeHomes[rect] = rect.localPosition;
+                float angle = (float)(stampRandom.NextDouble() * System.Math.PI * 2);
+                stampDirection = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0);
+            }
+            float age = elapsed - stampTime;
+            if (stampShakeTime <= 0 || age >= stampShakeTime) { RestoreDamageStamp(); return; }
+            float progress = age / stampShakeTime;
+            float impulse = Mathf.Cos(progress * Mathf.PI * 4) * (1 - progress) * (1 - progress);
+            var offset = stampDirection * (Mathf.Max(0, damageStampShakeAmount) * impulse);
+            foreach (var item in stampShakeHomes) if (item.Key != null) item.Key.localPosition = item.Value + offset;
+        }
+        void RestoreDamageStamp()
+        {
+            foreach (var item in stampScales) if (item.Key != null) item.Key.localScale = item.Value;
+            foreach (var item in stampShakeHomes) if (item.Key != null) item.Key.localPosition = item.Value;
+            stampScales.Clear(); stampShakeHomes.Clear();
+            stampActive = stampLanded = false;
         }
         float OrbRadiusForDamage(float damage)
         {
@@ -254,9 +324,10 @@ namespace HongikIngan
             bossVisual.color = bossAliveColor;
             RestoreBossPosition();
         }
-        void OnDisable() { RestoreImpactPositions(); RestoreOrb(); RestoreBossPosition(); if (bossDying) ApplyBossKo(); }
+        void OnDisable() { RestoreDamageStamp(); RestoreImpactPositions(); RestoreOrb(); RestoreBossPosition(); if (bossDying) ApplyBossKo(); }
         void OnDestroy()
         {
+            RestoreDamageStamp();
             if (bossVisual != null && bossVisual.material == bossRuntimeMaterial) bossVisual.material = bossOriginalMaterial;
             if (bossRuntimeMaterial != null) Destroy(bossRuntimeMaterial);
         }
@@ -313,6 +384,7 @@ namespace HongikIngan
         }
         public void Clear()
         {
+            RestoreDamageStamp();
             RestoreImpactPositions();
             RestoreOrb();
             RestoreBossPosition();

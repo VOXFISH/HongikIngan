@@ -159,6 +159,8 @@ namespace HongikIngan
             Check(Vector2.Distance(sender.portrait.rectTransform.anchoredPosition,senderRest)<.01f,"interruption resets hop");
             sender.animateEffects=false; sender.PlayEffectHop(); yield return null;
             Check(Vector2.Distance(sender.portrait.rectTransform.anchoredPosition,senderRest)<.01f,"per-student hop toggle"); sender.animateEffects=true;
+            var stampChecks = CheckDamageStamp(screen, run, sender);
+            while (stampChecks.MoveNext()) yield return stampChecks.Current;
             first=formation.StudentSlot(0);first.OnPointerEnter(e);screen.PerformAction();first.OnPointerEnter(e);
             Check(screen.IsRunning && formation.tooltip.IsOpen,"attack allows student inspection"); formation.HideTooltip();
             float deadline=Time.realtimeSinceStartup+120;
@@ -208,6 +210,66 @@ namespace HongikIngan
             while(!screen.CanReorder && Time.realtimeSinceStartup<readyDeadline) yield return null;
             Check(screen.CanReorder,"next turn ready");
             formation.StudentSlot(0).OnPointerEnter(e);Check(formation.tooltip.IsOpen,"next preparation hover restored");
+        }
+        IEnumerator CheckDamageStamp(BattleScreen screen, PrototypeRun run, BattleStudentSlot sender)
+        {
+            var presentation = screen.presentation;
+            var label = sender.calculationLabel.rectTransform;
+            var log = screen.hud.logLabel.rectTransform;
+            var labelScale = label.localScale; var logScale = log.localScale;
+            var canvas = screen.hud.GetComponentInParent<Canvas>().rootCanvas;
+            var homes = canvas.transform.Cast<Transform>().OfType<RectTransform>().ToDictionary(r => r, r => r.localPosition);
+            var step = new BattleStep("damage", "internal detail", run.Battle.Damage, sender.Student, operation: "+100");
+            Check(presentation.damageStampDuration == .5f, "half second stamp default");
+            for (int attempt = 0; attempt < 2; attempt++)
+            {
+                screen.hud.logLabel.text = BattleHud.StepText(step);
+                var probe = presentation.Play(step, run); float started = Time.time;
+                bool enlarged = false, landed = false, shaken = false, restored = false;
+                while (probe.MoveNext())
+                {
+                    float age = Time.time - started;
+                    float offset = homes.Max(item => Vector3.Distance(item.Key.localPosition, item.Value));
+                    if (!enlarged && age > .02f && age < .1f)
+                    {
+                        Check(label.localScale.x > labelScale.x && log.localScale.x > logScale.x, "both damage texts stamp from enlarged scale");
+                        if (attempt == 0) BattleUiCapture.Capture(canvas, Path.Combine(output, "stamp-start.png"));
+                        enlarged = true;
+                    }
+                    if (age < .49f) Check(offset < .01f, "no screen shake before stamp lands");
+                    if (age >= .5f && age < .63f)
+                    {
+                        Check(Vector3.Distance(label.localScale, labelScale) < .001f && Vector3.Distance(log.localScale, logScale) < .001f, "stamp settles at half second");
+                        Check(offset <= presentation.damageStampShakeAmount + .01f, "landing shake stays subtle");
+                        landed = true;
+                        if (!shaken && offset > .1f)
+                        {
+                            var direction = homes.First().Key.localPosition - homes.First().Value;
+                            Check(homes.All(item => Vector3.Distance(item.Key.localPosition - item.Value, direction) < .01f), "whole battle canvas shakes together");
+                            if (attempt == 0) BattleUiCapture.Capture(canvas, Path.Combine(output, "stamp-land.png"));
+                            shaken = true;
+                        }
+                    }
+                    if (age > .7f) { Check(offset < .01f, "landing shake fully restores screen position"); restored = true; }
+                    yield return probe.Current;
+                }
+                Check(enlarged && landed && shaken && restored, "stamp and landing shake phases sampled");
+                presentation.Clear();
+            }
+            // Cancellation during either phase must leave authored transforms intact.
+            foreach (float cutoff in new[] { .2f, .55f })
+            {
+                screen.hud.logLabel.text = BattleHud.StepText(step);
+                var probe = presentation.Play(step, run); float started = Time.time;
+                while (probe.MoveNext() && Time.time - started < cutoff) yield return probe.Current;
+                if (cutoff < .5f) presentation.Clear();
+                else { presentation.enabled = false; presentation.enabled = true; }
+                (probe as IDisposable)?.Dispose();
+                Check(Vector3.Distance(label.localScale, labelScale) < .001f && Vector3.Distance(log.localScale, logScale) < .001f, "cancel restores text scales");
+                Check(homes.All(item => Vector3.Distance(item.Key.localPosition, item.Value) < .01f), "cancel or disable restores screen positions");
+                presentation.Clear();
+            }
+            screen.hud.logLabel.text = "";
         }
         void Check(bool condition,string message){assertions++;if(!condition)throw new InvalidOperationException(message);}
         void OnScreen(RectTransform rect)
