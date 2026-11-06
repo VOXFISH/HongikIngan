@@ -288,8 +288,6 @@ Replace every \u00B7 character with another character. DO NOT attempt to make it
 "2026-11-06 04:45:10+09:00","VOXFISH","현재 진행중인 내용을 test 브랜치에 머지 커밋해 줘."
 "2026-11-06 04:45:10+09:00","VOXFISH","main 버그 수정과 로컬 기획 문서 모두 반영"
 "2026-11-06 04:39:42+09:00","qwerty","Check every script on every scene to check if that character exists. Do not create a seperate branch for this operation. If found, replace with -."
-
-
 "2026-11-06 05:05:20+09:00","VOXFISH","이제 Girl35까지 구현해 줘. 이전처럼 json보다 자연어를 우선하고, json도 자연어에 맞춰 수정해 줘. 애매한 점은 질문하고, test 브랜치에서 작업해 줘. 전투가 종료되면 (게임오버 제외), 50 + 남은 턴 * 100 + 현재(정산 시작 전) 소유 에너지 * 0.1 에너지를 보상으로 지급해. 해당 화면에 대해 네모 창과 수령 버튼, 텍스트 알림으로 된 임시 팝업창 UI를 완성해. 완성된 내용은 커밋하고 전 브랜치를 동기화해 줘."
 "2026-11-06 05:27:25+09:00","VOXFISH","1. 미감은 1스택씩 소모해. 미감은 별도의 언급이 없는 이상 자신에게 부여된 것을 의미해.
 2. 자신이 아닌 양 옆의 아군으로 하자.
@@ -309,13 +307,11 @@ Replace every \u00B7 character with another character. DO NOT attempt to make it
 
 기존 시너지·유물 보정 유지 (권장)"
 "2026-11-06 05:27:25+09:00","VOXFISH","혜림 정원 감소는 현재 열린 칸 수 기준, 강화 하나는 스택 수와 무관, 미네는 '별의 에너지 x 2'로 하자."
-
 "2026-11-06 04:52:19+09:00","qwerty","Tell me where '공격순서1' is connected to which script, inside scene ""school"", prefab deskslot"
 "2026-11-06 04:55:29+09:00","qwerty","Get rid of it please."
 "2026-11-06 05:03:09+09:00","qwerty","Revert, reinclude, only the number"
 "2026-11-06 05:06:02+09:00","qwerty","It didn't come back. Think"
 "2026-11-06 05:09:28+09:00","qwerty","Make the syngergie books (syngergies) also a prefab too."
-
 "2026-11-06 05:41:31+09:00","VOXFISH","<send_user_message_question_reply>
 [{""questionItemId"":""[\""request_user_input_async\"",\""call_740c2dad810e431b8035283cded91eff\"",0]"",""question"":""작업 중 test에 다른 개발자의 `Girl35_연극부2_독설가_드미트리우스.md` 초안 커밋이 추가된 것을 확인했습니다. 구현은 방금 확정한 뭉치·스파르타!!로 유지하고, 드미트리우스 문서는 중복 Girl35로 읽히지 않도록 ‘미구현 초안’ 폴더로 옮겨 보존해도 될까요?"",""answer"":""이름이 바뀌었다면 바뀐 이름으로 바꿔 줘.""}]
 </send_user_message_question_reply>"
@@ -567,7 +563,6 @@ Repository/
 - 각 응답을 마치기 전에 해당 사용자 메시지의 CSV 기록을 확인하고, 작업 완료 시 요약 기록도 확인한다. 관련 기록은 해당 작업의 커밋에 포함한다. 도구가 기록할 수 없는 환경에서는 개발자가 직접 같은 형식으로 기록하고, 에이전트는 기록하지 못한 사실을 알린다.
 
 </INSTRUCTIONS>"
-"2026-11-06 08:42:42+09:00","sid","지금 유니티 cli로 프로젝트와 연결했는데 확인할 수 있나요?"
 "2026-11-06 09:30:17+09:00","qwerty","In the scene ""School"", change the transitioning display to :
 
 Assets/sprite/UI.
@@ -596,7 +591,47 @@ When the purple tile is fullly covering the screen, add a effect that :
 
 When the 'student's start attacking (in unison) against the boss, the boss should tremble.
 When the boss dies, it should turn into monster KO after turning white and waiting 0.2 seconds"
+"2026-11-06 09:50:12+09:00","VOXFISH","유물 시스템을 삭제하고, ""오늘의 운세"" 시스템으로 대체해 줘. 유물 UI에서 작동하는 유물과 같은 시스템이지만 사물함 위에 쌓이지 않고 설명 텍스트로만 표시돼. 오늘의 운세는 매일 초기화돼. 아래는 텍스트의 목록과 등장 가중치야.
+
+- 상점 리롤 비용 50% 감소, 2
+- 모집 비용 50% 감소, 2
+- 공격 완료 후 데미지 2배, 1
+- 엄지발가락을 찧지 않음, 3 (꽝)
+- 마운틴 듀 1+1, 3 (꽝)
+- 급식으로 파인애플 피자가 나옴, 3 (꽝)
+- 급식으로 마라탕이 나옴, 3 (꽝)
+- 머지 컨플릭트 방지, 3 (꽝)
+- 운이 없네요..., 5 (꽝)
+- 100 미라클 에너지 획득, 1
+- 모든 시너지 +1 적용, 0.5
+- 모든 모집이 시너지 모집으로 적용, 1
+- 모든 마법소녀 강화, 0.3
+- 이번 전투 보상 1.5배, 1
+- 이번 전투 보상 2배, 1
+- 이번 전투 보상 10배, 0.3
+
+오늘의 운세 리롤 버튼을 누르면, 위의 텍스트들이 아주 빠르게 전환되다가 0.8초 후에 선정된 운세로 멈춰.
+
+전환 중에는 버튼이 비활성화되도록 해.
+
+'귀염둥이'의 기존 '디버프 유물'과 '모든 유물' 효과는 다음과 같이 변경해.
+
+- 디버프 유물 -> 오늘의 운세 리롤에서 꽝이 등장하지 않음, 효과 2배
+- 모든 유물 -> 상점 100% 할인!"
+"2026-11-06 09:50:12+09:00","VOXFISH","<send_user_message_question_reply>
+[{""questionItemId"":""[\""request_user_input_async\"",\""call_e1c9a8a240b340b79345150530fd661f\"",0]"",""question"":""“매일 초기화”는 게임 안에서 전투를 마치고 다음 날(다음 스테이지) 학교로 돌아올 때 초기화하는 것으로 적용해도 될까요?"",""answer"":""게임 내 다음 날에 초기화""}]
+</send_user_message_question_reply>"
+"2026-11-06 09:50:12+09:00","VOXFISH","<send_user_message_question_reply>
+[{""questionItemId"":""[\""request_user_input_async\"",\""call_e1c9a8a240b340b79345150530fd661f\"",1]"",""question"":""오늘의 운세는 기존 유물처럼 ‘리롤로 제안 확인 후 구매’하는 방식인가요, 아니면 리롤 결과가 즉시 적용되나요?"",""answer"":""리롤 결과 즉시 적용""}]
+</send_user_message_question_reply>"
+"2026-11-06 09:50:12+09:00","VOXFISH","<send_user_message_question_reply>
+[{""questionItemId"":""[\""request_user_input_async\"",\""call_6648f13df30740bcb4b1b972b2176eae\"",0]"",""question"":""‘모든 마법소녀 강화’는 현재 보유한 소녀에게 영구 강화 1회를 지급할까요, 해당 운세가 유지되는 동안만 임시 강화할까요?"",""answer"":""보유 소녀에게 영구 강화 지급""}]
+</send_user_message_question_reply>"
+"2026-11-06 09:59:43+09:00","VOXFISH","9단계에서의 비용은 '모든 비용'을 의미하고, 설명도 '모든 비용 공짜!'로 수정해 줘. 완성된 내용은 test 브랜치에 커밋/푸쉬해 줘"
 "2026-11-06 10:01:37+09:00","qwerty","Do the additional following :
 -L원기옥 being thrown at the monster when the combined attack commences.
 -원기옥 should decrease in size while going up and down until it reaches the monsters 'face' to simulate it being thrown to the monster. The 원기옥 should rapidly fade out when ending the animation, and be fade in slowly to where it was before.
 -When 원기옥 Hits the monster, the entire screen should shake, excluding the UI."
+"2026-11-06 10:07:00+09:00","qwerty","-The X 좌표 of the 원기옥 should not change
+-원기옥 should have a radius of 1/3~2.5 of the current size.
+it should start at 1/3, and increase (with bubbling effect of increasing and decreasing to the set goal) to 2.5 as the number rises. The max number should be 100000, and the size should be calculated on a log scale."

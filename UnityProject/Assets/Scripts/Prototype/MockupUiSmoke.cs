@@ -41,7 +41,7 @@ namespace HongikIngan
             var school=FindFirstObjectByType<SchoolScreen>(); var run=school.CurrentRun;
             Check(run.Money==100 && run.Students.Count==3,"100 energy and three starters");
             Check(school.CanInteract && school.dialogs!=null,"school ready with scene dialogs");
-            Check(run.RelicOffers.Count==1,"one relic proposal");
+            Check(run.Fortune==null,"new day has no fortune");
             // Keep the UI capacity fixture independent of a random HyeLim starter.
             run.Students.Clear();
             run.Students.AddRange(PrototypeCatalog.Students.Take(3).Select(d => new StudentState(d)));

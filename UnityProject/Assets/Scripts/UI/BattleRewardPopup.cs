@@ -22,7 +22,7 @@ namespace HongikIngan
                 "기본 보상  +" + reward.Base + "\n" +
                 "남은 턴 " + reward.RemainingTurns + " x 100  +" + reward.TurnBonus + "\n" +
                 "정산 전 에너지 " + reward.EnergyBeforeSettlement + " x 10%  +" + reward.Interest + "\n" +
-                "유물 추가 보상  +" + reward.RelicBonus + "\n\n" +
+                "오늘의 운세 보상 배율  ×" + reward.FortuneMultiplier.ToString("0.##") + "\n\n" +
                 "획득 배율 적용 후 수령 에너지  " + reward.Total + "\n" +
                 "수령하면 전투 종료 시너지를 적용하고 학교로 돌아갑니다.";
             claimButton.interactable = true;

@@ -56,6 +56,13 @@ namespace HongikIngan
                     var student = new StudentState(d);
                     Check(StudentCardView.Body(student).Contains(SynergyText.Link(d.Club)),"student link " + d.Id);
                 }
+                Roster(run); Set(run,"Atmosphere",0f);
+                Set(run,"Fortune",PrototypeCatalog.Fortunes.Single(f=>f.Kind==FortuneKind.AllSynergies));
+                Check(SynergyText.List(run,false).Contains(SynergyText.Link("운동부",SynergyText.Color("운동부 (1 / 2)",SynergyText.Gray))),"fortune adds unowned synergy");
+                Set(run,"FortuneStrength",2);
+                Check(SynergyText.List(run,true).Contains("운동부 (2 / 3)"),"doubled fortune activates synergy");
+                Check(!SynergyText.List(run,true).Contains("연극부"),"fortune excess disables exact theatre");
+                Check(SynergyText.Popup(run,"귀염둥이").Contains("모든 비용 공짜!"),"cute final tier matches fortune document");
                 Debug.Log("SYNERGY_UI_CHECKS_PASS assertions=" + assertions);
             }
             finally { UnityEngine.Object.DestroyImmediate(settings); }

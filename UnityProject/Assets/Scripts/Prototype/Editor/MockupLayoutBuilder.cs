@@ -170,7 +170,7 @@ namespace HongikIngan.Editor
             d.candidateStatus=Label(d.candidates.transform,"Status",80,595,1280,45,"",18,Paper);
             d.skip=Button(d.candidates.transform,"Skip",975,665,365,54,"영입하지 않음 (환불 없음)",Paper);
             d.restart=Modal(ui,"RestartConfirmPopup","새 게임을 시작할까요?");
-            Label(d.restart.transform,"Warning",300,270,840,100,"현재 학생-재화-유물-사진과 진행이 초기화됩니다.",25,Paper);
+            Label(d.restart.transform,"Warning",300,270,840,100,"현재 학생-재화-운세-사진과 진행이 초기화됩니다.",25,Paper);
             d.cancelRestart=Button(d.restart.transform,"Cancel",420,500,260,60,"취소",Paper);
             d.acceptRestart=Button(d.restart.transform,"Accept",750,500,310,60,"새 게임 시작",Gold);
             d.audioPanel=Audio(s,ui);
