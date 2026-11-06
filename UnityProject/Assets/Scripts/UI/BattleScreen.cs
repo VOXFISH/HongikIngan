@@ -21,6 +21,8 @@ namespace HongikIngan
         public bool CanReorder => isActiveAndEnabled && initialized && !running && !preparing && !interrupted &&
             !audioPanel.IsOpen && run.Battle != null && !run.Battle.IsResolving && !run.Battle.Ended;
         public bool IsRunning => running;
+        public bool CanInspect => initialized && isActiveAndEnabled && !preparing && !interrupted && !audioPanel.IsOpen &&
+            !(rewardPopup != null && rewardPopup.IsOpen) && !(SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy);
 
         void Start()
         {

@@ -53,6 +53,10 @@ namespace HongikIngan
             OnScreen(screen.hud.logLabel.rectTransform);
             OnScreen((RectTransform)screen.hud.actionButton.transform);
             Check(screen.CanReorder,"ready for input");
+            Check(screen.presentation.combatLogGroup.alpha==0,"empty log backing hidden");
+            var backdrop = (RectTransform)screen.hud.transform.Find("Background");
+            var backdropCorners = new Vector3[4]; backdrop.GetWorldCorners(backdropCorners);
+            Check(backdropCorners[0].x<=.5f && backdropCorners[0].y<=.5f && backdropCorners[2].x>=Screen.width-.5f && backdropCorners[2].y>=Screen.height-.5f,"background covers screen edges");
             Check(screen.presentation.stepDuration==1 && screen.presentation.beamDuration==1,"one second authored timings");
             var actual=run.Students.ToArray();
             int[][] expected={new[]{3,4,5},new[]{2,3,4,5},new[]{2,3,4,5,6},new[]{1,2,3,4,5,6,7},new[]{0,1,2,3,4,5,6,7,8}};
@@ -94,19 +98,61 @@ namespace HongikIngan
             first.Render(new StudentState(PrototypeCatalog.Students.Single(d=>d.Id=="Girl35")));
             first.OnPointerEnter(e);Check(formation.tooltip.effectLabel.text.Contains("0.5"),"fractional skill parameter stays precise");
             first.OnPointerExit(e);formation.Render(run);
-            first.OnPointerEnter(e);Check(formation.tooltip.IsOpen && formation.tooltip.nameLabel.text==first.Student.Definition.Name && formation.tooltip.effectLabel.text.Contains(first.Student.Definition.SkillDescription),"hover details");
+            first.OnPointerEnter(e);Check(formation.tooltip.IsOpen && formation.tooltip.nameLabel.text.StartsWith(first.Student.Definition.Name) && formation.tooltip.effectLabel.text.Contains(first.Student.Definition.SkillDescription),"hover details");
             OnScreen(formation.tooltip.nameLabel.rectTransform);
             OnScreen(formation.tooltip.effectLabel.rectTransform);
             BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"hover.png"));yield return new WaitForSeconds(.3f);
-            first.OnPointerExit(e);Check(!formation.tooltip.IsOpen,"exit hides tooltip");
+            first.OnPointerExit(e); formation.HideTooltip(); Check(!formation.tooltip.IsOpen,"explicit dismissal hides tooltip; pointer transfer is covered by SynergyUiSmoke");
             first.OnPointerEnter(e);screen.audioPanel.openButton.onClick.Invoke();Check(!formation.tooltip.IsOpen,"modal hides tooltip");
             first.OnPointerEnter(e);Check(!formation.tooltip.IsOpen,"modal rejects hover");screen.audioPanel.closeButton.onClick.Invoke();
             var original=run.Students[0];first.OnBeginDrag(e);second.OnDrop(e);first.OnEndDrag(e);
             Check(run.Students[1]==original,"centered drag uses logical index");
             Check(formation.StudentSlot(1).portrait.sprite==testSprite,"Girl sprite follows reordered student");
             artwork.sprite=originalArtwork;formation.Render(run);Destroy(testSprite);
+            // Probe sending and receiving effects without changing combat resolution.
+            var sender=formation.StudentSlot(0); var receiver=formation.StudentSlot(1); var observer=formation.StudentSlot(2);
+            var senderRest=sender.portrait.rectTransform.anchoredPosition; var receiverRest=receiver.portrait.rectTransform.anchoredPosition;
+            var observerRest=observer.portrait.rectTransform.anchoredPosition;
+            // Establish the snapshot, then make an untargeted party effect visible through keyword changes.
+            screen.presentation.BeginBattle(run,screen.hud,formation);
+            KeywordRules.Add(observer.Student.Keywords,KeywordRules.Art,1,1);
+            var probe=screen.presentation.Play(new BattleStep("keyword","전투 효과 전달 - 아군에게 버프",run.Battle.Damage,sender.Student,receiver.Student),run);
+            bool rising=false,held=false,fading=false,entered=false; float probeStarted=Time.time;
+            while(probe.MoveNext())
+            {
+                float age=Time.time-probeStarted;
+                if(!entered) { Check(sender.calculationGroup.alpha==0,"text fades in from zero"); entered=true; }
+                if(!rising && age>.18f && age<.35f)
+                {
+                    Check(sender.portrait.rectTransform.anchoredPosition.y>senderRest.y,"sender hops");
+                    Check(receiver.portrait.rectTransform.anchoredPosition.y>receiverRest.y,"target hops");
+                    Check(observer.portrait.rectTransform.anchoredPosition.y>observerRest.y,"party keyword recipient hops");
+                    rising=true;
+                }
+                if(!held && age>.4f && age<.6f) { Check(sender.calculationGroup.alpha>.95f,"readable fade hold"); held=true; }
+                if(!fading && age>.86f && age<.97f) { Check(sender.calculationGroup.alpha<.95f,"text fades out"); fading=true; }
+                yield return probe.Current;
+            }
+            Check(rising&&held&&fading,"motion and fade phases sampled");
+            Check(Vector2.Distance(sender.portrait.rectTransform.anchoredPosition,senderRest)<.01f && Vector2.Distance(receiver.portrait.rectTransform.anchoredPosition,receiverRest)<.01f && Vector2.Distance(observer.portrait.rectTransform.anchoredPosition,observerRest)<.01f,
+                "hops restore authored positions: "+senderRest+" -> "+sender.portrait.rectTransform.anchoredPosition+", "+receiverRest+" -> "+receiver.portrait.rectTransform.anchoredPosition+", "+observerRest+" -> "+observer.portrait.rectTransform.anchoredPosition);
+            screen.presentation.Clear();
+            screen.presentation.fadeCombatText=false; screen.presentation.animateStudents=false;
+            probe=screen.presentation.Play(new BattleStep("action","토글 끄기 확인",run.Battle.Damage,sender.Student,receiver.Student),run);
+            bool stayedStatic=true;
+            while(probe.MoveNext())
+            {
+                stayedStatic &= sender.calculationGroup.alpha==1 && Vector2.Distance(sender.portrait.rectTransform.anchoredPosition,senderRest)<.01f && Vector2.Distance(receiver.portrait.rectTransform.anchoredPosition,receiverRest)<.01f;
+                yield return probe.Current;
+            }
+            Check(stayedStatic,"disabled fades and hops stay static");
+            screen.presentation.Clear(); screen.presentation.fadeCombatText=true; screen.presentation.animateStudents=true;
+            sender.PlayEffectHop(); yield return new WaitForSeconds(.18f); screen.presentation.Clear();
+            Check(Vector2.Distance(sender.portrait.rectTransform.anchoredPosition,senderRest)<.01f,"interruption resets hop");
+            sender.animateEffects=false; sender.PlayEffectHop(); yield return null;
+            Check(Vector2.Distance(sender.portrait.rectTransform.anchoredPosition,senderRest)<.01f,"per-student hop toggle"); sender.animateEffects=true;
             first=formation.StudentSlot(0);first.OnPointerEnter(e);screen.PerformAction();first.OnPointerEnter(e);
-            Check(screen.IsRunning && !formation.tooltip.IsOpen,"attack hides and rejects hover");
+            Check(screen.IsRunning && formation.tooltip.IsOpen,"attack allows student inspection"); formation.HideTooltip();
             float deadline=Time.realtimeSinceStartup+120;
             float beamAt=-1,beamDamage=0,beamHp=0,lastFormulaAt=0;string lastFormula=null;
             bool formulaCaptured=false,transferChecked=false;int spacedFormulas=0;

@@ -249,7 +249,7 @@ namespace HongikIngan
             }
             var names = entries.GroupBy(e => e.Item1).Where(g => g.Count() >= 2)
                 .OrderByDescending(g => g.Count()).ThenBy(g => g.Min(e => e.Item2)).ThenBy(g => g.Key, StringComparer.Ordinal)
-                .Select(g => g.Key).ToArray();
+                .Select(g => SynergyCatalog.Find(g.Key)?.Word).Where(word => !string.IsNullOrEmpty(word)).ToArray();
             return names.Length == 0 ? "우리의 마음을 담아!" : string.Join("와 ", names) + "를 담아!";
         }
     }

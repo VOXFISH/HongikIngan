@@ -1,0 +1,923 @@
+fileFormatVersion: 2
+guid: f0a7b6aed14a5174a83f46fc65ce9e5a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2428010500311207622
+    second: monsterKO_0
+  - first:
+      213: -838089120439489325
+    second: monsterKO_1
+  - first:
+      213: 7210273642530102153
+    second: monsterKO_2
+  - first:
+      213: -1771886758583157351
+    second: monsterKO_3
+  - first:
+      213: 2531768422260780787
+    second: monsterKO_4
+  - first:
+      213: -1781736811425752490
+    second: monsterKO_5
+  - first:
+      213: 8203749569323355190
+    second: monsterKO_6
+  - first:
+      213: -8389277383556872088
+    second: monsterKO_7
+  - first:
+      213: -6689709802074466629
+    second: monsterKO_8
+  - first:
+      213: -4566691840286320679
+    second: monsterKO_9
+  - first:
+      213: -782479450420718594
+    second: monsterKO_10
+  - first:
+      213: 1583778194913963490
+    second: monsterKO_11
+  - first:
+      213: 1938710907327627486
+    second: monsterKO_12
+  - first:
+      213: -256181926212811628
+    second: monsterKO_13
+  - first:
+      213: -851594141723437682
+    second: monsterKO_14
+  - first:
+      213: -6999964098565973203
+    second: monsterKO_15
+  - first:
+      213: 2034650769644880989
+    second: monsterKO_16
+  - first:
+      213: 5976461279062199484
+    second: monsterKO_17
+  - first:
+      213: 4228243351385258439
+    second: monsterKO_18
+  - first:
+      213: -170295428646935288
+    second: monsterKO_19
+  - first:
+      213: -4107351178045569784
+    second: monsterKO_20
+  - first:
+      213: 6145524097934297328
+    second: monsterKO_21
+  - first:
+      213: 6561006596477445482
+    second: monsterKO_22
+  - first:
+      213: -6298497587993071259
+    second: monsterKO_23
+  - first:
+      213: 6132897522492390265
+    second: monsterKO_24
+  - first:
+      213: 3934632229766624248
+    second: monsterKO_25
+  - first:
+      213: 2931919835969073739
+    second: monsterKO_26
+  - first:
+      213: -8228422773655178099
+    second: monsterKO_27
+  - first:
+      213: 303814748617907223
+    second: monsterKO_28
+  - first:
+      213: -3380740600880526861
+    second: monsterKO_29
+  - first:
+      213: 9001851948862933055
+    second: monsterKO_30
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: monsterKO_0
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 0
+        width: 1630
+        height: 876
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cec7f59fa602b120800000000000000
+      internalID: 2428010500311207622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_1
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 753
+        width: 170
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dca516a2628e54f0800000000000000
+      internalID: -838089120439489325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_2
+      rect:
+        serializedVersion: 2
+        x: 853
+        y: 760
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98b5e5c1da9001460800000000000000
+      internalID: 7210273642530102153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_3
+      rect:
+        serializedVersion: 2
+        x: 869
+        y: 763
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99dbe64816ef867e0800000000000000
+      internalID: -1771886758583157351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_4
+      rect:
+        serializedVersion: 2
+        x: 875
+        y: 761
+        width: 71
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fea76657f5a22320800000000000000
+      internalID: 2531768422260780787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_5
+      rect:
+        serializedVersion: 2
+        x: 1124
+        y: 762
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65a1bbf5fcff547e0800000000000000
+      internalID: -1781736811425752490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_6
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 764
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63c48c994c299d170800000000000000
+      internalID: 8203749569323355190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_7
+      rect:
+        serializedVersion: 2
+        x: 1172
+        y: 759
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 868cfdefaac439b80800000000000000
+      internalID: -8389277383556872088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_8
+      rect:
+        serializedVersion: 2
+        x: 1383
+        y: 755
+        width: 116
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb617ece0606923a0800000000000000
+      internalID: -6689709802074466629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_9
+      rect:
+        serializedVersion: 2
+        x: 748
+        y: 744
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d71f0577f9df90c0800000000000000
+      internalID: -4566691840286320679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_10
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 743
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef351a9e5131425f0800000000000000
+      internalID: -782479450420718594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_11
+      rect:
+        serializedVersion: 2
+        x: 1592
+        y: 734
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ed2bd680e5baf510800000000000000
+      internalID: 1583778194913963490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_12
+      rect:
+        serializedVersion: 2
+        x: 1598
+        y: 734
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed040796c4fa7ea10800000000000000
+      internalID: 1938710907327627486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_13
+      rect:
+        serializedVersion: 2
+        x: 1016
+        y: 710
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 494c53a35ebd17cf0800000000000000
+      internalID: -256181926212811628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_14
+      rect:
+        serializedVersion: 2
+        x: 1042
+        y: 679
+        width: 51
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8555c9d3a78e24f0800000000000000
+      internalID: -851594141723437682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_15
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 714
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2bdc706db12bde90800000000000000
+      internalID: -6999964098565973203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_16
+      rect:
+        serializedVersion: 2
+        x: 1116
+        y: 685
+        width: 25
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5488ae48188c3c10800000000000000
+      internalID: 2034650769644880989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_17
+      rect:
+        serializedVersion: 2
+        x: 1156
+        y: 690
+        width: 32
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbc01606ed7a0f250800000000000000
+      internalID: 5976461279062199484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_18
+      rect:
+        serializedVersion: 2
+        x: 1195
+        y: 716
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c9b9370decbdaa30800000000000000
+      internalID: 4228243351385258439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_19
+      rect:
+        serializedVersion: 2
+        x: 957
+        y: 704
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80560acb53df2adf0800000000000000
+      internalID: -170295428646935288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_20
+      rect:
+        serializedVersion: 2
+        x: 1446
+        y: 703
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 805cfc08dd1cff6c0800000000000000
+      internalID: -4107351178045569784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_21
+      rect:
+        serializedVersion: 2
+        x: 1464
+        y: 696
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f80aff4b99494550800000000000000
+      internalID: 6145524097934297328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_22
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 493
+        width: 177
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a656800ecb06d0b50800000000000000
+      internalID: 6561006596477445482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_23
+      rect:
+        serializedVersion: 2
+        x: 1108
+        y: 678
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 561b40980dd3798a0800000000000000
+      internalID: -6298497587993071259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_24
+      rect:
+        serializedVersion: 2
+        x: 1185
+        y: 662
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97b3800adcd6c1550800000000000000
+      internalID: 6132897522492390265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_25
+      rect:
+        serializedVersion: 2
+        x: 1422
+        y: 671
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f3fa099a2f9a9630800000000000000
+      internalID: 3934632229766624248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_26
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 676
+        width: 9
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b42bbdc8e8540b820800000000000000
+      internalID: 2931919835969073739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_27
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 362
+        width: 6
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d847c8a5515cecd80800000000000000
+      internalID: -8228422773655178099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_28
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 217
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71c15e877ed573400800000000000000
+      internalID: 303814748617907223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_29
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 16
+        width: 19
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f986ced5523511d0800000000000000
+      internalID: -3380740600880526861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monsterKO_30
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 19
+        width: 37
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3802a457a00dec70800000000000000
+      internalID: 9001851948862933055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      monsterKO_0: 2428010500311207622
+      monsterKO_1: -838089120439489325
+      monsterKO_10: -782479450420718594
+      monsterKO_11: 1583778194913963490
+      monsterKO_12: 1938710907327627486
+      monsterKO_13: -256181926212811628
+      monsterKO_14: -851594141723437682
+      monsterKO_15: -6999964098565973203
+      monsterKO_16: 2034650769644880989
+      monsterKO_17: 5976461279062199484
+      monsterKO_18: 4228243351385258439
+      monsterKO_19: -170295428646935288
+      monsterKO_2: 7210273642530102153
+      monsterKO_20: -4107351178045569784
+      monsterKO_21: 6145524097934297328
+      monsterKO_22: 6561006596477445482
+      monsterKO_23: -6298497587993071259
+      monsterKO_24: 6132897522492390265
+      monsterKO_25: 3934632229766624248
+      monsterKO_26: 2931919835969073739
+      monsterKO_27: -8228422773655178099
+      monsterKO_28: 303814748617907223
+      monsterKO_29: -3380740600880526861
+      monsterKO_3: -1771886758583157351
+      monsterKO_30: 9001851948862933055
+      monsterKO_4: 2531768422260780787
+      monsterKO_5: -1781736811425752490
+      monsterKO_6: 8203749569323355190
+      monsterKO_7: -8389277383556872088
+      monsterKO_8: -6689709802074466629
+      monsterKO_9: -4566691840286320679
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

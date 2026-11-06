@@ -89,12 +89,12 @@ namespace HongikIngan.Editor
             for (int i = 0; i < 12; i++) Image(ui, "WallPanel" + i, i * 130, 90, 3, 185, Hex("E5BCCF"));
 
             var energy = Frame(ui, "Energy", 24, 18, 228, 64, Pink, Cream, 3);
-            screen.energyLabel = Text(energy, "Value", 12, 4, 204, 56, "미라클 에너지\n160", 19, Ink, TextAlignmentOptions.Center);
+            screen.energyLabel = Text(energy, "Value", 12, 4, 204, 56, "160", 19, Ink, TextAlignmentOptions.Center);
             var roster = Frame(ui, "Roster", 264, 18, 160, 64, Navy, Hex("EDF4FA"), 3);
-            screen.rosterLabel = Text(roster, "Value", 8, 4, 144, 56, "전대 인원\n1 / 3", 18, Navy, TextAlignmentOptions.Center);
+            screen.rosterLabel = Text(roster, "Value", 8, 4, 144, 56, "1 / 3", 18, Navy, TextAlignmentOptions.Center);
             var photos = Frame(ui, "Photos", 436, 18, 194, 64, Pink, Cream, 3);
             screen.photosLabel = Text(photos, "Value", 8, 4, 178, 56, "폴라로이드 0", 18, Ink, TextAlignmentOptions.Center);
-            screen.stageLabel = Text(ui, "Stage", 648, 25, 300, 45, "STAGE 01 - 방과 전", 24, Ink, TextAlignmentOptions.Left);
+            screen.stageLabel = Text(ui, "Stage", 648, 25, 300, 45, "STAGE 01", 24, Ink, TextAlignmentOptions.Left);
             screen.restartButton = Button(ui, "NewGame", 1128, 24, 126, 40, "새 게임", Hex("FFF6ED"), Ink);
             screen.audioButton = Button(ui, "Sound", 1266, 24, 146, 40, "사운드 설정", Hex("FFF6ED"), Ink);
 

@@ -1,4 +1,5 @@
 using TMPro;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +21,12 @@ namespace HongikIngan
         public GameObject studentCard;
         public Button previousRosterPage, nextRosterPage;
         public TMP_Text rosterPageLabel;
+        public GameObject battleSweepPrefab;
         public int RosterPage { get; private set; }
+        [Min(.1f)] public float transformationDuration = 1.2f;
+        [Tooltip("Fraction of the transformation held fully white, with the outfit swapped halfway through.")]
+        [Range(.05f, .8f)] public float transformationWhiteHold = .25f;
+        [Min(0)] public float transformedOutfitHoldDuration = .25f;
         public PrototypeRun CurrentRun => observedRun;
         int selected = -1;
         bool transitionWasBusy;
@@ -67,7 +73,7 @@ namespace HongikIngan
             }
             expandButton.onClick.AddListener(() => observedRun.ExpandSlots());
             rerollButton.onClick.AddListener(() => observedRun.Reroll());
-            battleButton.onClick.AddListener(() => { if (CanInteract && observedRun.CanStartBattle) SceneTransitionOverlay.Current.Go("출동!", () => PrototypeSession.Instance.EnterBattle()); });
+            battleButton.onClick.AddListener(() => { if (CanInteract && observedRun.CanStartBattle) SceneTransitionOverlay.Current.Go("전투 시작", () => PrototypeSession.Instance.EnterBattle(), TransformStudents(), battleSweepPrefab); });
             learnButton.onClick.AddListener(() => observedRun.Upgrade(selected));
             sellButton.onClick.AddListener(() => { int index = selected; selected = -1; observedRun.Sell(index); });
             restartButton.onClick.AddListener(dialogs.ShowRestart);
@@ -77,6 +83,18 @@ namespace HongikIngan
             var sound = HongikIngan.Audio.SoundManager.EnsureExists();
             if (sound.BackendAvailable) sound.PlayBgm("event:/BGM/School");
             Refresh();
+        }
+        IEnumerator TransformStudents()
+        {
+            foreach (var slot in slots) if (slot != null) slot.CancelDrag();
+            float duration = Mathf.Max(.1f, transformationDuration);
+            for (float time = 0; time < duration; time += Time.unscaledDeltaTime)
+            {
+                foreach (var slot in slots) if (slot != null) slot.SetTransformation(time / duration, transformationWhiteHold);
+                yield return null;
+            }
+            foreach (var slot in slots) if (slot != null) slot.SetTransformation(1, transformationWhiteHold);
+            yield return new WaitForSecondsRealtime(transformedOutfitHoldDuration);
         }
         void OnDestroy()
         {
@@ -104,9 +122,9 @@ namespace HongikIngan
             bool free = CanInteract;
             schoolCanvas.interactable = free;
             if (!free) foreach (var slot in slots) slot.CancelDrag();
-            energyLabel.text = $"미라클 에너지\n{observedRun.Money}";
-            rosterLabel.text = $"전대 인원\n{observedRun.Students.Count} / {observedRun.Capacity}";
-            stageLabel.text = $"STAGE {observedRun.Stage:00}  -  방과 전";
+            energyLabel.text = observedRun.Money.ToString();
+            rosterLabel.text = $"{observedRun.Students.Count} / {observedRun.Capacity}";
+            stageLabel.text = $"STAGE {observedRun.Stage:00}";
             photosLabel.text = $"폴라로이드 {observedRun.PhotoCount}\n분위기 {observedRun.Atmosphere} / 별의 힘 {observedRun.StarPower}";
             ownedRelicsLabel.text = observedRun.Relics.Count == 0 ? "아직 획득한 유물이 없어요" : string.Join("   /   ", observedRun.Relics.Select(r => r.Name));
             int pages = Mathf.Max(1, Mathf.CeilToInt(observedRun.SchoolDeskCount / 9f));
@@ -138,9 +156,7 @@ namespace HongikIngan
                 petLabels[i].text = pet.HasValue ? PetLabel((int)pet.Value) : "펫 없음";
                 petButtons[i].interactable = pet.HasValue;
             }
-            var groups = observedRun.Students.SelectMany(s => new[] { s.Definition.Club, s.Definition.Personality, s.Definition.SpecialSynergy })
-                .Where(s => !string.IsNullOrEmpty(s)).GroupBy(s => s).OrderByDescending(g => g.Count()).ThenBy(g => g.Key);
-            synergyLabel.text = groups.Any() ? string.Join("\n", groups.Select(g => $"{g.Key}   {BattleSynergies.Count(observedRun, g.Key)}명")) : "학생을 영입하면\n시너지가 표시됩니다";
+            synergyLabel.text = SynergyText.List(observedRun, false);
             SetButtonText(expandButton, $"책상 확장  +  {observedRun.Settings.slotExpansionPrice}");
             expandButton.interactable = observedRun.OpenCapacity < 7;
             SetButtonText(rerollButton, observedRun.RelicPurchasedThisBattle ? "유물 구매 완료" : $"유물 리롤\n{observedRun.RerollCost} 에너지");
@@ -154,20 +170,7 @@ namespace HongikIngan
             if (owned)
             {
                 var s = observedRun.Students[selected];
-                detailTitle.text = $"{s.Definition.Name}   /   {s.Definition.Grade}학년 - {s.Definition.RoleLabel}";
-                string values = s.Definition.Action == ActionKind.AddThenPercentDamage ?
-                    $"+{s.SkillValue:0.##} 후 +{s.Definition.PercentAtUpgrade(s.UpgradeCount):0.##}%" : $"{s.SkillValue:0.##}";
-                switch (s.Definition.Action)
-                {
-                    case ActionKind.Paparazzi: values = s.UpgradeCount > 0 ? "+500 후 +10%p" : "공격마다 +500"; break;
-                    case ActionKind.Spotlight: values = $"+{s.SkillValue:0.##}% - 양옆 조명"; break;
-                    case ActionKind.LightingDamage: values = $"+500 후 조명마다 +{s.SkillValue:0.##}"; break;
-                    case ActionKind.GrantLove: values = $"사랑 {(int)s.SkillValue}스택 - 스택당 ×1.1"; break;
-                    case ActionKind.CloneNext: values = (s.UpgradeCount > 0 ? "전투 종료까지 분신" : "턴 종료까지 분신") + $" - 다음 정밀화 +{3000f * (s.PrecisionCopies + 1):0}"; break;
-                    case ActionKind.BestSubject: values = s.UpgradeCount > 0 ? "세 조건 인원수의 곱" : "세 조건 인원수의 합"; break;
-                }
-                string traits = s.Definition.Club + " - " + s.Definition.Personality + (string.IsNullOrEmpty(s.Definition.SpecialSynergy) ? "" : " - " + s.Definition.SpecialSynergy);
-                detailBody.text = $"{traits}\n{s.Definition.SkillDescription}\n현재 효과 {values}  -  강화 {s.UpgradeCount}회";
+                studentCard.GetComponent<StudentCardView>().Render(s);
                 SetButtonText(learnButton, $"보충 학습\n{observedRun.Settings.UpgradePrice(s.Definition.Grade)} 에너지");
                 SetButtonText(sellButton, $"계약 해제\n+{BattleSynergies.Income(observedRun, observedRun.Settings.SalePrice(s.Definition.Grade))}");
             }
