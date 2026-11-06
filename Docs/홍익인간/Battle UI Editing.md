@@ -188,3 +188,10 @@ BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 
 
 목표 크기까지 감쇠 스프링을 적용해 부풀었다 줄어드는 버블 효과를 내며 단계 전환 시 크기를 초기화하지 않는다. Inspector의 orbMinRadius·orbMaxRadius·orbSizeMaxDamage·orbBubbleFrequency·orbBubbleDamping으로 조절한다. Connect Battle boss reactions 메뉴는 로그 크기 범위와 원기옥·BossFace·흔들림 참조를 저장한다.
 원기옥의 기본 중심은 화면 중앙이다. 현재 1600×900 레이아웃에서 Presentation 기준 좌표는 (800, -450)이며 생성 메뉴는 루트 Canvas의 실제 중심으로 배치한다.
+
+### 시너지 UI 최종 통합 검증 (2026-11-06)
+
+- main: [PR #8](https://github.com/VOXFISH/HongikIngan/pull/8)로 단계 목록·공통 팝업·회전 학생증·영창 단어 반영.
+- test: 최신 운세·아트·레이저를 보존했고, 귀염둥이 5·7·9단계 설명과 운세의 가상 시너지 인원을 함께 검증했다. 목록 텍스트 영역은 사용자 선택대로 209×308이다.
+- Unity 6000.3.7f1 Windows 빌드, 규칙 5,276개, 초기 지급 2,000시드 통과. Direct3D 11 플레이어의 시너지 UI 281개·전투 223개·운세 54개 통과 및 실제 렌더 캡처 확인. 테스트의 시간 간격과 전환 완료 대기는 검사 실행에만 적용된다.
+- 중간 실행에서 검사 결과 저장 후 Unity 네이티브 종료 오류가 있었으나 최종 실행에서는 재발하지 않았다. 수동 마우스 조작과 FMOD 실청취는 수행하지 않았다.
