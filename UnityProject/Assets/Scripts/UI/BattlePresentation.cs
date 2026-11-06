@@ -22,6 +22,20 @@ namespace HongikIngan
         [Header("Student animation")]
         [Tooltip("Hop height, duration and curve are editable on each BattleStudentSlot or its shared prefab.")]
         public bool animateStudents = true;
+        [Header("Thrown orb and impact")]
+        public RectTransform thrownOrb, bossFace;
+        public CanvasGroup orbGroup;
+        public RectTransform[] impactShakeTargets;
+        [Min(0)] public float orbArcHeight = 180f;
+        [Range(.01f, 1)] public float orbArrivalScale = .2f;
+        [Min(.01f)] public float orbFadeOutDuration = .1f;
+        [Min(.01f)] public float orbReturnFadeDuration = .7f;
+        [Min(0)] public float impactShakeDuration = .3f;
+        [Min(0)] public float impactShakeAmount = 12f;
+        Vector3 orbHome, orbHomeScale;
+        float orbHomeAlpha;
+        bool orbCaptured;
+        readonly Dictionary<RectTransform, Vector3> shakeHomes = new Dictionary<RectTransform, Vector3>();
         [Header("Boss reaction")]
         public Image bossVisual;
         public Sprite bossKoSprite;
@@ -46,6 +60,11 @@ namespace HongikIngan
         public void BeginBattle(PrototypeRun run, BattleHud owner, BattleFormationView students)
         {
             hud = owner; formation = students;
+            if (thrownOrb != null && !orbCaptured)
+            {
+                orbCaptured = true; orbHome = thrownOrb.localPosition; orbHomeScale = thrownOrb.localScale;
+                orbHomeAlpha = orbGroup != null ? orbGroup.alpha : 1;
+            }
             if (bossVisual != null)
             {
                 if (!bossCaptured)
@@ -82,7 +101,10 @@ namespace HongikIngan
             float targetDamage = firing || spent ? 0 : step.Damage;
             float targetHp = firing ? Mathf.Max(0, run.Battle.BossHp - step.Damage) : run.Battle.BossHp;
             if (step.Kind == "turn") fromDamage = 0;
-            if (firing) { IsBeaming = true; beam.SetActive(true); spent = true; }
+            bool throwing = firing && thrownOrb != null && bossFace != null;
+            if (firing) { IsBeaming = true; beam.SetActive(!throwing); spent = true; }
+            Vector3 throwStart = throwing ? thrownOrb.parent.InverseTransformPoint(thrownOrb.TransformPoint(thrownOrb.rect.center)) : Vector3.zero;
+            Vector3 throwEnd = throwing ? thrownOrb.parent.InverseTransformPoint(bossFace.position) : Vector3.zero;
             if (chant != null) { chant.gameObject.SetActive(step.Kind == "chant"); chant.text = step.Message; }
             if (step.Actor != null)
                 formation.ShowCalculation(step.Actor, (step.Damage != fromDamage ?
@@ -108,13 +130,14 @@ namespace HongikIngan
             {
                 float t = Mathf.Clamp01(elapsed / duration);
                 DisplayedDamage = Interpolate(fromDamage, targetDamage, t);
-                DisplayedHp = Interpolate(fromHp, targetHp, t);
+                DisplayedHp = throwing ? fromHp : Interpolate(fromHp, targetHp, t);
                 RenderTotals();
                 SetTextAlpha(TextAlpha(elapsed, duration));
                 if (!animateStudents) foreach (var slot in formation.slots) slot.CancelHop();
                 if (firing)
                 {
-                    PlaceBeam();
+                    if (throwing) PlaceOrb(throwStart, throwEnd, t);
+                    else PlaceBeam();
                     if (bossVisual != null && !bossDefeated)
                     {
                         float wave = elapsed * bossShakeFrequency * Mathf.PI * 2;
@@ -128,6 +151,22 @@ namespace HongikIngan
             DisplayedDamage = targetDamage; DisplayedHp = targetHp; RenderTotals();
             SetTextAlpha(fadeCombatText ? 0 : 1);
             RestoreBossPosition();
+            if (throwing)
+            {
+                PlaceOrb(throwStart, throwEnd, 1);
+                foreach (var slot in formation.slots) slot.CancelHop();
+                CaptureImpactPositions();
+                float impactDuration = Mathf.Max(orbFadeOutDuration, impactShakeDuration);
+                for (float time = 0; time < impactDuration; time += Time.unscaledDeltaTime)
+                {
+                    if (orbGroup != null) orbGroup.alpha = orbHomeAlpha * (1 - Mathf.Clamp01(time / Mathf.Max(.01f, orbFadeOutDuration)));
+                    ShakeImpact(time);
+                    yield return null;
+                }
+                RestoreImpactPositions();
+                if (orbGroup != null) orbGroup.alpha = 0;
+                thrownOrb.localPosition = orbHome; thrownOrb.localScale = orbHomeScale;
+            }
             if (bossVisual != null && !bossDefeated && targetHp <= 0)
             {
                 bossDefeated = bossDying = true;
@@ -141,6 +180,48 @@ namespace HongikIngan
                 yield return new WaitForSecondsRealtime(bossWhiteHold);
                 ApplyBossKo();
             }
+            if (throwing)
+            {
+                for (float time = 0; time < orbReturnFadeDuration; time += Time.unscaledDeltaTime)
+                {
+                    if (orbGroup != null) orbGroup.alpha = orbHomeAlpha * Mathf.SmoothStep(0, 1, time / Mathf.Max(.01f, orbReturnFadeDuration));
+                    yield return null;
+                }
+                RestoreOrb();
+            }
+        }
+        void PlaceOrb(Vector3 start, Vector3 end, float progress)
+        {
+            thrownOrb.localScale = orbHomeScale * Mathf.Lerp(1, orbArrivalScale, progress);
+            var center = Vector3.Lerp(start, end, progress) + Vector3.up * (Mathf.Sin(progress * Mathf.PI) * orbArcHeight);
+            thrownOrb.localPosition = center - thrownOrb.localRotation * Vector3.Scale(thrownOrb.rect.center, thrownOrb.localScale);
+        }
+        void CaptureImpactPositions()
+        {
+            shakeHomes.Clear();
+            if (impactShakeTargets != null)
+                foreach (var target in impactShakeTargets)
+                    if (target != null) shakeHomes[target] = target.localPosition;
+            foreach (var slot in formation.slots)
+                if (slot.HasStudent && slot.portrait != null) shakeHomes[slot.portrait.rectTransform] = slot.portrait.rectTransform.localPosition;
+        }
+        void ShakeImpact(float time)
+        {
+            float fade = impactShakeDuration <= 0 ? 0 : 1 - Mathf.Clamp01(time / impactShakeDuration);
+            var offset = new Vector3(Mathf.Sin(time * 103), Mathf.Sin(time * 137), 0) * (impactShakeAmount * fade);
+            foreach (var item in shakeHomes)
+                if (item.Key != null) item.Key.localPosition = item.Value + item.Key.parent.InverseTransformVector(transform.TransformVector(offset));
+        }
+        void RestoreImpactPositions()
+        {
+            foreach (var item in shakeHomes) if (item.Key != null) item.Key.localPosition = item.Value;
+            shakeHomes.Clear();
+        }
+        void RestoreOrb()
+        {
+            if (!orbCaptured || thrownOrb == null) return;
+            thrownOrb.localPosition = orbHome; thrownOrb.localScale = orbHomeScale;
+            if (orbGroup != null) orbGroup.alpha = orbHomeAlpha;
         }
         void RestoreBossPosition()
         {
@@ -156,7 +237,7 @@ namespace HongikIngan
             bossVisual.color = bossAliveColor;
             RestoreBossPosition();
         }
-        void OnDisable() { RestoreBossPosition(); if (bossDying) ApplyBossKo(); }
+        void OnDisable() { RestoreImpactPositions(); RestoreOrb(); RestoreBossPosition(); if (bossDying) ApplyBossKo(); }
         void OnDestroy()
         {
             if (bossVisual != null && bossVisual.material == bossRuntimeMaterial) bossVisual.material = bossOriginalMaterial;
@@ -211,6 +292,8 @@ namespace HongikIngan
         }
         public void Clear()
         {
+            RestoreImpactPositions();
+            RestoreOrb();
             RestoreBossPosition();
             if (bossDying) ApplyBossKo();
             if (formation != null) foreach (var slot in formation.slots) slot.CancelHop();

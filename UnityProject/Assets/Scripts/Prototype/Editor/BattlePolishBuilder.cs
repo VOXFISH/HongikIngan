@@ -31,6 +31,27 @@ namespace HongikIngan.Editor
             presentation.bossVisual = boss;
             presentation.bossKoSprite = ko;
             presentation.bossFlashMaterial = flash;
+            var orb = presentation.GetComponentsInChildren<BattleOrbGraphic>(true).Single().rectTransform;
+            presentation.thrownOrb = orb;
+            var group = orb.GetComponent<CanvasGroup>();
+            if (group == null) group = orb.gameObject.AddComponent<CanvasGroup>();
+            presentation.orbGroup = group;
+            // The log is stationary UI, so it must not travel or fade with the orb.
+            if (presentation.combatLogGroup != null && presentation.combatLogGroup.transform.IsChildOf(orb))
+                presentation.combatLogGroup.transform.SetParent(presentation.transform, true);
+            var face = boss.transform.Find("BossFace") as RectTransform;
+            if (face == null)
+            {
+                face = new GameObject("BossFace", typeof(RectTransform)).GetComponent<RectTransform>();
+                face.SetParent(boss.transform, false);
+                face.anchorMin = face.anchorMax = new Vector2(.3f, .78f);
+                face.anchoredPosition = Vector2.zero;
+                face.sizeDelta = Vector2.zero;
+            }
+            presentation.bossFace = face;
+            var canvas = boss.transform.parent;
+            presentation.impactShakeTargets = new[] { canvas.Find("Background") as RectTransform,
+                canvas.Find("Foreground") as RectTransform, boss.rectTransform }.Where(t => t != null).ToArray();
             EditorUtility.SetDirty(presentation);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
