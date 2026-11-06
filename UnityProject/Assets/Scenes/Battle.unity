@@ -3497,7 +3497,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 665, y: -320}
+  m_AnchoredPosition: {x: 800, y: -450}
   m_SizeDelta: {x: 270, y: 230}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &575284192
@@ -11151,8 +11151,8 @@ MonoBehaviour:
   orbReturnFadeDuration: 0.7
   impactShakeDuration: 0.3
   impactShakeAmount: 12
-  orbMinRadius: 0.33333334
-  orbMaxRadius: 2.5
+  orbMinRadius: 0.5
+  orbMaxRadius: 2
   orbSizeMaxDamage: 100000
   orbBubbleFrequency: 3.5
   orbBubbleDamping: 0.3

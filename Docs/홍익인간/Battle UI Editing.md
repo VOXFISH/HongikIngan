@@ -156,18 +156,15 @@ BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 
 
 표시 HP가 0이 되면 기존 StudentTransformation 머티리얼의 개별 런타임 복사본을 사용해 보스 전체를 순백색으로 표시하고 bossWhiteHold(기본 0.2초) 뒤 monsterKO.png의 가장 큰 기존 스프라이트로 교체한다. KO 이미지는 비율을 유지한다. 새 전투 시작은 원래 이미지·색·머티리얼로 초기화하며 연출 중 중단하면 흰색이 남지 않게 KO로 마무리한다. 연출 코루틴을 기다린 후 보상 화면을 열며 데미지·승패 계산은 바꾸지 않는다. 메뉴 HongikIngan > Connect Battle boss reactions가 씬의 세 참조를 저장한다.
 
-### 원기옥 투척과 명중 흔들림
+### 원기옥·레이저와 명중 흔들림
 
-BattlePresentation.thrownOrb는 기존 Orb이며 beam 단계의 표시를 대신한다. beamDuration 동안 사인 포물선(orbArcHeight 기본 180)을 따라 올라갔다 내려오며 원래 크기에서 orbArrivalScale(기본 0.2)로 줄어 BossVisual/BossFace에 도착한다. BossFace는 보스 내부의 RectTransform이며 에디터에서 얼굴 위치를 조절한다.
+합동 공격은 원기옥을 이동시키지 않고 기존 Beam 레이저로 표시한다. 레이저는 원기옥 중심에서 BossVisual/BossFace를 향하며 beamDuration 동안 표시된다. 원기옥의 로그 크기 변화 후 LateUpdate에서 끝점을 다시 계산하여 레이저 연결을 유지한다. 투척·포물선·투척 후 페이드 기능은 제거했다.
 
-명중 시 표시 HP를 갱신하고 원기옥을 orbFadeOutDuration(0.1초)에 사라지게 한다. 보이지 않는 동안 원위치·원크기로 복구한 후 orbReturnFadeDuration(0.7초) 동안 천천히 나타낸다. 기존 KO 흰색 연출도 유지한다. 원기옥 아래 있던 CombatLogPanel은 위치를 보존해 Presentation 아래로 분리하여 비행·페이드의 영향을 받지 않는다.
-
-impactShakeTargets는 Background·Foreground·BossVisual만 참조하며, 전투 중 표시되는 학생 Portrait도 개별적으로 더해 흔든다. Canvas·카메라·학생 슬롯 부모는 움직이지 않아 HP·버튼·이름·기록·팝업은 고정된다. impactShakeDuration(0.3초), impactShakeAmount(12)로 명중 흔들림을 조절한다. 종료·중단 시 모든 위치·원기옥 크기·불투명도를 복구한다. Connect Battle boss reactions 메뉴로 원기옥·CanvasGroup·BossFace·흔들림 참조를 저장한다.
+레이저 종료 시 Background·Foreground·BossVisual과 학생 Portrait만 흔든다. Canvas·카메라·학생 슬롯 부모는 움직이지 않아 HP·버튼·이름·기록·팝업은 고정된다. impactShakeDuration(0.3초), impactShakeAmount(12)로 조절하며 종료·중단 시 원래 위치를 복구한다. 처치 시 흰색 0.2초 후 monsterKO로 바뀌는 연출을 유지한다.
 
 ### 원기옥 로그 크기와 X 고정
 
-원기옥의 중심 피벗을 (0.5, 0.5)로 변경하되 기존 화면상 중심 위치는 보존한다. 준비·성장·투척·복귀 중 X좌표는 시작 위치로 고정한다. 최신 요청에 따라 투척은 보스 얼굴의 Y높이를 향하는 수직 포물선이며 가로 추적은 하지 않는다.
+원기옥은 중앙 피벗에서 고정된 위치를 유지하며 표시 공격 수치에 따라 성장한다. 반지름 배율은 0.5 + (2 - 0.5) × log10(1 + clamp(수치, 0, 100000)) / log10(100001)이다. 0에서 0.5배, 100000 이상에서 2배이며 실제 데미지 계산에는 상한을 넣지 않는다.
 
-현재 표시 공격 수치로 반지름 배율을 1/3 + (2.5 - 1/3) × log10(1 + clamp(수치, 0, 100000)) / log10(100001)로 계산한다. 0은 1/3배, 100000 이상은 2.5배다. 실제 데미지 계산에는 상한을 넣지 않는다. 목표 크기로 감쇠 스프링을 적용해 부풀었다 줄어드는 버블 효과를 내되 범위 밖으로 커지지는 않는다. 준비 중 목표는 LateUpdate에서 표시 수치를 따라 갱신하며 단계 전환 시 크기를 초기화하지 않는다.
-
-Inspector의 orbMinRadius·orbMaxRadius·orbSizeMaxDamage·orbBubbleFrequency·orbBubbleDamping으로 조절한다. 투척은 출발 크기에서 줄어들며 최소 1/3배를 유지하고, 원위치 페이드인은 소비 후 수치에 맞는 크기로 진행한다.
+목표 크기까지 감쇠 스프링을 적용해 부풀었다 줄어드는 버블 효과를 내며 단계 전환 시 크기를 초기화하지 않는다. Inspector의 orbMinRadius·orbMaxRadius·orbSizeMaxDamage·orbBubbleFrequency·orbBubbleDamping으로 조절한다. Connect Battle boss reactions 메뉴는 로그 크기 범위와 원기옥·BossFace·흔들림 참조를 저장한다.
+원기옥의 기본 중심은 화면 중앙이다. 현재 1600×900 레이아웃에서 Presentation 기준 좌표는 (800, -450)이며 생성 메뉴는 루트 Canvas의 실제 중심으로 배치한다.

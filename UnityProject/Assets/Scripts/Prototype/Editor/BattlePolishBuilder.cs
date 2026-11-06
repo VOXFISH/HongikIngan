@@ -40,6 +40,11 @@ namespace HongikIngan.Editor
                 orb.position = center;
             }
             presentation.thrownOrb = orb;
+            Canvas.ForceUpdateCanvases();
+            var screenRect = (RectTransform)orb.GetComponentInParent<Canvas>().rootCanvas.transform;
+            orb.position = screenRect.TransformPoint(screenRect.rect.center);
+            presentation.orbMinRadius = .5f;
+            presentation.orbMaxRadius = 2f;
             var group = orb.GetComponent<CanvasGroup>();
             if (group == null) group = orb.gameObject.AddComponent<CanvasGroup>();
             presentation.orbGroup = group;
