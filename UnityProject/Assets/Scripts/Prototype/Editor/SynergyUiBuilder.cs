@@ -71,7 +71,7 @@ namespace HongikIngan.Editor
                 SetupList(battle.hud.synergyLabel, popup);
                 battle.hud.synergyLabel.transform.parent.GetComponent<Image>().color = Ink;
                 Put(battle.hud.synergyLabel.transform.parent,24,100,260,390);
-                Put(battle.hud.synergyLabel.transform,14,14,232,362);
+                Put(battle.hud.synergyLabel.transform,18,32,209,308);
                 root.SetActive(false);
                 EditorUtility.SetDirty(tooltip);
                 EditorUtility.SetDirty(battle.formation);
