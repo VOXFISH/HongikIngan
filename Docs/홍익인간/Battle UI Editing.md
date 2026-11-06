@@ -168,3 +168,5 @@ SceneTransitionOverlay의 battleLogoDuration(기본 0.85초), battleLogoScale, b
 최종 동시 작업 통합: test의 `e4f55a0` 학교 타일·로고 전환도 반영했다. 코드·씬은 자동 병합했고 문서와 AI 기록의 추가 항목은 양쪽을 모두 보존했다. 기존 CSV에 남아 있던 충돌 표식도 제거해 154행이 모두 3열로 파싱되는 것을 확인했다. `Logs/SynergyTransitionMergedBuild.log`의 빌드·규칙 검사를 통과했고, 실제 학교 전투 버튼으로 새 전환을 거친 `Builds/SynergyTransitionMerged/result.txt`의 UI 검사 281개를 통과했다.
 
 Battle 목록 배치는 사용자 확인에 따라 최신 test의 텍스트 위치 `(18, -32)`와 영역 `209×308`, 흰색 기본 글자를 유지했다. test의 텍스트 박스 아트·전투 헤더·사운드 아이콘도 보존한다.
+
+사용자 승인 배치의 최종 결과: `Logs/SynergyArtworkMergedBuild.log` Windows 빌드와 기존 규칙 검사를 통과했고, `Builds/SynergyApprovedFinal/result.txt` 281개 및 `Builds/SynergyApprovedRegression/arc-result.txt` 222개를 통과했다. test의 209×308 목록, 새 전투 헤더·텍스트 박스·학교 전환을 포함한 결과다.
