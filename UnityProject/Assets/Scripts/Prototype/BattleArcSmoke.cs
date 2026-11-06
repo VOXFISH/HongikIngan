@@ -31,7 +31,7 @@ namespace HongikIngan
                 if(failure!=null){File.WriteAllText(Path.Combine(output,"arc-result.txt"),"FAIL "+failure); Application.Quit(1);yield break;}
                 if(!more)break; yield return next;
             }
-            File.WriteAllText(Path.Combine(output,"arc-result.txt"),"PASS assertions="+assertions+": centered 3/4/5/7/9, logical drag order, hover gating, authored positions, timed arithmetic, live beam endpoints and synchronized damage/HP.");
+            File.WriteAllText(Path.Combine(output,"arc-result.txt"),"PASS assertions="+assertions+": centered 3/4/5/7/9, logical drag order, hover gating, authored positions, timed arithmetic, live attack endpoints and final damage/HP.");
             Application.Quit();
         }
         IEnumerator CheckScene()
@@ -158,29 +158,42 @@ namespace HongikIngan
             float deadline=Time.realtimeSinceStartup+120;
             float beamAt=-1,beamDamage=0,beamHp=0,lastFormulaAt=0;string lastFormula=null;
             bool formulaCaptured=false,transferChecked=false;int spacedFormulas=0;
+            var orb = screen.presentation.thrownOrb;
+            bool throwing = orb != null && screen.presentation.bossFace != null;
+            Vector3 orbRest = throwing ? orb.localPosition : Vector3.zero;
+            Vector3 orbScale = throwing ? orb.localScale : Vector3.one;
             while(screen.IsRunning && Time.realtimeSinceStartup<deadline)
             {
                 var active=formation.slots.FirstOrDefault(s=>s.calculationLabel.gameObject.activeSelf);
                 if(active!=null && active.calculationLabel.text!=lastFormula)
                 {
-                    if(lastFormula!=null){Check(Time.realtimeSinceStartup-lastFormulaAt>=.9f,"one second per formula");spacedFormulas++;}
-                    lastFormula=active.calculationLabel.text;lastFormulaAt=Time.realtimeSinceStartup;
+                    if(lastFormula!=null){Check(Time.time-lastFormulaAt>=.9f,"one second per formula");spacedFormulas++;}
+                    lastFormula=active.calculationLabel.text;lastFormulaAt=Time.time;
                 }
-                if(active!=null && !formulaCaptured && Time.realtimeSinceStartup-lastFormulaAt>.3f)
+                if(active!=null && !formulaCaptured && Time.time-lastFormulaAt>.3f)
                 {BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"calculation.png"));formulaCaptured=true;}
                 if(screen.presentation.IsBeaming)
                 {
-                    if(beamAt<0){beamAt=Time.realtimeSinceStartup;beamDamage=screen.presentation.DisplayedDamage;beamHp=screen.presentation.DisplayedHp;}
-                    if(!transferChecked && Time.realtimeSinceStartup-beamAt>.35f)
+                    if(beamAt<0){beamAt=Time.time;beamDamage=screen.presentation.DisplayedDamage;beamHp=screen.presentation.DisplayedHp;}
+                    if(!transferChecked && Time.time-beamAt>.35f)
                     {
                         float spent=beamDamage-screen.presentation.DisplayedDamage;
                         float removed=beamHp-screen.presentation.DisplayedHp;
-                        Check(spent>0 && removed>0 && Math.Abs(spent-removed)<2,"orb and HP drain together");
-                        var beam=(RectTransform)screen.presentation.beam.transform;
-                        var from=screen.presentation.orbDamage.rectTransform;
-                        var to=screen.hud.bossHpLabel.rectTransform;
-                        Check(Vector3.Distance(beam.TransformPoint(Vector3.zero),from.TransformPoint(from.rect.center))<1,"beam starts at orb number");
-                        Check(Vector3.Distance(beam.TransformPoint(new Vector3(beam.rect.width,0,0)),to.TransformPoint(to.rect.center))<1,"beam ends at HP number");
+                        if (throwing)
+                        {
+                            Check(spent>0 && Math.Abs(removed)<.1f,"thrown orb spends damage; HP waits for impact");
+                            Check(Vector3.Distance(orb.localPosition,orbRest)>1,"orb travels toward boss");
+                            Check(orb.localScale.magnitude<orbScale.magnitude && !screen.presentation.beam.activeSelf,"orb shrinks with legacy beam hidden");
+                        }
+                        else
+                        {
+                            Check(spent>0 && removed>0 && Math.Abs(spent-removed)<2,"orb and HP drain together");
+                            var beam=(RectTransform)screen.presentation.beam.transform;
+                            var from=screen.presentation.orbDamage.rectTransform;
+                            var to=screen.hud.bossHpLabel.rectTransform;
+                            Check(Vector3.Distance(beam.TransformPoint(Vector3.zero),from.TransformPoint(from.rect.center))<1,"beam starts at orb number");
+                            Check(Vector3.Distance(beam.TransformPoint(new Vector3(beam.rect.width,0,0)),to.TransformPoint(to.rect.center))<1,"beam ends at HP number");
+                        }
                         BattleUiCapture.Capture(screen.hud.GetComponent<Canvas>(),Path.Combine(output,"beam.png"));transferChecked=true;
                     }
                 }
