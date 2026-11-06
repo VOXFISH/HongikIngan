@@ -164,3 +164,5 @@ SchoolScreen.battleSweepPrefab은 Assets/UI/Prefabs/SchoolBattleSweep.prefab을 
 SchoolBattleSweep/BattleStartLogo는 ui two.png의 battle_start 스프라이트이며 화면 중앙, 기본 영역 1296×720(기존 대비 1.8배), Preserve Aspect로 배치한다. 로고는 세 타일보다 뒤의 sibling으로 렌더링하며 스윕 타일 배열에서는 제외한다. 보라 타일이 중앙에 도달해 화면을 완전히 덮으면 크기 0 → 1 → 0.8 → 1 → 0, 회전 0 → -12 → +10 → -7 → 0도의 순서로 재생한다. Unity Z축의 음수는 시계 방향이다.
 
 SceneTransitionOverlay의 battleLogoDuration(기본 0.85초), battleLogoScale, battleLogoRotation을 Inspector에서 조절한다. 로고는 두 번째·세 번째 타일 진입 중에도 재생되고, 로고 크기가 0이 된 후 타일 퇴장을 시작하므로 주황 타일이 화면에서 사라지기 전에 끝난다. 프리팹 갱신 메뉴는 기존 타일 편집 내용을 보존하며 로고를 추가한다.
+
+최종 동시 작업 통합: test의 `e4f55a0` 학교 타일·로고 전환도 반영했다. 코드·씬은 자동 병합했고 문서와 AI 기록의 추가 항목은 양쪽을 모두 보존했다. 기존 CSV에 남아 있던 충돌 표식도 제거해 154행이 모두 3열로 파싱되는 것을 확인했다. `Logs/SynergyTransitionMergedBuild.log`의 빌드·규칙 검사를 통과했고, 실제 학교 전투 버튼으로 새 전환을 거친 `Builds/SynergyTransitionMerged/result.txt`의 UI 검사 281개를 통과했다.
