@@ -31,7 +31,7 @@ namespace HongikIngan.Editor
             presentation.bossVisual = boss;
             presentation.bossKoSprite = ko;
             presentation.bossFlashMaterial = flash;
-            var orb = presentation.GetComponentsInChildren<BattleOrbGraphic>(true).Single().rectTransform;
+            var orb = (RectTransform)presentation.orbDamage.transform.parent;
             // A centered pivot lets radius change without shifting the orb's center or X coordinate.
             if (orb.pivot != new Vector2(.5f, .5f))
             {
@@ -43,8 +43,8 @@ namespace HongikIngan.Editor
             Canvas.ForceUpdateCanvases();
             var screenRect = (RectTransform)orb.GetComponentInParent<Canvas>().rootCanvas.transform;
             orb.position = screenRect.TransformPoint(screenRect.rect.center);
-            presentation.orbMinRadius = .5f;
-            presentation.orbMaxRadius = 2f;
+            presentation.orbMinRadius = .6f;
+            presentation.orbMaxRadius = 1.5f;
             var group = orb.GetComponent<CanvasGroup>();
             if (group == null) group = orb.gameObject.AddComponent<CanvasGroup>();
             presentation.orbGroup = group;

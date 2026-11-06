@@ -15,6 +15,8 @@ namespace HongikIngan
         public Image selectionFrame;
         public Image studentPortrait;
         public StudentPortraitCatalog portraitCatalog;
+        public Image nameplate;
+        public StudentNameplateCatalog nameplateCatalog;
         public Material transformationMaterial;
         Material portraitMaterial;
         string studentId;
@@ -59,6 +61,7 @@ namespace HongikIngan
             if (occupied)
             {
                 nameLabel.text = student.Name;
+                StudentNameplateCatalog.Apply(nameplate, nameplateCatalog, student.Role);
                 roleLabel.text = $"{student.Grade}학년 - {student.RoleLabel}";
             }
             for (int i = 0; i < books.Length; i++)

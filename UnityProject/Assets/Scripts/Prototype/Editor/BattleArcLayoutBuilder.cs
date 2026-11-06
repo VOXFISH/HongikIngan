@@ -86,14 +86,13 @@ namespace HongikIngan.Editor
             Put(screen.hud.bossDebuffsLabel.transform,930,42,260,160);
             var orb=screen.presentation.orbDamage.transform.parent;
             Put(orb,585,320,270,230);
-            Object.DestroyImmediate(orb.GetComponent<Image>());
-            var graphic=orb.gameObject.AddComponent<BattleOrbGraphic>(); graphic.color=new Color(.68f,.92f,1); graphic.raycastTarget=false;
             Put(orb.Find("Caption"),40,20,190,30);
             Put(screen.presentation.orbDamage.transform,15,55,240,50);
             Put(screen.hud.logLabel.transform,25,111,220,95);
             screen.presentation.beam.transform.SetParent(orb,false);
             Put(screen.presentation.beam.transform,0,0,1,14);
             ((RectTransform)screen.presentation.beam.transform).pivot=new Vector2(0,.5f);
+            ApplyEnergyArt(orb.GetComponent<Image>(),screen.presentation.beam.GetComponent<Image>());
             screen.presentation.beam.transform.SetSiblingIndex(orb.Find("Caption").GetSiblingIndex());
             hp.SetSiblingIndex(screen.presentation.transform.GetSiblingIndex()+1);
             screen.hud.statusLabel.gameObject.SetActive(false);
@@ -104,6 +103,22 @@ namespace HongikIngan.Editor
             }
             EditorUtility.SetDirty(screen.presentation);
             EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene); AssetDatabase.SaveAssets();
+        }
+        // Both images draw their art untinted and must not block clicks on the UI beneath them.
+        static void ApplyEnergyArt(Image orb,Image beam)
+        {
+            orb.sprite=LoadUiSprite("EnergyOrb"); orb.type=Image.Type.Simple; orb.preserveAspect=true;
+            orb.color=Color.white; orb.raycastTarget=false;
+            beam.sprite=LoadUiSprite("EnergyBeam"); beam.type=Image.Type.Simple; beam.preserveAspect=false;
+            beam.color=Color.white; beam.raycastTarget=false;
+            // BattlePresentation sets the length at runtime; this height keeps the art's proportions at the usual distance.
+            beam.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,60);
+        }
+        static Sprite LoadUiSprite(string name)
+        {
+            var sprite=AssetDatabase.LoadAssetAtPath<Sprite>("Assets/sprite/UI/"+name+".png");
+            if(sprite==null)throw new System.InvalidOperationException(name+" sprite is missing.");
+            return sprite;
         }
         [MenuItem("HongikIngan/Apply centered arc Battle layout")]
         public static void Apply()
@@ -140,8 +155,6 @@ namespace HongikIngan.Editor
             screen.hud.bossDebuffsLabel=Label(ui,"BossDebuffs",975,48,250,165,"",18);
             var orb=screen.presentation.orbDamage.transform.parent;
             Put(orb,600,350,330,260);
-            var orbImage=orb.GetComponent<Image>(); orbImage.sprite=AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Knob.psd");
-            orbImage.type=Image.Type.Simple; orbImage.color=new Color(.66f,.90f,1,.95f);
             orb.Find("Fill").gameObject.SetActive(false);
             Put(orb.Find("Caption"),70,28,190,30); orb.Find("Caption").GetComponent<TMP_Text>().fontSize=21;
             screen.hud.damageLabel.gameObject.SetActive(false);
@@ -158,7 +171,7 @@ namespace HongikIngan.Editor
             screen.presentation.actorLabel.gameObject.SetActive(false); screen.presentation.damagePop.gameObject.SetActive(false);
             Put(screen.presentation.beam.transform,0,0,1,18);
             ((RectTransform)screen.presentation.beam.transform).pivot=new Vector2(0,.5f);
-            screen.presentation.beam.GetComponent<Image>().color=new Color(1,.88f,.42f,.9f);
+            ApplyEnergyArt(orb.GetComponent<Image>(),screen.presentation.beam.GetComponent<Image>());
             screen.presentation.beam.transform.SetAsFirstSibling();
             screen.presentation.stepDuration=1; screen.presentation.beamDuration=1;
             Put(screen.formation.transform,0,0,1440,900);

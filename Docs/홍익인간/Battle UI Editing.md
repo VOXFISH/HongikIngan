@@ -180,11 +180,13 @@ BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 
 
 합동 공격은 원기옥을 이동시키지 않고 기존 Beam 레이저로 표시한다. 레이저는 원기옥 중심에서 BossVisual/BossFace를 향하며 beamDuration 동안 표시된다. 원기옥의 로그 크기 변화 후 LateUpdate에서 끝점을 다시 계산하여 레이저 연결을 유지한다. 투척·포물선·투척 후 페이드 기능은 제거했다.
 
+Orb와 Beam은 Image 컴포넌트로 렌더링한다. 이미지는 Source Image에서 교체하며 현재 값은 `Assets/sprite/UI/EnergyOrb.png`, `EnergyBeam.png`이다. 그림 색이 그대로 나오도록 Color는 흰색으로 두고, 뒤의 UI 클릭을 막지 않도록 Raycast Target은 끈다. Orb는 Preserve Aspect를 켠다. Beam의 길이는 런타임에 계산되므로 RectTransform에서는 높이(현재 60)만 편집하며, Orb 자식이어서 굵기도 Orb 크기를 따라 변한다. 그림의 왼쪽이 Orb 쪽, 오른쪽이 보스 쪽이다. Orb 배경이 투명해졌으므로 Caption·Damage는 흰 글자로 표시하고, Damage에는 `Assets/UI/Fonts/GmarketSansTTFMedium SDF - Orb Outline.mat` 외곽선을 쓴다.
+
 레이저 종료 시 Background·Foreground·BossVisual과 학생 Portrait만 흔든다. Canvas·카메라·학생 슬롯 부모는 움직이지 않아 HP·버튼·이름·기록·팝업은 고정된다. impactShakeDuration(0.3초), impactShakeAmount(12)로 조절하며 종료·중단 시 원래 위치를 복구한다. 처치 시 흰색 0.2초 후 monsterKO로 바뀌는 연출을 유지한다.
 
 ### 원기옥 로그 크기와 X 고정
 
-원기옥은 중앙 피벗에서 고정된 위치를 유지하며 표시 공격 수치에 따라 성장한다. 반지름 배율은 0.5 + (2 - 0.5) × log10(1 + clamp(수치, 0, 100000)) / log10(100001)이다. 0에서 0.5배, 100000 이상에서 2배이며 실제 데미지 계산에는 상한을 넣지 않는다.
+원기옥은 중앙 피벗에서 고정된 위치를 유지하며 표시 공격 수치에 따라 성장한다. 반지름 배율은 0.6 + (1.5 - 0.6) × log10(1 + clamp(수치, 0, 100000)) / log10(100001)이다. 0에서 0.5배, 100000 이상에서 2배이며 실제 데미지 계산에는 상한을 넣지 않는다.
 
 목표 크기까지 감쇠 스프링을 적용해 부풀었다 줄어드는 버블 효과를 내며 단계 전환 시 크기를 초기화하지 않는다. Inspector의 orbMinRadius·orbMaxRadius·orbSizeMaxDamage·orbBubbleFrequency·orbBubbleDamping으로 조절한다. Connect Battle boss reactions 메뉴는 로그 크기 범위와 원기옥·BossFace·흔들림 참조를 저장한다.
 원기옥의 기본 중심은 화면 중앙이다. 현재 1600×900 레이아웃에서 Presentation 기준 좌표는 (800, -450)이며 생성 메뉴는 루트 Canvas의 실제 중심으로 배치한다.
@@ -195,3 +197,9 @@ BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 
 - test: 최신 운세·아트·레이저를 보존했고, 귀염둥이 5·7·9단계 설명과 운세의 가상 시너지 인원을 함께 검증했다. 목록 텍스트 영역은 사용자 선택대로 209×308이다.
 - Unity 6000.3.7f1 Windows 빌드, 규칙 5,276개, 초기 지급 2,000시드 통과. Direct3D 11 플레이어의 시너지 UI 281개·전투 223개·운세 54개 통과 및 실제 렌더 캡처 확인. 테스트의 시간 간격과 전환 완료 대기는 검사 실행에만 적용된다.
 - 중간 실행에서 검사 결과 저장 후 Unity 네이티브 종료 오류가 있었으나 최종 실행에서는 재발하지 않았다. 수동 마우스 조작과 FMOD 실청취는 수행하지 않았다.
+
+## 역할별 이름표
+
+School·Battle 학생의 이름은 역할별 이름표 위에 표시된다. `Assets/UI/StudentNameplateCatalog.asset`이 `StudentRole`별 스프라이트(`Assets/sprite/UI/`의 Dealer·Buff·Debuff)를 지정하고, `SchoolStudentSlot`·`BattleStudentSlot`이 바인딩 때 학생의 `Role`에 맞는 이미지를 적용한다. 역할은 성격이 아니라 학생 정의(`PrototypeContent`)의 `Role` 값을 따른다.
+
+이름표 위치와 크기는 `SchoolDeskSlot`·`BattleStudentSlot` 프리팹의 `Nameplate`, 글자 영역은 같은 프리팹의 `Name`에서 편집한다. `Name`은 오른쪽 아이콘을 피하도록 이름표의 왼쪽 영역에 맞췄고 Auto Size를 사용한다.

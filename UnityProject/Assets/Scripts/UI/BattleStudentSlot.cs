@@ -13,6 +13,8 @@ namespace HongikIngan
         public CanvasGroup visualGroup;
         public TMP_Text nameLabel, roleLabel, synergyLabel, skillLabel, emptyLabel;
         public Image portrait;
+        public Image nameplate;
+        public StudentNameplateCatalog nameplateCatalog;
         public TMP_Text orderLabel, buffsLabel, calculationLabel;
         public CanvasGroup calculationGroup;
         [Header("Effect hop (portrait only)")]
@@ -43,6 +45,7 @@ namespace HongikIngan
             portrait.sprite = artwork;
             var d = student.Definition;
             nameLabel.text = student.IsClone ? d.Name + " (분신)" : d.Name;
+            StudentNameplateCatalog.Apply(nameplate, nameplateCatalog, d.Role);
             roleLabel.text = $"{d.Grade}학년 - {d.RoleLabel}";
             synergyLabel.text = $"{d.Club} - {d.Personality}" + (string.IsNullOrEmpty(d.SpecialSynergy) ? "" : " - " + d.SpecialSynergy);
             skillLabel.text = string.IsNullOrEmpty(d.SkillName) ? $"스킬 {student.SkillValue:0.##}" : d.SkillName;

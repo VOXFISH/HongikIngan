@@ -29,8 +29,8 @@ namespace HongikIngan
         [Min(0)] public float impactShakeDuration = .3f;
         [Min(0)] public float impactShakeAmount = 12f;
         [Header("Orb charge size (radius multiplier)")]
-        [Min(.01f)] public float orbMinRadius = .5f;
-        [Min(.01f)] public float orbMaxRadius = 2f;
+        [Min(.01f)] public float orbMinRadius = .6f;
+        [Min(.01f)] public float orbMaxRadius = 1.5f;
         [Min(1)] public float orbSizeMaxDamage = 100000f;
         [Min(.1f)] public float orbBubbleFrequency = 3.5f;
         [Range(.05f, .95f)] public float orbBubbleDamping = .3f;
