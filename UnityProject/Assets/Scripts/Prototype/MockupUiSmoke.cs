@@ -128,8 +128,9 @@ namespace HongikIngan
             Check(run.Battle.Won && battle.turnTransition.LastShownTurn==1 && !battle.turnTransition.IsShowing,"victory has no extra turn overlay");
             int previous=run.Money, reward=run.VictoryReward;
             Check(battle.rewardPopup != null && battle.rewardPopup.IsOpen, "victory opens authored reward popup");
-            Check(battle.rewardPopup.detailsLabel.text.Contains(reward.ToString()) && !battle.CanReorder, "reward amount visible and formation locked");
-            var rewardRect = (RectTransform)battle.rewardPopup.modal.transform.Find("Dialog");
+            battle.rewardPopup.Skip(); yield return null;
+            Check(battle.rewardPopup.DisplayedEnergy == previous + reward && !battle.CanReorder, "reward amount visible and formation locked");
+            var rewardRect = (RectTransform)battle.rewardPopup.content.transform;
             var originalPosition = rewardRect.anchoredPosition;
             rewardRect.anchoredPosition += new Vector2(13, 7);
             yield return null;
@@ -137,7 +138,7 @@ namespace HongikIngan
             rewardRect.anchoredPosition = originalPosition;
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output,"reward-popup.png")); yield return new WaitForSeconds(.3f);
-            battle.rewardPopup.claimButton.onClick.Invoke(); Check(SceneTransitionOverlay.Current.IsBusy,"return curtain begins");
+            battle.rewardPopup.claimButton.onClick.Invoke(); Check(battle.rewardPopup.IsLeaving,"result logo return begins");
             battle.ClaimReward(); // A second input during transition must not pay twice.
             yield return new WaitForSeconds(1);
             Check(SceneManager.GetActiveScene().name=="School" && run.Stage==2 && run.Money==previous+reward,"victory return and preview reward agree");

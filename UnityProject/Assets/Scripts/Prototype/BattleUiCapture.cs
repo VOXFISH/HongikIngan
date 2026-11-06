@@ -22,6 +22,8 @@ namespace HongikIngan
             {
                 target.Create(); camera.targetTexture = target;
                 canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = 1;
+                // Rebuild every batch after changing render mode; cached overlay batches can be absent from a camera capture.
+                foreach (var graphic in canvas.GetComponentsInChildren<UnityEngine.UI.Graphic>()) graphic.SetAllDirty();
                 Canvas.ForceUpdateCanvases();
                 if (RenderPipelineManager.currentPipeline != null)
                 {
