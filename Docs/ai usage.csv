@@ -406,3 +406,7 @@ When the purple tile is fullly covering the screen, add a effect that :
 "2026-11-06 09:41:31+09:00","qwerty","what is the name of the object, tell me without touching the editor. quick"
 "2026-11-06 09:41:31+09:00","qwerty","에디터 내부에 있는 오브젝트의 이름이 뭐냐고"
 "2026-11-06 09:42:45+09:00","qwerty","방금 띄운 로고 크기 1.8배 키워"
+"2026-11-06 09:53:32+09:00","qwerty","In ""Battle"" scene, under battlecanvas/bossvisual, the object for bossvisual is the boss of the battle.
+
+When the 'student's start attacking (in unison) against the boss, the boss should tremble.
+When the boss dies, it should turn into monster KO after turning white and waiting 0.2 seconds"

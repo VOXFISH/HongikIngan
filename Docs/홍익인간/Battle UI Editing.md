@@ -149,3 +149,9 @@ SchoolScreen.battleSweepPrefab은 Assets/UI/Prefabs/SchoolBattleSweep.prefab을 
 SchoolBattleSweep/BattleStartLogo는 ui two.png의 battle_start 스프라이트이며 화면 중앙, 기본 영역 1296×720(기존 대비 1.8배), Preserve Aspect로 배치한다. 로고는 세 타일보다 뒤의 sibling으로 렌더링하며 스윕 타일 배열에서는 제외한다. 보라 타일이 중앙에 도달해 화면을 완전히 덮으면 크기 0 → 1 → 0.8 → 1 → 0, 회전 0 → -12 → +10 → -7 → 0도의 순서로 재생한다. Unity Z축의 음수는 시계 방향이다.
 
 SceneTransitionOverlay의 battleLogoDuration(기본 0.85초), battleLogoScale, battleLogoRotation을 Inspector에서 조절한다. 로고는 두 번째·세 번째 타일 진입 중에도 재생되고, 로고 크기가 0이 된 후 타일 퇴장을 시작하므로 주황 타일이 화면에서 사라지기 전에 끝난다. 프리팹 갱신 메뉴는 기존 타일 편집 내용을 보존하며 로고를 추가한다.
+
+### Battle 보스 피격·KO
+
+BattlePresentation의 bossVisual은 BattleCanvas/BossVisual의 Image다. 합동 필살기 beam 단계 동안 이 이미지의 위치만 떨리며 단계 종료·중단 시 원래 위치로 복구한다. Inspector의 bossShakeAmount(기본 7), bossShakeFrequency(기본 24)로 조절한다.
+
+표시 HP가 0이 되면 기존 StudentTransformation 머티리얼의 개별 런타임 복사본을 사용해 보스 전체를 순백색으로 표시하고 bossWhiteHold(기본 0.2초) 뒤 monsterKO.png의 가장 큰 기존 스프라이트로 교체한다. KO 이미지는 비율을 유지한다. 새 전투 시작은 원래 이미지·색·머티리얼로 초기화하며 연출 중 중단하면 흰색이 남지 않게 KO로 마무리한다. 연출 코루틴을 기다린 후 보상 화면을 열며 데미지·승패 계산은 바꾸지 않는다. 메뉴 HongikIngan > Connect Battle boss reactions가 씬의 세 참조를 저장한다.

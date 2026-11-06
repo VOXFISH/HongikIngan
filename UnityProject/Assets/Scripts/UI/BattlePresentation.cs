@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using HongikIngan.Audio;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HongikIngan
 {
@@ -21,6 +22,18 @@ namespace HongikIngan
         [Header("Student animation")]
         [Tooltip("Hop height, duration and curve are editable on each BattleStudentSlot or its shared prefab.")]
         public bool animateStudents = true;
+        [Header("Boss reaction")]
+        public Image bossVisual;
+        public Sprite bossKoSprite;
+        public Material bossFlashMaterial;
+        [Min(0)] public float bossShakeAmount = 7f;
+        [Min(0)] public float bossShakeFrequency = 24f;
+        [Min(0)] public float bossWhiteHold = .2f;
+        Vector3 bossHome;
+        Sprite bossAliveSprite;
+        Color bossAliveColor;
+        Material bossOriginalMaterial, bossRuntimeMaterial;
+        bool bossCaptured, bossDefeated, bossDying, bossAlivePreserveAspect;
         readonly Dictionary<StudentState,string> keywordSnapshots = new Dictionary<StudentState,string>();
         public float DisplayedDamage { get; private set; }
         public float DisplayedHp { get; private set; }
@@ -33,6 +46,25 @@ namespace HongikIngan
         public void BeginBattle(PrototypeRun run, BattleHud owner, BattleFormationView students)
         {
             hud = owner; formation = students;
+            if (bossVisual != null)
+            {
+                if (!bossCaptured)
+                {
+                    bossCaptured = true;
+                    bossHome = bossVisual.rectTransform.anchoredPosition3D;
+                    bossAliveSprite = bossVisual.sprite;
+                    bossAliveColor = bossVisual.color;
+                    bossAlivePreserveAspect = bossVisual.preserveAspect;
+                    bossOriginalMaterial = bossVisual.material;
+                    if (bossFlashMaterial != null) bossRuntimeMaterial = new Material(bossFlashMaterial);
+                }
+                bossDefeated = bossDying = false;
+                bossVisual.sprite = bossAliveSprite;
+                bossVisual.preserveAspect = bossAlivePreserveAspect;
+                bossVisual.color = bossAliveColor;
+                bossVisual.material = bossOriginalMaterial;
+                if (run.Battle != null && run.Battle.BossHp <= 0) ApplyBossKo();
+            }
             DisplayedDamage = run.Battle?.Damage ?? 0;
             DisplayedHp = run.Battle?.BossHp ?? 0;
             maxHp = run.Battle?.MaxBossHp ?? 1;
@@ -80,12 +112,55 @@ namespace HongikIngan
                 RenderTotals();
                 SetTextAlpha(TextAlpha(elapsed, duration));
                 if (!animateStudents) foreach (var slot in formation.slots) slot.CancelHop();
-                if (firing) PlaceBeam();
+                if (firing)
+                {
+                    PlaceBeam();
+                    if (bossVisual != null && !bossDefeated)
+                    {
+                        float wave = elapsed * bossShakeFrequency * Mathf.PI * 2;
+                        bossVisual.rectTransform.anchoredPosition3D = bossHome + new Vector3(
+                            Mathf.Sin(wave), Mathf.Sin(wave * 1.37f) * .4f, 0) * bossShakeAmount;
+                    }
+                }
                 elapsed += Time.deltaTime;
                 yield return null;
             }
             DisplayedDamage = targetDamage; DisplayedHp = targetHp; RenderTotals();
             SetTextAlpha(fadeCombatText ? 0 : 1);
+            RestoreBossPosition();
+            if (bossVisual != null && !bossDefeated && targetHp <= 0)
+            {
+                bossDefeated = bossDying = true;
+                if (beam != null) beam.SetActive(false);
+                if (bossRuntimeMaterial != null)
+                {
+                    bossVisual.material = bossRuntimeMaterial;
+                    bossVisual.color = Color.white;
+                    bossRuntimeMaterial.SetFloat("_Flash", 1);
+                }
+                yield return new WaitForSecondsRealtime(bossWhiteHold);
+                ApplyBossKo();
+            }
+        }
+        void RestoreBossPosition()
+        {
+            if (bossCaptured && bossVisual != null) bossVisual.rectTransform.anchoredPosition3D = bossHome;
+        }
+        void ApplyBossKo()
+        {
+            bossDefeated = true; bossDying = false;
+            if (bossVisual == null) return;
+            if (bossKoSprite != null) bossVisual.sprite = bossKoSprite;
+            bossVisual.preserveAspect = true;
+            bossVisual.material = bossOriginalMaterial;
+            bossVisual.color = bossAliveColor;
+            RestoreBossPosition();
+        }
+        void OnDisable() { RestoreBossPosition(); if (bossDying) ApplyBossKo(); }
+        void OnDestroy()
+        {
+            if (bossVisual != null && bossVisual.material == bossRuntimeMaterial) bossVisual.material = bossOriginalMaterial;
+            if (bossRuntimeMaterial != null) Destroy(bossRuntimeMaterial);
         }
         static string KeywordSignature(StudentState student) => string.Join("|", student.Keywords.Select(k => k.Definition.Id + ":" + k.StackCount + ":" + string.Join(",", k.Values)));
         void SnapshotKeywords(PrototypeRun run)
@@ -136,6 +211,8 @@ namespace HongikIngan
         }
         public void Clear()
         {
+            RestoreBossPosition();
+            if (bossDying) ApplyBossKo();
             if (formation != null) foreach (var slot in formation.slots) slot.CancelHop();
             SetTextAlpha(1);
             IsBeaming = false;

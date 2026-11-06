@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using TMPro;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -13,6 +14,28 @@ namespace HongikIngan.Editor
         const string SlotPath = "Assets/UI/Prefabs/BattleStudentSlot.prefab";
         static readonly Color Panel = new Color(.12f,.10f,.20f,.96f);
         public static void Build() { Apply(); PrototypeBuilder.BuildExpansion(); }
+
+        [MenuItem("HongikIngan/Connect Battle boss reactions")]
+        public static void ConnectBossReactions()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            var ko = AssetDatabase.LoadAllAssetsAtPath("Assets/sprite/background/monsterKO.png")
+                .OfType<Sprite>().OrderByDescending(s => s.rect.width * s.rect.height).First();
+            var flash = AssetDatabase.LoadAssetAtPath<Material>("Assets/UI/StudentTransformation.mat");
+            if (flash == null) throw new System.InvalidOperationException("Boss white-flash material is missing.");
+            var scene = EditorSceneManager.OpenScene("Assets/Scenes/Battle.unity");
+            var presentation = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<BattlePresentation>(true)).Single();
+            var boss = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Image>(true))
+                .Single(i => i.name == "BossVisual");
+            presentation.bossVisual = boss;
+            presentation.bossKoSprite = ko;
+            presentation.bossFlashMaterial = flash;
+            EditorUtility.SetDirty(presentation);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log("BATTLE_BOSS_REACTIONS_SAVED: beam tremble, white 0.2s, monsterKO.");
+        }
 
         [MenuItem("HongikIngan/Polish full-screen Battle presentation")]
         public static void Apply()
