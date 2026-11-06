@@ -31,7 +31,7 @@ namespace HongikIngan.Editor
             presentation.bossVisual = boss;
             presentation.bossKoSprite = ko;
             presentation.bossFlashMaterial = flash;
-            var orb = presentation.GetComponentsInChildren<BattleOrbGraphic>(true).Single().rectTransform;
+            var orb = (RectTransform)presentation.orbDamage.transform.parent;
             // A centered pivot lets radius change without shifting the orb's center or X coordinate.
             if (orb.pivot != new Vector2(.5f, .5f))
             {

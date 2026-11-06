@@ -455,3 +455,6 @@ it should start at 1/3, and increase (with bubbling effect of increasing and dec
 Restore the lazer
 원기옥 should have a radius of 1/2~2 radius."
 "2026-11-06 10:15:10+09:00","qwerty","reset the 원기옥 position to the center of the screen like before."
+"2026-11-06 10:13:56+09:00","sid","지금 battle scene에서 orb의 ui image를 새로운 이미지로 교체하려고 하는데, 확인해보니 orb 자체의 렌더링 방식이 이미지가 아니라서 이미지 컴포넌트를 추가하여 orb 자체의 렌더링 방식을 image 로 바꾸었을때 기능적으로 누락되는 요소가 없는지 확인하고, 있다면 그것도 누락되지않도록 해결한뒤 image 컴포넌트로 렌더링하도록 변경해주세요."
+"2026-11-06 10:17:25+09:00","sid","잠시 작업을 멈춰주세요 수정사항이 있어서 처음부터 다시 검사해야해요"
+"2026-11-06 10:20:10+09:00","sid","다시 한번 작업을 진행해주세요. 가능할 경우 orb자체의 image source는 ui 폴더에 있는 EnergyOrb를 사용하고 orb의 자식 개체인 beam의 image source 는 EnergyBeam 으로 바꾸어주세요"

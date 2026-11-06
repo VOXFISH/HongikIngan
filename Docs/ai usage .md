@@ -400,3 +400,8 @@ Unity CLI로 실행 중인 에디터(UnityProject, 6000.3.7f1)와 Pipeline 연�
 
 - 사용자: qwerty
 - 요약: Battle 씬의 원기옥 중심을 1600×900 레이아웃의 (800, -450)으로 옮기고 생성 메뉴에서도 루트 Canvas 중앙을 사용하도록 변경했다. 고정 위치·로그 크기·레이저는 유지하며 테스트·커밋·main 동기화는 수행하지 않았다.
+
+## 2026-11-06 — Battle 원기옥·빔 Image 렌더링 전환
+
+- 사용자: sid
+- 요약: Battle 씬의 Orb를 BattleOrbGraphic에서 Image(EnergyOrb)로, Beam을 EnergyBeam으로 바꾸고 투명 배경에서 읽히도록 글자에 외곽선을 넣었으며 관련 빌더를 함께 수정했다. 에디터 Play 모드에서 한 턴의 충전·레이저·종료 상태를 확인했다.
