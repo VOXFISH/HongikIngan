@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521a8fbe8f57e42478e781f8e838e1ec, type: 3}
+  m_Name: StudentNameplateCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::HongikIngan.StudentNameplateCatalog
+  dealer: {fileID: -6123196760004327306, guid: 526109752d121014abaedc459d4462db, type: 3}
+  buff: {fileID: 8291305821292071062, guid: 260745cdc522755429fd62f69d7c45c2, type: 3}
+  debuff: {fileID: -1538873551591825017, guid: bb44399be717bae4dae97518b062f44b, type: 3}

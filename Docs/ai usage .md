@@ -432,3 +432,7 @@ Unity CLI로 실행 중인 에디터(UnityProject, 6000.3.7f1)와 Pipeline 연�
 ## 2026-11-06 — VOXFISH — 시너지 UI main·test 반영 완료
 
 시너지 단계·공통 팝업·회전 학생증·영창 단어를 main PR #8로 병합하고, test의 최신 운세·HP UI·레이저 변경도 보존해 통합했다. 최종 Windows 빌드, 규칙 5,276개(시너지 109개 포함), 초기 지급 2,000시드, 플레이어 시너지 UI 281개·전투 223개·운세 54개를 통과했고 요청한 목록 209×308을 유지했다.
+
+## 2026-11-06 — sid — 학생 역할별 이름표 UI
+
+School·Battle 학생 슬롯 프리팹에 StudentRole(Dealer/Buff/Debuff)별 이름표 스프라이트를 표시하는 Nameplate와 공용 StudentNameplateCatalog를 추가했고, 플레이 모드에서 두 씬의 표시를 확인했다.

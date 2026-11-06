@@ -3208,8 +3208,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 5, y: -2}
-  m_SizeDelta: {x: 280, y: 51}
+  m_AnchoredPosition: {x: 0.00000047684, y: -217}
+  m_SizeDelta: {x: 280, y: -46.0746}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &484926900
 CanvasRenderer:
@@ -3239,7 +3239,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD569\uB3D9 \uACF5\uACA9"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8de09a46db87bab46b4483f474e77bf0, type: 2}
   m_sharedMaterial: {fileID: 4480149059836144528, guid: 8de09a46db87bab46b4483f474e77bf0, type: 2}
@@ -9066,7 +9066,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279771438
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -10316,7 +10316,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 17bd3b3c23abfe944b39731a758a05db, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10351,8 +10351,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1360, y: -815}
-  m_SizeDelta: {x: 215, y: 60}
+  m_AnchoredPosition: {x: 1311.3, y: -736}
+  m_SizeDelta: {x: 247.9362, y: 150.5992}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1887080121
 GameObject:
@@ -10413,14 +10413,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC6D0\uAE30\uC625\n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 986b98bdb59e84e498727944abef742b, type: 2}
-  m_sharedMaterial: {fileID: 712826361898866933, guid: 986b98bdb59e84e498727944abef742b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8de09a46db87bab46b4483f474e77bf0, type: 2}
+  m_sharedMaterial: {fileID: 4480149059836144528, guid: 8de09a46db87bab46b4483f474e77bf0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279771438
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -11188,8 +11188,8 @@ MonoBehaviour:
   - {fileID: 1107698764}
   impactShakeDuration: 0.3
   impactShakeAmount: 12
-  orbMinRadius: 0.5
-  orbMaxRadius: 2
+  orbMinRadius: 0.6
+  orbMaxRadius: 1.5
   orbSizeMaxDamage: 100000
   orbBubbleFrequency: 3.5
   orbBubbleDamping: 0.3
