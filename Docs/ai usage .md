@@ -436,3 +436,8 @@ Unity CLI로 실행 중인 에디터(UnityProject, 6000.3.7f1)와 Pipeline 연�
 ## 2026-11-06 — sid — 학생 역할별 이름표 UI
 
 School·Battle 학생 슬롯 프리팹에 StudentRole(Dealer/Buff/Debuff)별 이름표 스프라이트를 표시하는 Nameplate와 공용 StudentNameplateCatalog를 추가했고, 플레이 모드에서 두 씬의 표시를 확인했다.
+
+
+## 2026-11-06 — VOXFISH — 전투 보상·게임오버 결과 화면
+
+전환 타일·기존 로고 페이드, 순차 타자와 점선 정렬, 에너지 전달·클릭 스킵, 확인 후 교실/메인 복귀와 누적 데미지 점수를 구현하고 사용자가 제공한 에너지 아이콘을 적용했다. 최신 test의 합동 공격 아트·학생 이름표와 main을 통합한 Windows 빌드에서 규칙 5,337개·초기 지급 2,000시드·플레이어 결과 103개·전투 223개·시너지 UI 281개를 통과했으며 대화 합의와 최종 캡처를 Battle Results 문서에 정리했다.
