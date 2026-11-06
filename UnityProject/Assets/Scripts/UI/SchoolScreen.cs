@@ -14,6 +14,7 @@ namespace HongikIngan
         public CanvasGroup schoolCanvas;
         public RectTransform dragLayer;
         public SchoolStudentSlot[] slots;
+        // Legacy field names retain existing scene references; the card is now a read-only fortune display.
         public Button[] relicButtons, petButtons;
         public TMP_Text[] relicLabels, petLabels;
         public TMP_Text energyLabel, rosterLabel, stageLabel, photosLabel, synergyLabel, ownedRelicsLabel;
@@ -35,7 +36,7 @@ namespace HongikIngan
         bool transitionWasBusy;
         PrototypeRun observedRun;
         readonly List<RaycastResult> pressHits = new List<RaycastResult>();
-        public bool CanInteract => observedRun != null && !observedRun.PendingPet && !dialogs.IsOpen && !(SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy);
+        public bool CanInteract => observedRun != null && !observedRun.IsFortuneRolling && !observedRun.PendingPet && !dialogs.IsOpen && !(SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy);
 
         void Awake() => EnsureDragLayer();
 
@@ -65,18 +66,13 @@ namespace HongikIngan
                 return;
             }
             observedRun.Changed += Refresh;
-            for (int i = 0; i < relicButtons.Length; i++)
-            {
-                int index = i;
-                relicButtons[i].onClick.AddListener(() => observedRun.BuyRelic(index));
-            }
             for (int i = 0; i < petButtons.Length; i++)
             {
                 int index = i;
                 petButtons[i].onClick.AddListener(() => { observedRun.OpenPet(index); Refresh(); });
             }
             expandButton.onClick.AddListener(() => observedRun.ExpandSlots());
-            rerollButton.onClick.AddListener(() => observedRun.Reroll());
+            rerollButton.onClick.AddListener(RollFortune);
             battleButton.onClick.AddListener(() => { if (CanInteract && observedRun.CanStartBattle) SceneTransitionOverlay.Current.Go("전투 시작", () => PrototypeSession.Instance.EnterBattle(), TransformStudents(), battleSweepPrefab); });
             learnButton.onClick.AddListener(() => observedRun.Upgrade(selected));
             sellButton.onClick.AddListener(() => { int index = selected; selected = -1; observedRun.Sell(index); });
@@ -87,6 +83,34 @@ namespace HongikIngan
             var sound = HongikIngan.Audio.SoundManager.EnsureExists();
             if (sound.BackendAvailable) sound.PlayBgm("event:/BGM/School");
             Refresh();
+        }
+        public const float FortuneRollDuration = .8f;
+        void RollFortune()
+        {
+            if (!CanInteract || !observedRun.Reroll()) return;
+            StartCoroutine(AnimateFortune());
+        }
+        IEnumerator AnimateFortune()
+        {
+            float start = Time.unscaledTime;
+            int lastIndex = -1;
+            while (Time.unscaledTime - start < FortuneRollDuration)
+            {
+                int index = Mathf.FloorToInt((Time.unscaledTime - start) / .04f) % PrototypeCatalog.Fortunes.Count;
+                if (index != lastIndex) { ShowFortune(PrototypeCatalog.Fortunes[index].Description); lastIndex = index; }
+                yield return null;
+            }
+            observedRun.CompleteFortuneRoll();
+        }
+        void ShowFortune(string text)
+        {
+            foreach (var label in relicLabels) label.text = text;
+        }
+        void OnDisable()
+        {
+            StopAllCoroutines();
+            // A scene unload or disabled view must not lose a paid result or leave the run locked.
+            if (observedRun != null) observedRun.CompleteFortuneRoll();
         }
         IEnumerator TransformStudents()
         {
@@ -130,7 +154,7 @@ namespace HongikIngan
             rosterLabel.text = $"{observedRun.Students.Count} / {observedRun.Capacity}";
             stageLabel.text = $"STAGE {observedRun.Stage:00}";
             photosLabel.text = $"폴라로이드 {observedRun.PhotoCount}\n분위기 {observedRun.Atmosphere} / 별의 힘 {observedRun.StarPower}";
-            ownedRelicsLabel.text = observedRun.Relics.Count == 0 ? "아직 획득한 유물이 없어요" : string.Join("   /   ", observedRun.Relics.Select(r => r.Name));
+            if (ownedRelicsLabel != null) ownedRelicsLabel.gameObject.SetActive(false);
             int pages = Mathf.Max(1, Mathf.CeilToInt(observedRun.SchoolDeskCount / 9f));
             RosterPage = Mathf.Clamp(RosterPage, 0, pages - 1);
             if (rosterPageLabel != null) rosterPageLabel.text = $"학생 {RosterPage + 1} / {pages}";
@@ -147,26 +171,25 @@ namespace HongikIngan
                 slot.Bind(this, desk, seated?.Definition, desk < Mathf.Max(observedRun.Capacity, observedRun.SchoolDeskCount),
                     seated != null && observedRun.Students.IndexOf(seated) == selected);
             }
-            for (int i = 0; i < relicButtons.Length; i++)
-            {
-                var relic = i < observedRun.RelicOffers.Count ? observedRun.RelicOffers[i] : null;
-                relicLabels[i].text = relic == null ? (observedRun.RelicPurchasedThisBattle ? "구매 완료 - 다음 전투 후 구매 가능" : "남은 유물 없음") :
-                    $"{relic.Name}\n{relic.Description}\n{observedRun.Settings.relicPrice} 에너지";
-                relicButtons[i].interactable = relic != null && !observedRun.RelicPurchasedThisBattle;
-            }
+            // Keep scene bindings while replacing the old purchase card with text-only fortune output.
+            foreach (var button in relicButtons) button.interactable = false;
+            if (!observedRun.IsFortuneRolling) ShowFortune(observedRun.Fortune == null ? "오늘의 운세\n리롤로 운세를 확인하세요" :
+                observedRun.Fortune.Description + (observedRun.FortuneStrength == 2 ? "\n귀염둥이: 효과 2배" : ""));
             for (int i = 0; i < petButtons.Length; i++)
             {
                 var pet = i < observedRun.PetOffers.Count ? observedRun.PetOffers[i] : null;
                 petLabels[i].text = pet.HasValue ? PetLabel((int)pet.Value) : "펫 없음";
                 petButtons[i].interactable = pet.HasValue;
             }
-            var groups = observedRun.Students.SelectMany(s => new[] { s.Definition.Club, s.Definition.Personality, s.Definition.SpecialSynergy })
-                .Where(s => !string.IsNullOrEmpty(s)).GroupBy(s => s).OrderByDescending(g => g.Count()).ThenBy(g => g.Key);
-            synergyLabel.text = groups.Any() ? string.Join("\n", groups.Select(g => $"{g.Key}   {BattleSynergies.Count(observedRun, g.Key)}명")) : "학생을 영입하면\n시너지가 표시됩니다";
-            SetButtonText(expandButton, $"책상 확장  +  {observedRun.Settings.slotExpansionPrice}");
+            var names = (observedRun.FortuneSynergyBonus > 0 ? PrototypeCatalog.Students : observedRun.Students.Select(s => s.Definition))
+                .SelectMany(s => new[] { s.Club, s.Personality, s.SpecialSynergy }).Where(s => !string.IsNullOrEmpty(s))
+                .Distinct().OrderByDescending(s => BattleSynergies.Count(observedRun, s)).ThenBy(s => s);
+            synergyLabel.text = names.Any() ? string.Join("\n", names.Select(s => $"{s}   {BattleSynergies.Count(observedRun, s)}명")) : "학생을 영입하면\n시너지가 표시됩니다";
+            if (BattleSynergies.AllCostsFree(observedRun)) synergyLabel.text += "\n" + BattleSynergies.AllCostsFreeDescription;
+            SetButtonText(expandButton, $"책상 확장  +  {observedRun.ExpansionPrice}");
             expandButton.interactable = observedRun.OpenCapacity < 7;
-            SetButtonText(rerollButton, observedRun.RelicPurchasedThisBattle ? "유물 구매 완료" : $"유물 리롤\n{observedRun.RerollCost} 에너지");
-            rerollButton.interactable = observedRun.CanRerollRelic;
+            SetButtonText(rerollButton, observedRun.IsFortuneRolling ? "운세\n확인 중..." : $"<nobr>오늘의 운세</nobr>\n리롤\n{observedRun.RerollCost} 에너지");
+            rerollButton.interactable = free && observedRun.CanRerollFortune;
             battleButton.interactable = observedRun.CanStartBattle;
             statusLabel.text = observedRun.Students.Count > observedRun.Capacity ? observedRun.StartBattleBlockReason : observedRun.LastMessage;
             bool owned = selected >= 0 && selected < observedRun.Students.Count;
@@ -190,7 +213,7 @@ namespace HongikIngan
                 }
                 string traits = s.Definition.Club + " - " + s.Definition.Personality + (string.IsNullOrEmpty(s.Definition.SpecialSynergy) ? "" : " - " + s.Definition.SpecialSynergy);
                 detailBody.text = $"{traits}\n{s.Definition.SkillDescription}\n현재 효과 {values}  -  강화 {s.UpgradeCount}회";
-                SetButtonText(learnButton, $"보충 학습\n{observedRun.Settings.UpgradePrice(s.Definition.Grade)} 에너지");
+                SetButtonText(learnButton, $"보충 학습\n{observedRun.UpgradePrice(s.Definition.Grade)} 에너지");
                 SetButtonText(sellButton, $"계약 해제\n+{BattleSynergies.Income(observedRun, observedRun.Settings.SalePrice(s.Definition.Grade))}");
             }
             else
@@ -230,7 +253,7 @@ namespace HongikIngan
         string PetLabel(int kind)
         {
             string[] labels = { "일반 펫", "고급 펫", "최고급 펫", "시너지 펫" };
-            return labels[Mathf.Clamp(kind, 0, 3)] + $"\n{Run.Settings.PetPrice((PetKind)kind)} 에너지\n후보 {(kind == 1 || kind == 2 ? 5 : 3)}명";
+            return labels[Mathf.Clamp(kind, 0, 3)] + $"\n{Run.PetPrice((PetKind)kind)} 에너지\n후보 {(kind == 1 || kind == 2 ? 5 : 3)}명";
         }
     }
 }

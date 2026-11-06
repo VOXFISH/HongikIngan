@@ -51,7 +51,7 @@ namespace HongikIngan
             run.AddMoney(10000);
             run.Settings.bossBaseHp = 1;
             for (int i = 0; i < 4; i++) Check(run.ExpandSlots(), "expand test formation to seven");
-            run.Relics.Add(new RelicDefinition { Id="smoke-seed", Name="검사용 시작 피해", Kind=RelicKind.OpeningDamage, Value=10 });
+            run.Photos["smoke-seed"] = 1;
             for (int group = 0; group < 7; group++)
             {
                 run.Students.Clear();
@@ -104,7 +104,7 @@ namespace HongikIngan
                 Check(run.Stage == group + 2, "advance stage " + group);
             }
             run.Students.Clear(); run.Students.Add(new StudentState(PrototypeCatalog.Students.Single(d => d.Id == "Girl28")));
-            run.Relics.Clear(); run.Settings.bossBaseHp = 1e30f; run.Settings.bossGrowth = 1;
+            run.Photos.Clear(); run.Settings.bossBaseHp = 1e30f; run.Settings.bossGrowth = 1;
             session.EnterBattle(); yield return new WaitForSeconds(1.5f);
             var rescueScreen = FindFirstObjectByType<BattleScreen>(); rescueScreen.presentation.stepDuration = .001f;
             for (int turn = 0; turn < 3; turn++)

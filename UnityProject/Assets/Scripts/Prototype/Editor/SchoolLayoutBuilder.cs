@@ -17,6 +17,46 @@ namespace HongikIngan.Editor
         static readonly Color Cream = Hex("FFF6E4"), Gold = Hex("CFA76C"), Paper = Hex("FFFDF7");
         static TMP_FontAsset font;
 
+        [MenuItem("HongikIngan/Apply daily fortune UI")]
+        public static void ApplyFortune()
+        {
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            var scene = EditorSceneManager.OpenScene("Assets/Scenes/School.unity");
+            var screen = UnityEngine.Object.FindFirstObjectByType<SchoolScreen>();
+            if (screen == null || screen.relicLabels.Length != 1) throw new InvalidOperationException("Fortune display binding missing.");
+            ConfigureFortune(screen);
+            EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
+            ValidateBindings(screen);
+            PrototypeChecks.Run();
+            Debug.Log("DAILY_FORTUNE_UI_SAVED");
+        }
+
+        static void ConfigureFortune(SchoolScreen screen)
+        {
+            screen.ownedRelicsLabel.text = "";
+            screen.ownedRelicsLabel.gameObject.SetActive(false);
+            foreach (var button in screen.relicButtons)
+            {
+                button.transition = Selectable.Transition.None;
+                button.interactable = false;
+                foreach (Transform child in button.transform)
+                    if (child.GetComponent<TMP_Text>() == null) child.gameObject.SetActive(false);
+            }
+            foreach (var label in screen.relicLabels)
+            {
+                label.text = "오늘의 운세\n리롤로 운세를 확인하세요";
+                label.enableAutoSizing = true; label.fontSizeMin = 12; label.fontSizeMax = 16;
+                label.alignment = TextAlignmentOptions.Center;
+            }
+            var rollLabel = screen.rerollButton.GetComponentInChildren<TMP_Text>();
+            rollLabel.text = "<nobr>오늘의 운세</nobr>\n리롤\n20 에너지";
+            rollLabel.enableAutoSizing = true; rollLabel.fontSizeMin = 8; rollLabel.fontSizeMax = 15;
+            foreach (var label in screen.schoolCanvas.GetComponentsInChildren<TMP_Text>(true))
+                if (label.text.Contains("유물")) label.text = label.text.Replace("유물", "오늘의 운세");
+            foreach (var label in screen.dialogs.GetComponentsInChildren<TMP_Text>(true))
+                if (label.text.Contains("유물")) label.text = label.text.Replace("유물", "오늘의 운세");
+        }
+
         [MenuItem("HongikIngan/Apply overflow recruitment controls")]
         public static void ApplyOverflowRecruitment()
         {
@@ -99,16 +139,16 @@ namespace HongikIngan.Editor
             screen.audioButton = Button(ui, "Sound", 1266, 24, 146, 40, "사운드 설정", Hex("FFF6ED"), Ink);
 
             var board = Frame(ui, "Chalkboard", 240, 100, 700, 194, Gold, Hex("335653"), 9);
-            Text(board, "Caption", 20, 7, 660, 29, "우리들의 보물 칠판", 20, Cream, TextAlignmentOptions.Center);
+            Text(board, "Caption", 20, 7, 660, 29, "오늘의 운세", 20, Cream, TextAlignmentOptions.Center);
             screen.relicButtons = new Button[1]; screen.relicLabels = new TMP_Text[1];
             for (int i = 0; i < 1; i++)
             {
                 var b = Button(board, "RelicOffer" + i, 28, 43, 644, 98, "", Hex("F6EEE2"), Ink);
                 Blank(b.transform, "RelicPlaceholder", 10, 10, 54);
                 screen.relicButtons[i] = b;
-                screen.relicLabels[i] = Text(b.transform, "Offer", 73, 10, 555, 78, "유물\n30 에너지", 17, Ink, TextAlignmentOptions.Center);
+                screen.relicLabels[i] = Text(b.transform, "Offer", 73, 10, 555, 78, "오늘의 운세\n리롤로 운세를 확인하세요", 17, Ink, TextAlignmentOptions.Center);
             }
-            screen.ownedRelicsLabel = Text(board, "OwnedRelics", 25, 149, 650, 31, "아직 획득한 유물이 없어요", 15, Cream, TextAlignmentOptions.Center);
+            screen.ownedRelicsLabel = Text(board, "OwnedRelics", 25, 149, 650, 31, "", 15, Cream, TextAlignmentOptions.Center);
 
             var pets = Frame(ui, "Pets", 958, 100, 454, 194, Pink, Hex("FFF5F8"), 3);
             Text(pets, "Caption", 8, 5, 438, 28, "새로운 인연 - 펫 부르기", 20, Pink, TextAlignmentOptions.Center);
@@ -161,7 +201,7 @@ namespace HongikIngan.Editor
             screen.expandButton = Button(ui, "ExpandDesks", 1122, 560, 290, 42, "책상 확장", Hex("FBF0DF"), Ink);
             screen.statusLabel = Text(ui, "Status", 32, 607, 1370, 26, "교실에 오신 것을 환영합니다.", 16, Ink, TextAlignmentOptions.Left);
 
-            screen.rerollButton = Button(ui, "Reroll", 24, 661, 194, 120, "유물 리롤\n20 에너지", Pink, Color.white);
+            screen.rerollButton = Button(ui, "Reroll", 24, 661, 194, 120, "오늘의 운세\n리롤 20", Pink, Color.white);
             var detail = Frame(ui, "StudentDetailBook", 238, 649, 864, 138, Gold, Cream, 4);
             Image(detail, "LeftPage", 9, 8, 155, 122, Paper);
             Image(detail, "RightPage", 172, 8, 682, 122, Paper);
@@ -207,7 +247,7 @@ namespace HongikIngan.Editor
                 var rect = (RectTransform)screen.relicButtons[0].transform;
                 rect.sizeDelta = new Vector2(644, rect.sizeDelta.y);
                 screen.relicLabels[0].rectTransform.sizeDelta = new Vector2(555, 78);
-                screen.rerollButton.GetComponentInChildren<TMP_Text>().text = "유물 리롤\n20 에너지";
+                screen.rerollButton.GetComponentInChildren<TMP_Text>().text = "오늘의 운세\n리롤 20";
                 changed = true;
             }
             return changed;
@@ -232,7 +272,7 @@ namespace HongikIngan.Editor
                         throw new InvalidOperationException("Book cover/spine/pages are missing.");
             }
             // The authored school now uses background/desk sprites; artwork is valid scene content.
-            Debug.Log("SCHOOL_LAYOUT_BINDINGS_PASS: nine desks, one relic, three pets, book geometry.");
+            Debug.Log("SCHOOL_LAYOUT_BINDINGS_PASS: nine desks, one fortune, three pets, book geometry.");
         }
         [MenuItem("HongikIngan/Verify School cursor drag (Play Mode)")]
         public static void VerifyDrag()
