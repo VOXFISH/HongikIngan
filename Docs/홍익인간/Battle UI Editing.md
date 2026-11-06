@@ -153,3 +153,14 @@ BattleFormationView.Artwork의 Girl0–Girl35 전체 36명을 Assets/sprite/magi
 최종 검증: Unity 6000.3.7f1 Windows 빌드, 기존 규칙 4,010개와 시너지 표시 규칙 105개, 초기 지급 2,000개 시드를 통과했다. 실제 플레이어에서 시너지 UI 281개(36명 텍스트·학생증 전달 호버·회전·720p/1080p 경계·모달 닫기)와 기존 전투 회귀 222개를 통과했다. 목록 높이와 팝업 대비를 캡처로 확인했고 신규 에셋의 GUID 중복은 없다. 수동 마우스 인수와 FMOD 청취는 미실시다.
 
 최신 test의 `c157bfd` UI 이미지 2개를 충돌 없이 통합한 빌드는 `Logs/SynergyMergedBuild.log`, 최종 UI 결과와 캡처는 `Builds/SynergyMergedFinal/`, 전투 회귀는 `Builds/SynergyBattleRegression/`에 있다. 팝업은 Inspector의 최대 높이 안에서 내용 길이에 맞춰 줄어든다. 테스트의 가상 마우스는 숨김 플레이어의 포커스·물리 마우스 이벤트와 분리되며 일반 게임에서는 생성되지 않는다.
+### School 전투 시작 타일 전환
+
+SchoolScreen.battleSweepPrefab은 Assets/UI/Prefabs/SchoolBattleSweep.prefab을 참조한다. 원본 Assets/sprite/UI/sides (1).png의 기존 세 스프라이트를 하단부터 Tile1(보라), Tile2(분홍), Tile3(주황) 순서로 사용하며 원본 이미지와 슬라이스 GUID를 유지한다. HongikIngan > Apply School tile sweep transition 메뉴로 프리팹 및 School 참조를 저장한다.
+
+학생 변신 후 기존 텍스트 Band 대신 타일이 왼쪽에서 들어와 화면을 덮고, Battle 로드 후 오른쪽으로 빠져나간다. SceneTransitionOverlay의 sweepInterval은 0.1초, sweepDuration은 편도 0.45초이며 Inspector에서 조절한다. 전환 도형은 프리팹에서 편집하고, 런타임에는 화면 크기에 맞춰 이동 거리와 크기를 계산한다. 지속 오버레이 아래에 프리팹을 표시하므로 Main에서 시작해도 씬 로드 중 유지되고 완료 후 정리된다. 다른 씬 이동은 기존 페이드를 사용한다.
+
+### 전투 시작 로고
+
+SchoolBattleSweep/BattleStartLogo는 ui two.png의 battle_start 스프라이트이며 화면 중앙, 기본 영역 1296×720(기존 대비 1.8배), Preserve Aspect로 배치한다. 로고는 세 타일보다 뒤의 sibling으로 렌더링하며 스윕 타일 배열에서는 제외한다. 보라 타일이 중앙에 도달해 화면을 완전히 덮으면 크기 0 → 1 → 0.8 → 1 → 0, 회전 0 → -12 → +10 → -7 → 0도의 순서로 재생한다. Unity Z축의 음수는 시계 방향이다.
+
+SceneTransitionOverlay의 battleLogoDuration(기본 0.85초), battleLogoScale, battleLogoRotation을 Inspector에서 조절한다. 로고는 두 번째·세 번째 타일 진입 중에도 재생되고, 로고 크기가 0이 된 후 타일 퇴장을 시작하므로 주황 타일이 화면에서 사라지기 전에 끝난다. 프리팹 갱신 메뉴는 기존 타일 편집 내용을 보존하며 로고를 추가한다.

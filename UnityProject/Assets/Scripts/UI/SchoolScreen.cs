@@ -21,6 +21,7 @@ namespace HongikIngan
         public GameObject studentCard;
         public Button previousRosterPage, nextRosterPage;
         public TMP_Text rosterPageLabel;
+        public GameObject battleSweepPrefab;
         public int RosterPage { get; private set; }
         [Min(.1f)] public float transformationDuration = 1.2f;
         [Tooltip("Fraction of the transformation held fully white, with the outfit swapped halfway through.")]
@@ -72,7 +73,7 @@ namespace HongikIngan
             }
             expandButton.onClick.AddListener(() => observedRun.ExpandSlots());
             rerollButton.onClick.AddListener(() => observedRun.Reroll());
-            battleButton.onClick.AddListener(() => { if (CanInteract && observedRun.CanStartBattle) SceneTransitionOverlay.Current.Go("전투 시작", () => PrototypeSession.Instance.EnterBattle(), TransformStudents()); });
+            battleButton.onClick.AddListener(() => { if (CanInteract && observedRun.CanStartBattle) SceneTransitionOverlay.Current.Go("전투 시작", () => PrototypeSession.Instance.EnterBattle(), TransformStudents(), battleSweepPrefab); });
             learnButton.onClick.AddListener(() => observedRun.Upgrade(selected));
             sellButton.onClick.AddListener(() => { int index = selected; selected = -1; observedRun.Sell(index); });
             restartButton.onClick.AddListener(dialogs.ShowRestart);

@@ -88,7 +88,8 @@ namespace HongikIngan
                 Check(Mathf.Abs(Angle(card.transform))<=10.001f,"school card rotation bound"); OnScreen((RectTransform)card.transform);
             }
             school.DeselectStudent();
-            PrototypeSession.Instance.EnterBattle(); yield return new WaitForSecondsRealtime(2.5f);
+            school.battleButton.onClick.Invoke();
+            while (FindFirstObjectByType<BattleScreen>() == null) yield return null;
             var battle = FindFirstObjectByType<BattleScreen>(); var formation = battle.formation;
             while (!battle.CanInspect) yield return null;
             Check(battle.CanInspect,"battle inspection enabled");
