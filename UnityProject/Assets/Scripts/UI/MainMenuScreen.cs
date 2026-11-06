@@ -9,6 +9,14 @@ namespace HongikIngan
         public Button startButton, exitButton;
         bool starting;
 
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void ConfigureWindow()
+        {
+            Screen.SetResolution(1920, 1080, FullScreenMode.Windowed);
+        }
+#endif
+
         void Start()
         {
             startButton.onClick.AddListener(StartNewGame);

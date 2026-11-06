@@ -51,11 +51,12 @@ namespace HongikIngan.Editor
             EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
             PlayerSettings.defaultScreenWidth = 1920; PlayerSettings.defaultScreenHeight = 1080;
             PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
+            PlayerSettings.productName = "방과 후 전투 활동!";
             AssetDatabase.SaveAssets();
-            Directory.CreateDirectory("Builds/DesktopRelease");
+            Directory.CreateDirectory("Builds/FinalGame");
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
                 scenes = new[] { "Assets/Scenes/Main.unity", "Assets/Scenes/School.unity", "Assets/Scenes/Battle.unity" },
-                locationPathName = "Builds/DesktopRelease/HongikIngan.exe", target = BuildTarget.StandaloneWindows64,
+                locationPathName = "Builds/FinalGame/방과 후 전투 활동!.exe", target = BuildTarget.StandaloneWindows64,
                 options = BuildOptions.None
             });
             if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)

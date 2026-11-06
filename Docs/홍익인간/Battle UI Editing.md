@@ -221,3 +221,5 @@ School·Battle 학생의 이름은 역할별 이름표 위에 표시된다. `Ass
 ### 메인 배경과 Windows 배포 (2026-11-06)
 
 Main 씬의 전체 화면 배경에 사용자 첨부 교실 이미지 `Assets/UI/Sprites/MainMenuBackground.png`를 적용하고, 우측 하단에 첨부 새 캐릭터 `MainMenuMascot.png`를 비율 유지로 배치했다. 기존 시작·종료 버튼 연결을 유지한다. `HongikIngan.Editor.MainLayoutBuilder.BuildDesktopRelease`는 테스트 없이 Main/School/Battle을 Windows 64비트 1920×1080 창 모드로 빌드한다. 배포 폴더의 `Launch_1920x1080.cmd`는 기존 사용자 화면 설정과 관계없이 해당 창 모드로 실행한다.
+
+최종 배포 변경: 제품명과 Windows 실행 파일은 `방과 후 전투 활동!`이다. `MainMenuScreen.ConfigureWindow`는 Windows 플레이어 시작 시 1920×1080 창 모드를 직접 적용하므로 별도 CMD 실행기가 필요 없다. `BuildDesktopRelease`의 출력은 `Builds/FinalGame/방과 후 전투 활동!.exe`이며, 바탕화면 FinalGame.zip에는 Game 전체 빌드, Project/UnityProject의 Assets·Packages·ProjectSettings, README.md를 함께 넣는다.
