@@ -146,6 +146,7 @@ namespace HongikIngan
                 {
                     double reduction = Math.Min(battle.BossHp, coffee.StackCount * 20);
                     battle.BossHp = (float)Math.Max(0, battle.BossHp - reduction);
+                    run.RecordDamage((float)reduction);
                     coffee.AdditionalStacks += reduction;
                     yield return Step(battle, "damage", "커피 - 보스 HP -" + reduction.ToString("0") + ", 커피 " + coffee.StackCount.ToString("0"));
                     if (battle.BossHp <= 0)
@@ -189,6 +190,7 @@ namespace HongikIngan
 
                 yield return Step(battle, "chant", BuildChant(run.Students));
                 yield return Step(battle, "beam", "합동 필살기! " + PrototypeCatalog.FormatDamage(battle.Damage));
+                run.RecordDamage(battle.Damage);
                 battle.BossHp = Math.Max(0f, battle.BossHp - battle.Damage);
                 foreach (var result in FinishTurn(run)) yield return result;
             }

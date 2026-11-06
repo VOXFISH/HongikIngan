@@ -98,6 +98,8 @@ namespace HongikIngan
                 if (group == 2) Check(cloneSeen && cloneDisplayed && run.Students.All(s => !s.IsClone), "clones appear in battle slots and expire on victory");
                 float atmosphere = run.Atmosphere;
                 Check(atmosphere > 0, "mood maker changes persistent atmosphere " + group);
+                screen.rewardPopup.Skip(); yield return null;
+
                 screen.rewardPopup.claimButton.onClick.Invoke();
                 yield return new WaitForSeconds(1.5f);
                 Check(SceneManager.GetActiveScene().name == "School" && run.Atmosphere == atmosphere, "victory preserves atmosphere " + group);
@@ -115,6 +117,8 @@ namespace HongikIngan
             }
             Check(run.Battle.Saved && !run.GameOver && rescueScreen.rewardPopup.IsOpen, "sun rescue opens result reward popup");
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "sun-rescue-result.png")); yield return new WaitForSeconds(.3f);
+            rescueScreen.rewardPopup.Skip(); yield return null;
+
             rescueScreen.rewardPopup.claimButton.onClick.Invoke(); yield return new WaitForSeconds(1.5f);
             Check(SceneManager.GetActiveScene().name == "School" && run.SunRescueUsed, "sun rescue claims and returns to school");
         }

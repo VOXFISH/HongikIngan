@@ -71,11 +71,11 @@ School의 `DragLayer`는 책상 프리팹 밖의 `SchoolCanvas/Layout` 아래에
 텍스트 구분자: 폰트에 없는 U+00B7 대신 모든 씬, 공통 책상 프리팹, 런타임/Editor 문구 생성 코드에서 ASCII 하이픈(-)을 사용한다. 2026-11-06에 로컬 스크립트 UnityProject/Logs/ReplaceMiddleDot.ps1로 124곳을 치환했으며 원본은 UnityProject/Logs/MiddleDotBackup-20261106-043514-997/에 보관했다. Logs의 스크립트와 백업은 버전 관리 대상이 아니다. 씬 5개 중 SampleScene과 URP2DSceneTemplate에는 해당 문자가 없어 변경하지 않았다.
 
 
-## 전투 보상 팝업
+## 전투 결과 화면
 
-`BattleCanvas/Layout/RewardPopup/Dialog`는 전투 종료 후 보상을 수령하는 임시 네모 창이다. `Title`, `RewardDetails`, `ClaimButton`을 Inspector의 RectTransform에서 조절한다. `BattleRewardPopup`은 표시 내용과 활성 상태만 갱신하며 배치를 덮어쓰지 않는다. 생성 메뉴는 `HongikIngan/Add battle reward popup`이며 이미 연결된 팝업은 재생성하지 않는다.
+2026-11-06 결과 화면 요청이 이전 임시 보상 팝업 안내를 대체한다. 자세한 요구사항·대화 원문·검증·캡처는 [전투 보상·게임오버 화면](Battle%20Results.md)을 따른다.
 
-보스 처치가 확정되면 정산 전 소유 에너지와 남은 턴을 저장한다. 기본 보상은 `50 + 남은 턴 × 100 + 정산 전 소유 에너지의 10%`이며 정수 에너지의 소수 부분은 버린다. 기존 선도부 획득 배율과 유물 추가 보상을 유지한다. 전투 연출이 끝난 뒤 팝업을 표시하고 수령 버튼을 누를 때 한 번만 지급한 뒤 학교로 돌아간다. 게임오버에는 지급·표시하지 않는다.
+Battle 씬의 별도 루트 BattleResultCanvas/ResultScreen에 주황 보상·분홍 게임오버 화면을 저장한다. 선택한 타일이 화면을 덮은 상태에서 기존 battle_start 로고를 0.5초 페이드아웃하고, 제목·점선·오른쪽 수치·에너지 전달을 순차 표시한다. 클릭 스킵과 확인/복귀는 구분하며, 보상 지급은 확인 시 기존 정산 경로에서 한 번만 수행한다. 게임오버는 누적 데미지를 Score로 표시하고 완료 후 클릭 또는 키 입력으로 메인에 복귀한다.
 
 학교 모집 창의 Replace·ReplacementPanel을 삭제했다. 정원 초과 영입 후 학교 학생 상세에서 계약을 해제할 수 있다. SchoolCanvas/Layout/RosterPages의 Previous·Page·Next는 보유 학생 9명 단위의 페이지를 바꾸는 독립 UI이며 Inspector에서 위치를 조절한다. 출전 정원과 보유 인원은 별도로 검사한다.
 

@@ -38,6 +38,7 @@ namespace HongikIngan
             if (Run.ReturnToSchool()) SceneManager.LoadScene("School");
         }
         public void Restart() { ResetRun(); SceneManager.LoadScene("School"); }
+        public void ReturnToMain() { ResetRun(); SceneManager.LoadScene("Main"); }
         void OnDestroy() { if (Instance == this) Instance = null; }
     }
 }

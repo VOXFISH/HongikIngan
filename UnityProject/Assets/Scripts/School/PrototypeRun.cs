@@ -38,6 +38,11 @@ namespace HongikIngan
         public IReadOnlyList<StudentDefinition> Catalog => PrototypeCatalog.Students;
         public int Money { get; private set; }
         public int Stage { get; private set; } = 1;
+        public float CumulativeDamage { get; private set; }
+        internal void RecordDamage(float amount)
+        {
+            if (amount > 0) CumulativeDamage += amount;
+        }
         public int BaseCapacity { get; private set; } = 3;
         public int OpenCapacity => Math.Min(7, BaseCapacity);
         public int Capacity => Math.Max(0, OpenCapacity - Students.Where(s => s.Definition.Action == ActionKind.MarsJealousy && !s.IsClone)

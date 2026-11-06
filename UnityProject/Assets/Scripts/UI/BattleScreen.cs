@@ -81,13 +81,24 @@ namespace HongikIngan
         {
             if (!initialized || !isActiveAndEnabled || running || preparing || audioPanel.IsOpen ||
                 (SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy)) return;
-            if (interrupted || run.Battle == null || run.Battle.Lost)
+            if (rewardPopup != null && rewardPopup.IsOpen) return;
+            if (run.Battle != null && run.Battle.Lost) { Refresh(); return; }
+            if (interrupted || run.Battle == null)
                 ChangeScene("새로운 시작", () => PrototypeSession.Instance.Restart());
             else if (run.Battle.CanReturnToSchool) Refresh();
             else if (!run.Battle.IsResolving) StartCoroutine(Attack());
         }
         public void ClaimReward()
         {
+            if (rewardPopup != null && rewardPopup.IsOpen)
+            {
+                if (!rewardPopup.IsReady) { rewardPopup.Skip(); return; }
+                if (!rewardPopup.CanContinue || running || preparing || run.Battle == null) return;
+                if (run.Battle.Lost) rewardPopup.ReturnTo(() => PrototypeSession.Instance.ReturnToMain());
+                else if (run.Battle.CanReturnToSchool && run.Battle.Reward != null && !run.Battle.Reward.Claimed)
+                    rewardPopup.ReturnTo(() => PrototypeSession.Instance.BackToSchool());
+                return;
+            }
             if (!initialized || running || preparing || run.Battle == null || !run.Battle.CanReturnToSchool ||
                 run.Battle.IsResolving || run.Battle.Reward == null || run.Battle.Reward.Claimed ||
                 (SceneTransitionOverlay.Current != null && SceneTransitionOverlay.Current.IsBusy)) return;
